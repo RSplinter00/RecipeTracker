@@ -1,8 +1,8 @@
 ﻿namespace ReceptTracker.Views
 {
-    public partial class MainPage
+    public partial class MainPageView
     {
-        public MainPage()
+        public MainPageView()
         {
             InitializeComponent();
         }

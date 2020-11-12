@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ReceptTracker.ViewModels
 {
-    public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible
+    public class ViewModelBase : BindableBase, IInitialize, INavigationAware
     {
         protected INavigationService NavigationService { get; private set; }
         protected IPageDialogService DialogService { get; private set; }
@@ -62,11 +62,6 @@ namespace ReceptTracker.ViewModels
         }
 
         public virtual void OnNavigatedTo(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void Destroy()
         {
 
         }
