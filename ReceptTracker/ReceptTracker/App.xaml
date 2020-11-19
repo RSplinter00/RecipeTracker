@@ -2,9 +2,12 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:prism="http://prismlibrary.com"
+                        xmlns:c="clr-namespace:ReceptTracker.Converters"
                         x:Class="ReceptTracker.App">
     <Application.Resources>
         <ResourceDictionary>
+            <c:NullToBoolConverter x:Key="NullToBoolConverter"/>
+
             <Color x:Key="AppBackgroundColor">White</Color>
             
             <Color x:Key="DarkTextColor">Black</Color>
@@ -34,6 +37,11 @@
                 <Setter Property="VerticalTextAlignment" Value="Start"/>
             </Style>
             <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}"></Style>
+            <Style TargetType="Label" x:Key="RecipeTitle" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

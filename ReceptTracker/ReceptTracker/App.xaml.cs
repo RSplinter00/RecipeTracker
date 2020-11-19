@@ -20,7 +20,7 @@ namespace ReceptTracker
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPageView");
+            await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -28,7 +28,8 @@ namespace ReceptTracker
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPageView, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
         }
     }
 }

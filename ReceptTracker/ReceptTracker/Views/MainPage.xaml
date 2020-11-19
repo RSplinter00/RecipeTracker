@@ -1,16 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ReceptTracker.Views.MainPageView"
+             x:Class="ReceptTracker.Views.MainPage"
              Title="Main Page">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}" x:Key="RecipeTitle">
-                <Setter Property="FontSize" Value="28"/>
-                <Setter Property="FontAttributes" Value="Bold"/>
-                <Setter Property="VerticalOptions" Value="Center"/>
-            </Style>
-            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}" x:Key="RecipeSubTitle">
+            <Style TargetType="Label" x:Key="RecipeSubTitle" BasedOn="{StaticResource BaseLabel}">
                 <Setter Property="FontSize" Value="16"/>
                 <Setter Property="VerticalOptions" Value="Center"/>
             </Style>
@@ -22,7 +17,7 @@
     </ContentPage.Resources>
 
     <ScrollView Margin="10,10,10,10">
-        <StackLayout BindableLayout.ItemsSource="{Binding Recipes}">
+        <StackLayout x:Name="RecipeOverview" BindableLayout.ItemsSource="{Binding Recipes}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Frame>
@@ -32,11 +27,16 @@
                             <StackLayout Orientation="Horizontal">
                                 <Image Source="Category.png"/>
                                 <Label Text="{Binding Category}" Style="{StaticResource RecipeSubTitle}"/>
-                            
+
                                 <Image Source="Duration.png" Margin="10,0,0,0"/>
                                 <Label Text="{Binding Duration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubTitle}"/>
                             </StackLayout>
                         </StackLayout>
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.RecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
                     </Frame>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
