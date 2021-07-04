@@ -1,4 +1,5 @@
-﻿using Prism.Navigation;
+﻿using Prism.Commands;
+using Prism.Navigation;
 using Prism.Services;
 using ReceptTracker.Models;
 using System;
@@ -7,6 +8,8 @@ namespace ReceptTracker.ViewModels
 {
     public class DisplayRecipePageViewModel : ViewModelBase
     {
+        public DelegateCommand EditRecipeCommand { get; }
+
         private Recipe recipe;
         public Recipe Recipe
         {
@@ -16,18 +19,23 @@ namespace ReceptTracker.ViewModels
 
         public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
+            EditRecipeCommand = new DelegateCommand(EditRecipe);
+        }
+
+        public void EditRecipe()
+        {
+            var parameters = new NavigationParameters
+            {
+                { "Recipe", Recipe }
+            };
+
+            NavigateToPageAsync("EditRecipePage", parameters);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("SelectedRecipe"))
-            {
-                Recipe = (Recipe) parameters["SelectedRecipe"];
-            }
-            else
-            {
-                Recipe = new Recipe("New Recipe", "Add category", new TimeSpan());
-            }
+            if (parameters.ContainsKey("SelectedRecipe")) Recipe = (Recipe)parameters["SelectedRecipe"];
+            else if (Recipe == null) Recipe = new Recipe("New Recipe", "Add category", new TimeSpan());
         }
     }
 }

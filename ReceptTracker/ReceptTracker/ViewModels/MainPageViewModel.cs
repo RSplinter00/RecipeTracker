@@ -26,12 +26,12 @@ namespace ReceptTracker.ViewModels
 
         public void RecipeSelected(Recipe selectedRecipe)
         {
-            var navParams = new NavigationParameters
+            var parameters = new NavigationParameters
             {
                 { "SelectedRecipe", selectedRecipe }
             };
 
-            NavigateToPageAsync("DisplayRecipePage", navParams);
+            NavigateToPageAsync("DisplayRecipePage", parameters);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)

@@ -14,6 +14,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="EditRecipeIcon" Command="{Binding EditRecipeCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <ScrollView Margin="10,10,10,10">
         <StackLayout>
             <Label Text="{Binding Recipe.Title}" Style="{StaticResource RecipeTitle}"/>
@@ -29,10 +33,10 @@
 
             <StackLayout IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
                 <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
-                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="0">
+                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="0" Padding="15,0,0,0">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Label Text="{Binding ., StringFormat='   - {0}'}"/>
+                            <Label Text="{Binding ., StringFormat='- {0}'}"/>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>
@@ -40,10 +44,10 @@
 
             <StackLayout IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
                 <Label Text="Benodigden" Style="{StaticResource Header}"/>
-                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Requirements}" Spacing="0">
+                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Requirements}" Spacing="0" Padding="15,0,0,0">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Label Text="{Binding ., StringFormat='   - {0}'}"/>
+                            <Label Text="{Binding ., StringFormat='- {0}'}"/>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>

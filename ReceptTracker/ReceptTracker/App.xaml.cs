@@ -30,6 +30,7 @@ namespace ReceptTracker
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
+            containerRegistry.RegisterForNavigation<EditRecipePage, EditRecipePageViewModel>();
         }
     }
 }
