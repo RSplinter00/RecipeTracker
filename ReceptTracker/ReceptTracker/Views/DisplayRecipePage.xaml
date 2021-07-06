@@ -33,24 +33,26 @@
 
             <StackLayout IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
                 <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
-                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="0" Padding="15,0,0,0">
+                <Label Text="{Binding Recipe.Ingredients}"/>
+                <!-- <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="0" Padding="15,0,0,0">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Label Text="{Binding ., StringFormat='- {0}'}"/>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                </StackLayout>
+                </StackLayout> -->
             </StackLayout>
 
             <StackLayout IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
                 <Label Text="Benodigden" Style="{StaticResource Header}"/>
-                <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Requirements}" Spacing="0" Padding="15,0,0,0">
+                <Label Text="{Binding Recipe.Requirements}"/>
+                <!--<StackLayout BindableLayout.ItemsSource="{Binding Recipe.Requirements}" Spacing="0" Padding="15,0,0,0">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Label Text="{Binding ., StringFormat='- {0}'}"/>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                </StackLayout>
+                </StackLayout>-->
             </StackLayout>
 
             <StackLayout IsVisible="{Binding Recipe.Preparation, Converter={StaticResource NullToBoolConverter}}" Spacing="0">

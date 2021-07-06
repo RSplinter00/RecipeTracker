@@ -18,6 +18,13 @@ namespace ReceptTracker.ViewModels
             set => SetProperty(ref recipe, value);
         }
 
+        private string test = "Test";
+        public string Test
+        {
+            get => test;
+            set => SetProperty(ref test, value);
+        }
+
         public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
         {
 

@@ -9,11 +9,10 @@ namespace ReceptTracker.Models
         public string Title { get; set; }
         public string Category { get; set; }
         public TimeSpan Duration { get; set; }
-        public List<string> Ingredients { get; set; }
-        public List<string> Requirements { get; set; }
-        public string Preparation { get; set; }
         public string Method { get; set; }
-
+        public string Ingredients { get; set; }
+        public string Requirements { get; set; }
+        public string Preparation { get; set; }
 
         public Recipe()
         {

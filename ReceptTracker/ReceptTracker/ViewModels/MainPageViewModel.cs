@@ -50,27 +50,21 @@ namespace ReceptTracker.ViewModels
                 new Recipe("Recipe10", "Beef", new TimeSpan(1, 30, 0))
             };
 
-            Recipes[0].Ingredients = new List<string>
-            {
-                "1 Procureur, zo'n 2,5kg",
-                "PP injectiemix",
-                "BBQ kruiden voor pulled pork",
-                "PP Glaze",
-                "PP Eindsaus"
-            };
-            Recipes[0].Requirements = new List<string>
-            {
-                "Kerntemperatuurmeter",
-                "Plasticfolie",
-                "Aluminiumfolie"
-            };
-            Recipes[0].Preparation = "1. Snij het grootste deel van het overtollige vet van de procureur. Als er nog een beetje op zit is dat niet erg, als de grote dikke stukken maar weg zijn.\r\n" +
+            Recipes[0].Ingredients = "- 1 Procureur, zo'n 2,5kg\n" +
+                "- PP injectiemix\n" +
+                "- BBQ kruiden voor pulled pork\n" +
+                "- PP Glaze\n" +
+                "- PP Eindsaus";
+            Recipes[0].Requirements = "- Kerntemperatuurmeter\n" +
+                "- Plasticfolie\n" +
+                "- Aluminiumfolie";
+            Recipes[0].Preparation = "1. Snij het grootste deel van het overtollige vet van de procureur. Als er nog een beetje op zit is dat niet erg, als de grote dikke stukken maar weg zijn.\n" +
                 "2. Bestrooi rijkelijk met de barbecuekruiden en pak in plasticfolie in. Laat 4 tot 8 uur in de koelkast liggen.\n" +
                 "3. Maak je barbecue klaar voor indirect  barbecueën op 121°C. Als je niet weet hoe je dat moet doen dan laat ik je dat hier stap voor stap zien.\n" +
-                "4. Haal het vlees uit het plastic en plaats het in de barbecue weg van het vuur. Plaats de voeler van de kernthermometer en sluit de deksel." +
-                "5. Na 5 uur of als de kerntemperatuur 74°C is (wat het eerste gebeurt), smeer je het vlees in met opgewarmde PP Glaze." +
+                "4. Haal het vlees uit het plastic en plaats het in de barbecue weg van het vuur. Plaats de voeler van de kernthermometer en sluit de deksel.\n" +
+                "5. Na 5 uur of als de kerntemperatuur 74°C is (wat het eerste gebeurt), smeer je het vlees in met opgewarmde PP Glaze.\n" +
                 "6. Laat nog twee uur liggen, je hebt nu een mooie bark.\n" +
-                "7. Haal het vlees uit de barbecue en pak het strak in twee lagen aluminiumfolie in." +
+                "7. Haal het vlees uit de barbecue en pak het strak in twee lagen aluminiumfolie in.\n" +
                 "8. Plaats terug in de barbecue en laat liggen totdat de kerntemperatuur 88°C is.\n" +
                 "Prik dan met de voeler van de thermometer of een metalen satéprikker hier en daar in het vlees om te voelen of het gaar is.\n" +
                 "De voeler of prikker moet er zonder al te veel weerstand in gaan.Denk aan boterzacht.\n" +

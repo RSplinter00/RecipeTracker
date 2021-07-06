@@ -2,38 +2,102 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:local="clr-namespace:ReceptTracker.Controls"
              prism:ViewModelLocator.AutowireViewModel="True"
              NavigationPage.HasBackButton="False"
              x:Class="ReceptTracker.Views.EditRecipePage"
              Title="{Binding Recipe.Title}">
-    <!--<StackLayout Margin="20">
-        <StackLayout Orientation="Horizontal" >
-            <Label Text="Test"/>
-            <Frame HorizontalOptions="FillAndExpand" CornerRadius="10">
-                <Entry />
-            </Frame>
-        </StackLayout>
-    </StackLayout>-->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="StackLayout" x:Key="RecipePropertyLayout">
+                <Setter Property="Orientation" Value="Horizontal"/>
+            </Style>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <Label Text="Total:" Grid.Row="1"/>
-        <Editor Keyboard="Numeric" Grid.Row="2"/>
-    </Grid>
+            <Style TargetType="Label" x:Key="RecipeProperty">
+                <Setter Property="Grid.Column" Value="0"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+            
+            <Style TargetType="Frame" x:Key="EditRecipePropertyFrame">
+                <Setter Property="Grid.Column" Value="1"/>
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="BorderColor" Value="DarkGray"/>
+                <Setter Property="HasShadow" Value="False"/>
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="ReturnType" Value="Next"/>
+            </Style>
+
+            <Style TargetType="local:MultiLineEditor">
+                <Setter Property="AutoSize" Value="TextChanges"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Margin="20">
+        <StackLayout Spacing="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Editor for Title property -->
+                <Label Text="Titel:" Grid.Row="0" Style="{StaticResource RecipeProperty}"/>
+                <Frame Grid.Row="0" Style="{StaticResource EditRecipePropertyFrame}">
+                    <Entry Placeholder="Titel" Text="{Binding Recipe.Title}"/>
+                </Frame>
+
+                <!-- Editor for Category property -->
+                <Label Grid.Row="1" Text="Categorie:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Grid.Row="1" Style="{StaticResource EditRecipePropertyFrame}">
+                    <Entry Placeholder="Categorie" Text="{Binding Recipe.Category}"/>
+                </Frame>
+
+                <!-- Editor for Duration property -->
+                <Label Grid.Row="2" Text="Duur:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Grid.Row="2" Style="{StaticResource EditRecipePropertyFrame}">
+                    <TimePicker Format="HH:mm" Time="{Binding Recipe.Duration}"/>
+                </Frame>
+
+                <!-- Editor for Method property -->
+                <Label Grid.Row="3" Text="Methode:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Grid.Row="3" Style="{StaticResource EditRecipePropertyFrame}">
+                    <Entry Placeholder="Methode" Text="{Binding Recipe.Method}"/>
+                </Frame>
+            </Grid>
+
+            <StackLayout>
+                <!-- Editor for Ingredients property -->
+                <Label Text="Ingrediënten:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <local:MultiLineEditor Placeholder="Ingrediënten" Text="{Binding Recipe.Ingredients}" MaxHeight="256"/>
+                </Frame>
+
+                <!-- Editor for Requirements property -->
+                <Label Text="Benodigdheden:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <local:MultiLineEditor Placeholder="Benodigdheden" Text="{Binding Recipe.Requirements}" MaxHeight="235"/>
+                </Frame>
+
+                <!-- Editor for Preparation property -->
+                <Label Text="Bereiding:" Style="{StaticResource RecipeProperty}"/>
+                <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <local:MultiLineEditor Placeholder="Bereiding" Text="{Binding Recipe.Preparation}" MaxHeight="445"/>
+                </Frame>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
