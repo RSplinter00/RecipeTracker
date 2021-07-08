@@ -1,11 +1,13 @@
 ﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
+using SQLite;
 
 namespace ReceptTracker.Models
 {
     public class Recipe : BindableBase
     {
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
         public string Title { get; set; }
         public string Category { get; set; }
         public TimeSpan Duration { get; set; }

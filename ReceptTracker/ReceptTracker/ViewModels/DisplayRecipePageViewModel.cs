@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
+using ReceptTracker.Controllers;
 using ReceptTracker.Models;
 using System;
 
@@ -17,7 +18,7 @@ namespace ReceptTracker.ViewModels
             set => SetProperty(ref recipe, value);
         }
 
-        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
+        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController) : base(navigationService, pageDialogService, recipeController)
         {
             EditRecipeCommand = new DelegateCommand(EditRecipe);
         }

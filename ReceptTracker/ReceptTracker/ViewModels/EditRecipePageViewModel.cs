@@ -1,11 +1,8 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using Prism.Services;
+using ReceptTracker.Controllers;
 using ReceptTracker.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ReceptTracker.ViewModels
 {
@@ -25,7 +22,7 @@ namespace ReceptTracker.ViewModels
             set => SetProperty(ref test, value);
         }
 
-        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService, pageDialogService)
+        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController) : base(navigationService, pageDialogService, recipeController)
         {
 
         }

@@ -5,14 +5,13 @@ using ReceptTracker.Views;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
+using ReceptTracker.Controllers;
 
 namespace ReceptTracker
 {
     public partial class App
     {
-        public App() : this(null) { }
-
-        public App(IPlatformInitializer initializer) : base(initializer)
+        public App(IPlatformInitializer initializer = null) : base(initializer)
         {
         }
 
@@ -26,6 +25,8 @@ namespace ReceptTracker
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+
+            containerRegistry.Register<IRecipeController, RecipeController>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();

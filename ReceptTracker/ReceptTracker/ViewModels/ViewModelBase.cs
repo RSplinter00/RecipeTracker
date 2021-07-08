@@ -2,9 +2,8 @@
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
+using ReceptTracker.Controllers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ReceptTracker.ViewModels
 {
@@ -12,13 +11,15 @@ namespace ReceptTracker.ViewModels
     {
         protected INavigationService NavigationService { get; private set; }
         protected IPageDialogService DialogService { get; private set; }
+        protected IRecipeController RecipeController { get; private set; }
 
         public DelegateCommand<string> NavigateCommand { get; }
 
-        public ViewModelBase(INavigationService navigationService, IPageDialogService pageDialogService)
+        public ViewModelBase(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController)
         {
             NavigationService = navigationService;
             DialogService = pageDialogService;
+            RecipeController = recipeController;
 
             NavigateCommand = new DelegateCommand<string>(NavigateToPageAsync);
         }
