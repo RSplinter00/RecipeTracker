@@ -10,6 +10,7 @@ namespace ReceptTracker.ViewModels
     public class DisplayRecipePageViewModel : ViewModelBase
     {
         public DelegateCommand EditRecipeCommand { get; }
+        private int recipeID = -1;
 
         private Recipe recipe;
         public Recipe Recipe
@@ -27,16 +28,18 @@ namespace ReceptTracker.ViewModels
         {
             var parameters = new NavigationParameters
             {
-                { "Recipe", Recipe }
+                { "SelectedRecipe", Recipe.ID }
             };
 
             NavigateToPageAsync("EditRecipePage", parameters);
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("SelectedRecipe")) Recipe = (Recipe)parameters["SelectedRecipe"];
-            else if (Recipe == null) Recipe = new Recipe("New Recipe", "Add category", new TimeSpan());
+            if (parameters.ContainsKey("SelectedRecipe")) recipeID = (int)parameters["SelectedRecipe"];
+
+            if (recipeID != -1) Recipe = await RecipeController.GetRecipeAsync(recipeID);
+            else Recipe = new Recipe("New Recipe", "Add category", new TimeSpan());
         }
     }
 }

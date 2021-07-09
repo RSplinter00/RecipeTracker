@@ -27,7 +27,7 @@ namespace ReceptTracker.ViewModels
         {
             var parameters = new NavigationParameters
             {
-                { "SelectedRecipe", selectedRecipe }
+                { "SelectedRecipe", selectedRecipe.ID }
             };
 
             NavigateToPageAsync("DisplayRecipePage", parameters);
