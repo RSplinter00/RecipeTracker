@@ -9,6 +9,7 @@ namespace ReceptTracker.ViewModels
 {
     public class EditRecipePageViewModel : ViewModelBase
     {
+        private bool createMode = false;
         public DelegateCommand OnCancelCommand { get; }
         public DelegateCommand OnSubmitCommand { get; }
 
@@ -40,11 +41,26 @@ namespace ReceptTracker.ViewModels
 
         public async void OnSubmit()
         {
-            var response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden. Weer u het zeker?", "Ja", "Nee");
-            if (response)
+            if (createMode)
             {
                 await RecipeController.SaveRecipeAsync(Recipe);
-                GoBackAsync();
+
+                var parameters = new NavigationParameters
+                {
+                    { "SelectedRecipe", Recipe.ID }
+                };
+
+                NavigateToPageAsync("../DisplayRecipePage", parameters);
+            }
+            else
+            {
+                var response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden. Weer u het zeker?", "Ja", "Nee");
+
+                if (response)
+                {
+                    await RecipeController.SaveRecipeAsync(Recipe);
+                    GoBackAsync();
+                }
             }
         }
 
@@ -55,8 +71,12 @@ namespace ReceptTracker.ViewModels
                 var recipeID = (int)parameters["SelectedRecipe"];
                 Recipe = await RecipeController.GetRecipeAsync(recipeID);
             }
-            
-            if (Recipe == null) Recipe = new Recipe("New Recipe", "Add category", new TimeSpan());
+
+            if (Recipe == null)
+            {
+                Recipe = new Recipe();
+                createMode = true;
+            }
         }
     }
 }

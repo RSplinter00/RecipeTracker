@@ -10,19 +10,21 @@
             <Style TargetType="Label" x:Key="Header" BasedOn="{StaticResource BaseLabel}">
                 <Setter Property="FontSize" Value="22"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="Margin" Value="0,10,0,0"/>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="DeleteRecipeIcon" Command="{Binding DeleteRecipeCommand}"/>
         <ToolbarItem IconImageSource="EditRecipeIcon" Command="{Binding EditRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <ScrollView Margin="10,10,10,10">
-        <StackLayout>
+    <ScrollView>
+        <StackLayout Margin="10" Spacing="0">
             <Label Text="{Binding Recipe.Title}" Style="{StaticResource RecipeTitle}"/>
 
-            <StackLayout BackgroundColor="LightGray" Padding="20" HorizontalOptions="StartAndExpand">
+            <StackLayout BackgroundColor="LightGray" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
                 <Label Text="{Binding Recipe.Category, StringFormat='Categorie: {0}'}"
                        IsVisible="{Binding Recipe.Category, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.Duration, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min'}"
@@ -31,34 +33,14 @@
                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
             </StackLayout>
 
-            <StackLayout IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
-                <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
-                <Label Text="{Binding Recipe.Ingredients}"/>
-                <!-- <StackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="0" Padding="15,0,0,0">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Label Text="{Binding ., StringFormat='- {0}'}"/>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout> -->
-            </StackLayout>
+            <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
+            <Label Text="{Binding Recipe.Ingredients}"/>
 
-            <StackLayout IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
-                <Label Text="Benodigden" Style="{StaticResource Header}"/>
-                <Label Text="{Binding Recipe.Requirements}"/>
-                <!--<StackLayout BindableLayout.ItemsSource="{Binding Recipe.Requirements}" Spacing="0" Padding="15,0,0,0">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Label Text="{Binding ., StringFormat='- {0}'}"/>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>-->
-            </StackLayout>
+            <Label Text="Benodigden" Style="{StaticResource Header}"/>
+            <Label Text="{Binding Recipe.Requirements}"/>
 
-            <StackLayout IsVisible="{Binding Recipe.Preparation, Converter={StaticResource NullToBoolConverter}}" Spacing="0">
-                <Label Text="Bereiding" Style="{StaticResource Header}"/>
-                <Label Text="{Binding Recipe.Preparation}"/>
-            </StackLayout>
+            <Label Text="Bereiding" Style="{StaticResource Header}"/>
+            <Label Text="{Binding Recipe.Preparation}"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>
