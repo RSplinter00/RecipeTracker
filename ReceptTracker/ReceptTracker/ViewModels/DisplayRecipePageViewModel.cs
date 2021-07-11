@@ -10,6 +10,7 @@ namespace ReceptTracker.ViewModels
     {
         public DelegateCommand DeleteRecipeCommand { get; }
         public DelegateCommand EditRecipeCommand { get; }
+
         private int recipeID = -1;
 
         private Recipe recipe;

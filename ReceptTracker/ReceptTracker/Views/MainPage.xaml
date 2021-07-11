@@ -17,7 +17,7 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="AddRecipeIcon" Command="{Binding AddRecipeCommand}"/>
+        <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding OnRefreshCommand}">

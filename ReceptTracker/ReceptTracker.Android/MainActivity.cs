@@ -15,6 +15,8 @@ namespace ReceptTracker.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
+
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

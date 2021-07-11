@@ -21,6 +21,7 @@ namespace ReceptTracker.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            global::Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
 

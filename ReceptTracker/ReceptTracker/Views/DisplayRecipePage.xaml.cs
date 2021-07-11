@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using ReceptTracker.ViewModels;
+using Xamarin.Forms;
 
 namespace ReceptTracker.Views
 {
