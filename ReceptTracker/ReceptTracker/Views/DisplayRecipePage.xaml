@@ -15,6 +15,7 @@
 
             <Style TargetType="xct:Expander">
                 <Setter Property="Margin" Value="0,10,0,0"/>
+                <Setter Property="IsExpanded" Value="True"/>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -25,7 +26,7 @@
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <StackLayout Margin="10" Spacing="0">
+        <StackLayout Margin="10,10,10,0" Spacing="0">
             <Label Text="{Binding Recipe.Title}" Style="{StaticResource RecipeTitle}"/>
 
             <StackLayout BackgroundColor="LightGray" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
@@ -37,7 +38,7 @@
                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
             </StackLayout>
 
-            <xct:Expander x:Name="ingredientsExpander">
+            <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -58,7 +59,7 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="requirementsExpander">
+            <xct:Expander x:Name="requirementsExpander" ForceUpdateSizeCommand="{Binding ForceRequirementsUpdateSizeCommand}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -79,7 +80,7 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="preparationExpander">
+            <xct:Expander x:Name="preparationExpander" ForceUpdateSizeCommand="{Binding ForcePreparationUpdateSizeCommand}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -99,6 +100,9 @@
                     </DataTemplate>
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
+
+            <!-- Prevents the last line from being cut off due to the margin -->
+            <Label/>
         </StackLayout>
     </ScrollView>
 </ContentPage>
