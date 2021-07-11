@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReceptTracker.Views.MainPage"
-             Title="Main Page">
+             Title="Recepten">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label" x:Key="RecipeSubTitle" BasedOn="{StaticResource BaseLabel}">

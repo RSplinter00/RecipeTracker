@@ -6,7 +6,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              NavigationPage.HasBackButton="False"
              x:Class="ReceptTracker.Views.EditRecipePage"
-             Title="{Binding Recipe.Title}">
+             Title="{Binding PageName}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="StackLayout" x:Key="RecipePropertyLayout">

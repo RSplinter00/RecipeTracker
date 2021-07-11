@@ -3,13 +3,29 @@ using Prism.Navigation;
 using Prism.Services;
 using ReceptTracker.Controllers;
 using ReceptTracker.Models;
-using System;
 
 namespace ReceptTracker.ViewModels
 {
     public class EditRecipePageViewModel : ViewModelBase
     {
-        private bool createMode = false;
+        private string pageName;
+        public string PageName
+        {
+            get => pageName;
+            set => SetProperty(ref pageName, value);
+        }
+        private bool createMode;
+        protected bool CreateMode
+        {
+            get => createMode;
+            set
+            {
+                SetProperty(ref createMode, value);
+
+                if (createMode) PageName = "Nieuw recept";
+                else PageName = "Recept wijzigen";
+            }
+        }
         public DelegateCommand OnCancelCommand { get; }
         public DelegateCommand OnSubmitCommand { get; }
 
@@ -75,8 +91,9 @@ namespace ReceptTracker.ViewModels
             if (Recipe == null)
             {
                 Recipe = new Recipe();
-                createMode = true;
+                CreateMode = true;
             }
+            else CreateMode = false;
         }
     }
 }

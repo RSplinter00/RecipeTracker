@@ -65,8 +65,6 @@ namespace ReceptTracker.ViewModels
 
             if (recipeID != -1) Recipe = await RecipeController.GetRecipeAsync(recipeID);
 
-            var prep = Recipe.Preparation;
-
             if (Recipe == null)
             {
                 await DialogService.DisplayAlertAsync("Niet gevonden!", "Het recept kan niet geladen worden.", "OK");

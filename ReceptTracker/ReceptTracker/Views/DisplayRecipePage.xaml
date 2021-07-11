@@ -5,7 +5,7 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ReceptTracker.Views.DisplayRecipePage"
-             Title="{Binding Recipe.Title}">
+             Title="Recept overzicht">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label" x:Key="Header" BasedOn="{StaticResource BaseLabel}">
@@ -38,7 +38,8 @@
                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
             </StackLayout>
 
-            <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}">
+            <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -59,7 +60,8 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="requirementsExpander" ForceUpdateSizeCommand="{Binding ForceRequirementsUpdateSizeCommand}">
+            <xct:Expander x:Name="requirementsExpander" ForceUpdateSizeCommand="{Binding ForceRequirementsUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -80,7 +82,8 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="preparationExpander" ForceUpdateSizeCommand="{Binding ForcePreparationUpdateSizeCommand}">
+            <xct:Expander x:Name="preparationExpander" ForceUpdateSizeCommand="{Binding ForcePreparationUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.Preparation, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
