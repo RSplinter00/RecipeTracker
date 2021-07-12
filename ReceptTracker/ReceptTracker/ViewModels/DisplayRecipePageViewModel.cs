@@ -12,7 +12,7 @@ namespace ReceptTracker.ViewModels
 #nullable enable
         public ICommand? ForceIngredientsUpdateSizeCommand { get; set; }
         public ICommand? ForceRequirementsUpdateSizeCommand { get; set; }
-        public ICommand? ForcePreparationUpdateSizeCommand { get; set; }
+        public ICommand? ForceStepsUpdateSizeCommand { get; set; }
 #nullable disable
         public DelegateCommand DeleteRecipeCommand { get; }
         public DelegateCommand EditRecipeCommand { get; }
@@ -28,7 +28,7 @@ namespace ReceptTracker.ViewModels
                 SetProperty(ref recipe, value);
                 ForceIngredientsUpdateSizeCommand?.Execute(null);
                 ForceRequirementsUpdateSizeCommand?.Execute(null);
-                ForcePreparationUpdateSizeCommand?.Execute(null);
+                ForceStepsUpdateSizeCommand?.Execute(null);
             }
         }
 

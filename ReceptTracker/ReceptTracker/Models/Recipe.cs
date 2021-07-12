@@ -8,23 +8,29 @@ namespace ReceptTracker.Models
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public string Category { get; set; }
-        public TimeSpan Duration { get; set; }
+        // Time it takes to prepare the recipe
+        public TimeSpan PrepTime { get; set; }
+        // Time it takes for the meat to rest
+        public TimeSpan RestTime { get; set; }
+        // Time it takes to cook the meal
+        public TimeSpan CookingTime { get; set; }
+        // Sum of all timespans
+        public TimeSpan TotalDuration
+        {
+            get => PrepTime + RestTime + CookingTime;
+        }
         public string Method { get; set; }
+        public int NumPortions { get; set; }
+        public string Description { get; set; }
         public string Ingredients { get; set; }
         public string Requirements { get; set; }
-        public string Preparation { get; set; }
+        public string Steps { get; set; }
+        public string ServeTip { get; set; }
 
         public Recipe()
         {
-        }
-
-        public Recipe(string title, string category, TimeSpan duration) : base()
-        {
-            Title = title;
-            Category = category;
-            Duration = duration;
         }
     }
 }

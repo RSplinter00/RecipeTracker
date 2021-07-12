@@ -27,14 +27,14 @@
                     <DataTemplate>
                         <Frame>
                             <StackLayout>
-                                <Label Text="{Binding Title}" Style="{StaticResource RecipeTitle}"/>
+                                <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
 
                                 <StackLayout Orientation="Horizontal">
                                     <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
                                     <Label Text="{Binding Category}" Style="{StaticResource RecipeSubTitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
 
                                     <Image Source="Duration.png" Margin="10,0,0,0"/>
-                                    <Label Text="{Binding Duration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubTitle}"/>
+                                    <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubTitle}"/>
                                 </StackLayout>
                             </StackLayout>
 

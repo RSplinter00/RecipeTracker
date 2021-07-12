@@ -27,13 +27,21 @@
 
     <ScrollView>
         <StackLayout Margin="10,10,10,0" Spacing="0">
-            <Label Text="{Binding Recipe.Title}" Style="{StaticResource RecipeTitle}"/>
+            <Label Text="{Binding Recipe.Name}" Style="{StaticResource RecipeTitle}"/>
 
-            <StackLayout BackgroundColor="LightGray" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
+            <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
                 <Label Text="{Binding Recipe.Category, StringFormat='Categorie: {0}'}"
                        IsVisible="{Binding Recipe.Category, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.Duration, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min'}"
-                       IsVisible="{Binding Recipe.Duration, Converter={StaticResource NullToBoolConverter}}"/>
+
+                <Label Text="{Binding Recipe.PrepTime, StringFormat='Voorbereidingstijd: {0:%h} uur {0:%m} min.'}"
+                       IsVisible="{Binding Recipe.PrepTime, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.RestTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"
+                       IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.CookingTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
+                       IsVisible="{Binding Recipe.CookingTime, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}"
+                       IsVisible="{Binding Recipe.TotalDuration, Converter={StaticResource NullToBoolConverter}}"/>
+                
                 <Label Text="{Binding Recipe.Method, StringFormat='Methode: {0}'}"
                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
             </StackLayout>
@@ -82,13 +90,13 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="preparationExpander" ForceUpdateSizeCommand="{Binding ForcePreparationUpdateSizeCommand}"
-                          IsVisible="{Binding Recipe.Preparation, Converter={StaticResource NullToBoolConverter}}">
+            <xct:Expander x:Name="stepsExpander" ForceUpdateSizeCommand="{Binding ForceStepsUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.Steps, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
                             <Image.Triggers>
-                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference preparationExpander}, Path=IsExpanded}" Value="True">
+                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference stepsExpander}, Path=IsExpanded}" Value="True">
                                     <Setter Property="Source" Value="CollapseIcon.png" />
                                 </DataTrigger>
                             </Image.Triggers>
@@ -99,7 +107,7 @@
 
                 <xct:Expander.ContentTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Recipe.Preparation}"/>
+                        <Label Text="{Binding Recipe.Steps}"/>
                     </DataTemplate>
                 </xct:Expander.ContentTemplate>
             </xct:Expander>

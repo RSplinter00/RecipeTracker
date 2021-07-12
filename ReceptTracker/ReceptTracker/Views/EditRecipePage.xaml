@@ -46,7 +46,7 @@
 
     <StackLayout Spacing="0">
         <ScrollView>
-            <StackLayout Margin="20,20,20,0" Spacing="0">
+            <StackLayout Margin="20,20,20,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -59,13 +59,12 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Editor for Title property -->
-                    <Label Text="Titel:" Grid.Row="0" Style="{StaticResource RecipeProperty}"/>
+                    <!-- Editor for Name property -->
+                    <Label Text="Naam:" Grid.Row="0" Style="{StaticResource RecipeProperty}"/>
                     <Frame Grid.Row="0" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Titel" Text="{Binding Recipe.Title}"/>
+                        <Entry Placeholder="Titel" Text="{Binding Recipe.Name}"/>
                     </Frame>
 
                     <!-- Editor for Category property -->
@@ -74,15 +73,27 @@
                         <Entry Placeholder="Categorie" Text="{Binding Recipe.Category}"/>
                     </Frame>
 
-                    <!-- Editor for Duration property -->
-                    <Label Grid.Row="2" Text="Duur:" Style="{StaticResource RecipeProperty}"/>
+                    <!-- Editor for PrepTime property -->
+                    <Label Grid.Row="2" Text="Voorbereidingstijd:" Style="{StaticResource RecipeProperty}"/>
                     <Frame Grid.Row="2" Style="{StaticResource EditRecipePropertyFrame}">
-                        <TimePicker Format="HH:mm" Time="{Binding Recipe.Duration}"/>
+                        <TimePicker Format="HH:mm" Time="{Binding Recipe.PrepTime}"/>
+                    </Frame>
+
+                    <!-- Editor for CookingTime property -->
+                    <Label Grid.Row="3" Text="Bereidingstijd:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Grid.Row="3" Style="{StaticResource EditRecipePropertyFrame}">
+                        <TimePicker Format="HH:mm" Time="{Binding Recipe.CookingTime}"/>
+                    </Frame>
+
+                    <!-- Editor for RestTime property -->
+                    <Label Grid.Row="4" Text="Rusttijd:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Grid.Row="4" Style="{StaticResource EditRecipePropertyFrame}">
+                        <TimePicker Format="HH:mm" Time="{Binding Recipe.RestTime}"/>
                     </Frame>
 
                     <!-- Editor for Method property -->
-                    <Label Grid.Row="3" Text="Methode:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="3" Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Grid.Row="5" Text="Methode:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Grid.Row="5" Style="{StaticResource EditRecipePropertyFrame}">
                         <Entry Placeholder="Methode" Text="{Binding Recipe.Method}"/>
                     </Frame>
                 </Grid>
@@ -100,10 +111,10 @@
                         <local:MultiLineEditor Placeholder="Benodigdheden" Text="{Binding Recipe.Requirements}" MaxHeight="235"/>
                     </Frame>
 
-                    <!-- Editor for Preparation property -->
+                    <!-- Editor for Steps property -->
                     <Label Text="Bereiding:" Style="{StaticResource RecipeProperty}"/>
                     <Frame Style="{StaticResource EditRecipePropertyFrame}">
-                        <local:MultiLineEditor Placeholder="Bereiding" Text="{Binding Recipe.Preparation}" MaxHeight="445"/>
+                        <local:MultiLineEditor Placeholder="Bereiding" Text="{Binding Recipe.Steps}" MaxHeight="445"/>
                     </Frame>
                 </StackLayout>
             </StackLayout>

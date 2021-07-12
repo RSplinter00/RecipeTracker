@@ -37,6 +37,23 @@ namespace ReceptTracker.Controllers
             else return recipeDatabase.InsertAsync(recipe);
         }
 
-        public Task<int> DeleteRecipeAsync(Recipe recipe) => recipeDatabase.DeleteAsync(recipe);
+        public async Task<int> DeleteRecipeAsync(Recipe recipe)
+        {
+            var response = await recipeDatabase.DeleteAsync(recipe);
+            await ResetID();
+            return response;
+        }
+
+        private async Task ResetID()
+        {
+            try
+            {
+                await recipeDatabase.ExecuteAsync("DELETE FROM sqlite_sequence where name = 'Recipe'");
+            }
+            catch (SQLiteException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }
