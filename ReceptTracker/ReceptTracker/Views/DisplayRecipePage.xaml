@@ -26,25 +26,53 @@
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <StackLayout Margin="10,10,10,0" Spacing="0">
+        <StackLayout Margin="10" Spacing="0">
             <Label Text="{Binding Recipe.Name}" Style="{StaticResource RecipeTitle}"/>
+            <Label Text="{Binding Recipe.Category, StringFormat='In: {0}'}" Margin="20,0,0,0"
+                   FontAttributes="Italic" Style="{StaticResource RecipeSubtitle}"/>
 
             <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
-                <Label Text="{Binding Recipe.Category, StringFormat='Categorie: {0}'}"
-                       IsVisible="{Binding Recipe.Category, Converter={StaticResource NullToBoolConverter}}"/>
-
                 <Label Text="{Binding Recipe.PrepTime, StringFormat='Voorbereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.PrepTime, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.RestTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.CookingTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.CookingTime, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}"
+                <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"
                        IsVisible="{Binding Recipe.TotalDuration, Converter={StaticResource NullToBoolConverter}}"/>
-                
+
                 <Label Text="{Binding Recipe.Method, StringFormat='Methode: {0}'}"
-                       IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
+                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.NumPortions, StringFormat='Porties: {0}'}"
+                        IsVisible="{Binding Recipe.NumPortions, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="Bekijk online" TextColor="Blue" TextDecorations="Underline"
+                        IsVisible="{Binding Recipe.OriginalRecipe, Converter={StaticResource NullToBoolConverter}}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToWebsiteCommand}" CommandParameter="{Binding Recipe.OriginalRecipe}"/>
+                    </Label.GestureRecognizers>
+                </Label>
             </StackLayout>
+
+            <xct:Expander x:Name="descriptionExpander" ForceUpdateSizeCommand="{Binding ForceDescriptionUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.Description, Converter={StaticResource NullToBoolConverter}}">
+                <xct:Expander.Header>
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="ExpandIcon.png">
+                            <Image.Triggers>
+                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference descriptionExpander}, Path=IsExpanded}" Value="True">
+                                    <Setter Property="Source" Value="CollapseIcon.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                        <Label Text="Beschrijving" Style="{StaticResource Header}"/>
+                    </StackLayout>
+                </xct:Expander.Header>
+                <xct:Expander.ContentTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Recipe.Description}"/>
+                    </DataTemplate>
+                </xct:Expander.ContentTemplate>
+            </xct:Expander>
 
             <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}"
                           IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
@@ -112,8 +140,27 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <!-- Prevents the last line from being cut off due to the margin -->
-            <Label/>
+            <xct:Expander x:Name="servetipsExpander" ForceUpdateSizeCommand="{Binding ForceServetipsUpdateSizeCommand}"
+                          IsVisible="{Binding Recipe.ServeTips, Converter={StaticResource NullToBoolConverter}}">
+                <xct:Expander.Header>
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="ExpandIcon.png">
+                            <Image.Triggers>
+                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference servetipsExpander}, Path=IsExpanded}" Value="True">
+                                    <Setter Property="Source" Value="CollapseIcon.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                        <Label Text="Serveertips" Style="{StaticResource Header}"/>
+                    </StackLayout>
+                </xct:Expander.Header>
+
+                <xct:Expander.ContentTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Recipe.ServeTips}"/>
+                    </DataTemplate>
+                </xct:Expander.ContentTemplate>
+            </xct:Expander>
         </StackLayout>
     </ScrollView>
 </ContentPage>

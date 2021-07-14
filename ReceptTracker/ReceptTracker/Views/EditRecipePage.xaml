@@ -96,9 +96,27 @@
                     <Frame Grid.Row="5" Style="{StaticResource EditRecipePropertyFrame}">
                         <Entry Placeholder="Methode" Text="{Binding Recipe.Method}"/>
                     </Frame>
+
+                    <!-- Editor for NumPortions property -->
+                    <Label Grid.Row="6" Text="Porties:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Grid.Row="6" Style="{StaticResource EditRecipePropertyFrame}">
+                        <Entry Placeholder="Porties" Text="{Binding Recipe.NumPortions, Converter={StaticResource DefaultValueConverter}}" Keyboard="Numeric"/>
+                    </Frame>
+
+                    <!-- Editor for OriginalRecipe property -->
+                    <Label Grid.Row="7" Text="Recept:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Grid.Row="7" Style="{StaticResource EditRecipePropertyFrame}">
+                        <Entry Placeholder="Link naar recept" Text="{Binding Recipe.OriginalRecipe}"/>
+                    </Frame>
                 </Grid>
 
                 <StackLayout>
+                    <!-- Editor for Description property -->
+                    <Label Text="Beschrijving:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                        <local:MultiLineEditor Placeholder="Beschrijving" Text="{Binding Recipe.Description}" MaxHeight="256"/>
+                    </Frame>
+                    
                     <!-- Editor for Ingredients property -->
                     <Label Text="Ingrediënten:" Style="{StaticResource RecipeProperty}"/>
                     <Frame Style="{StaticResource EditRecipePropertyFrame}">
@@ -115,6 +133,12 @@
                     <Label Text="Bereiding:" Style="{StaticResource RecipeProperty}"/>
                     <Frame Style="{StaticResource EditRecipePropertyFrame}">
                         <local:MultiLineEditor Placeholder="Bereiding" Text="{Binding Recipe.Steps}" MaxHeight="445"/>
+                    </Frame>
+
+                    <!-- Editor for ServeTips property -->
+                    <Label Text="Serveertips:" Style="{StaticResource RecipeProperty}"/>
+                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                        <local:MultiLineEditor Placeholder="Serveertips" Text="{Binding Recipe.ServeTips}" MaxHeight="235"/>
                     </Frame>
                 </StackLayout>
             </StackLayout>
