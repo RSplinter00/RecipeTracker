@@ -9,7 +9,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label" x:Key="Header" BasedOn="{StaticResource BaseLabel}">
-                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
 
@@ -27,10 +27,12 @@
 
     <ScrollView>
         <StackLayout Margin="10" Spacing="0">
+            <!-- Show recipe name and its category -->
             <Label Text="{Binding Recipe.Name}" Style="{StaticResource RecipeTitle}"/>
             <Label Text="{Binding Recipe.Category, StringFormat='In: {0}'}" Margin="20,0,0,0"
                    FontAttributes="Italic" Style="{StaticResource RecipeSubtitle}"/>
 
+            <!-- Textbox showing important properties of the recipe -->
             <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
                 <Label Text="{Binding Recipe.PrepTime, StringFormat='Voorbereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.PrepTime, Converter={StaticResource NullToBoolConverter}}"/>
@@ -47,12 +49,14 @@
                         IsVisible="{Binding Recipe.NumPortions, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="Bekijk online" TextColor="Blue" TextDecorations="Underline"
                         IsVisible="{Binding Recipe.OriginalRecipe, Converter={StaticResource NullToBoolConverter}}">
+                    <!-- Open the link in the webbrowser, after clicking it -->
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToWebsiteCommand}" CommandParameter="{Binding Recipe.OriginalRecipe}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </StackLayout>
 
+            <!-- Show an expander for the description -->
             <xct:Expander x:Name="descriptionExpander" ForceUpdateSizeCommand="{Binding ForceDescriptionUpdateSizeCommand}"
                           IsVisible="{Binding Recipe.Description, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
@@ -67,6 +71,7 @@
                         <Label Text="Beschrijving" Style="{StaticResource Header}"/>
                     </StackLayout>
                 </xct:Expander.Header>
+                
                 <xct:Expander.ContentTemplate>
                     <DataTemplate>
                         <Label Text="{Binding Recipe.Description}"/>
@@ -74,30 +79,57 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}"
-                          IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
-                <xct:Expander.Header>
-                    <StackLayout Orientation="Horizontal">
-                        <Image Source="ExpandIcon.png">
-                            <Image.Triggers>
-                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference ingredientsExpander}, Path=IsExpanded}" Value="True">
-                                    <Setter Property="Source" Value="CollapseIcon.png" />
-                                </DataTrigger>
-                            </Image.Triggers>
-                        </Image>
-                        <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
-                    </StackLayout>
-                </xct:Expander.Header>
+            <!-- Layout for the ingredients and requirements, if the device is in portrait -->
+            <StackLayout Spacing="0" x:Name="outerPortraitLayout">
+                <!-- Show an expander for the ingredients -->
+                <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}"
+                              IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
+                    <xct:Expander.Header>
+                        <StackLayout Orientation="Horizontal">
+                            <Image Source="ExpandIcon.png">
+                                <Image.Triggers>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference ingredientsExpander}, Path=IsExpanded}" Value="True">
+                                        <Setter Property="Source" Value="CollapseIcon.png" />
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
+                        </StackLayout>
+                    </xct:Expander.Header>
 
-                <xct:Expander.ContentTemplate>
-                    <DataTemplate>
-                        <Label Text="{Binding Recipe.Ingredients}"/>
-                    </DataTemplate>
-                </xct:Expander.ContentTemplate>
-            </xct:Expander>
+                    <xct:Expander.ContentTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Recipe.Ingredients}"/>
+                        </DataTemplate>
+                    </xct:Expander.ContentTemplate>
+                </xct:Expander>
 
-            <xct:Expander x:Name="requirementsExpander" ForceUpdateSizeCommand="{Binding ForceRequirementsUpdateSizeCommand}"
-                          IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}">
+                <!-- Show an expander for the requirements -->
+                <xct:Expander x:Name="requirementsExpander" ForceUpdateSizeCommand="{Binding ForceRequirementsUpdateSizeCommand}"
+                              IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}">
+                    <xct:Expander.Header>
+                        <StackLayout Orientation="Horizontal">
+                            <Image Source="ExpandIcon.png">
+                                <Image.Triggers>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference requirementsExpander}, Path=IsExpanded}" Value="True">
+                                        <Setter Property="Source" Value="CollapseIcon.png" />
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label Text="Benodigdheden" Style="{StaticResource Header}"/>
+                        </StackLayout>
+                    </xct:Expander.Header>
+
+                    <xct:Expander.ContentTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Recipe.Requirements}"/>
+                        </DataTemplate>
+                    </xct:Expander.ContentTemplate>
+                </xct:Expander>
+            </StackLayout>
+
+            <!-- Layout for the ingredients and requirements, if the device is in landscape -->
+            <xct:Expander x:Name="outerLandscapeLayout" ForceUpdateSizeCommand="{Binding ForceLandscapeUpdateSizeCommand}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -107,19 +139,45 @@
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <Label Text="Benodigdheden" Style="{StaticResource Header}"/>
+                        
+                        <StackLayout Orientation="Horizontal" Spacing="0">
+                            <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
+                            <Label Text=" en benodigdheden" Style="{StaticResource Header}"
+                                   IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}"/>
+                        </StackLayout>
                     </StackLayout>
                 </xct:Expander.Header>
 
                 <xct:Expander.ContentTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Recipe.Requirements}"/>
+                        <StackLayout Orientation="Horizontal" Spacing="30">
+                            <!-- Show the ingredients -->
+                            <Label IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Ingredienten &#10;" Style="{StaticResource Header}" FontSize="16"/>
+                                        <Span Text="{Binding Recipe.Ingredients}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <!-- Show the requirements -->
+                            <Label IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Benodigdheden &#10;" Style="{StaticResource Header}" FontSize="16"/>
+                                        <Span Text="{Binding Recipe.Requirements}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
                     </DataTemplate>
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
+            <!-- Show an expander for the steps -->
             <xct:Expander x:Name="stepsExpander" ForceUpdateSizeCommand="{Binding ForceStepsUpdateSizeCommand}"
-                          IsVisible="{Binding Recipe.Steps, Converter={StaticResource NullToBoolConverter}}">
+                        IsVisible="{Binding Recipe.Steps, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
@@ -140,6 +198,7 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
+            <!-- Show an expander for the serve tips -->
             <xct:Expander x:Name="servetipsExpander" ForceUpdateSizeCommand="{Binding ForceServetipsUpdateSizeCommand}"
                           IsVisible="{Binding Recipe.ServeTips, Converter={StaticResource NullToBoolConverter}}">
                 <xct:Expander.Header>

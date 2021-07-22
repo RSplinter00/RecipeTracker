@@ -17,6 +17,7 @@ namespace ReceptTracker.ViewModels
         public ICommand? ForceRequirementsUpdateSizeCommand { get; set; }
         public ICommand? ForceStepsUpdateSizeCommand { get; set; }
         public ICommand? ForceServetipsUpdateSizeCommand { get; set; }
+        public ICommand? ForceLandscapeUpdateSizeCommand { get; set; }
 #nullable disable
         public DelegateCommand DeleteRecipeCommand { get; }
         public DelegateCommand EditRecipeCommand { get; }
@@ -36,6 +37,7 @@ namespace ReceptTracker.ViewModels
                 ForceRequirementsUpdateSizeCommand?.Execute(null);
                 ForceStepsUpdateSizeCommand?.Execute(null);
                 ForceServetipsUpdateSizeCommand?.Execute(null);
+                ForceLandscapeUpdateSizeCommand?.Execute(null);
             }
         }
 
