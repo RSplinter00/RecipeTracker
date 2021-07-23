@@ -9,17 +9,23 @@
              Title="{Binding PageName}">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="StackLayout" x:Key="RecipePropertyLayout">
-                <Setter Property="Orientation" Value="Horizontal"/>
-            </Style>
+            <ColumnDefinitionCollection x:Key="dividerColumns">
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </ColumnDefinitionCollection>
 
-            <Style TargetType="Label" x:Key="RecipeProperty">
-                <Setter Property="Grid.Column" Value="0"/>
+            <Style TargetType="Label" x:Key="recipeProperty">
                 <Setter Property="FontSize" Value="16"/>
-                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HeightRequest" Value="45.3333333333333"/>
+            </Style>
+            <Style TargetType="Label" x:Key="removableProperty" BasedOn="{StaticResource recipeProperty}">
+                <Setter Property="TextDecorations" Value="Underline"/>
             </Style>
             
-            <Style TargetType="Frame" x:Key="EditRecipePropertyFrame">
+            <Style TargetType="Frame" x:Key="editRecipePropertyFrame">
                 <Setter Property="Grid.Column" Value="1"/>
                 <Setter Property="WidthRequest" Value="150"/>
                 <Setter Property="BorderColor" Value="DarkGray"/>
@@ -29,6 +35,10 @@
 
             <Style TargetType="Entry">
                 <Setter Property="ReturnType" Value="Next"/>
+            </Style>
+
+            <Style TargetType="TimePicker">
+                <Setter Property="Format" Value="HH:mm"/>
             </Style>
 
             <Style TargetType="local:MultiLineEditor">
@@ -41,6 +51,17 @@
                 <Setter Property="TextTransform" Value="None"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
+
+            <Style TargetType="BoxView">
+                <Setter Property="BackgroundColor" Value="Gray"/>
+                <Setter Property="HeightRequest" Value="4"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+            <Style TargetType="ImageButton">
+                <Setter Property="Source" Value="AddPropertyIcon.png"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -52,98 +73,158 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
 
-                    <!-- Editor for Name property -->
-                    <Label Text="Naam:" Grid.Row="0" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="0" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Titel" Text="{Binding Recipe.Name}"/>
-                    </Frame>
+                    <StackLayout Grid.Column="0">
+                        <Label Text="Naam:" Style="{StaticResource recipeProperty}"/>
+                        <Label Text="Categorie:" Style="{StaticResource recipeProperty}"/>
+                        <Label Text="Voorbereidingstijd:" Style="{StaticResource removableProperty}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='PrepTime'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="PrepTime"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Text="Bereidingstijd:" Style="{StaticResource recipeProperty}"/>
+                        <Label Text="Rusttijd:" Style="{StaticResource removableProperty}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='RestTime'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="RestTime"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Text="Methode:" Style="{StaticResource removableProperty}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Method'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="Method"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Text="Porties:" Style="{StaticResource removableProperty}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='NumPortions'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="NumPortions"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Text="Recept:" Style="{StaticResource removableProperty}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='OriginalRecipe'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="OriginalRecipe"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
 
-                    <!-- Editor for Category property -->
-                    <Label Grid.Row="1" Text="Categorie:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="1" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Categorie" Text="{Binding Recipe.Category}"/>
-                    </Frame>
+                    <StackLayout Grid.Column="1">
+                        <!-- Editor for Name property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}" x:Name="frame">
+                            <Entry Placeholder="Titel" Text="{Binding Recipe.Name}"/>
+                        </Frame>
 
-                    <!-- Editor for PrepTime property -->
-                    <Label Grid.Row="2" Text="Voorbereidingstijd:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="2" Style="{StaticResource EditRecipePropertyFrame}">
-                        <TimePicker Format="HH:mm" Time="{Binding Recipe.PrepTime}"/>
-                    </Frame>
+                        <!-- Editor for Category property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}">
+                            <Entry Placeholder="Categorie" Text="{Binding Recipe.Category}"/>
+                        </Frame>
 
-                    <!-- Editor for CookingTime property -->
-                    <Label Grid.Row="3" Text="Bereidingstijd:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="3" Style="{StaticResource EditRecipePropertyFrame}">
-                        <TimePicker Format="HH:mm" Time="{Binding Recipe.CookingTime}"/>
-                    </Frame>
+                        <!-- Editor for PrepTime property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='PrepTime'}">
+                            <TimePicker Format="HH:mm" Time="{Binding Recipe.PrepTime}"/>
+                        </Frame>
 
-                    <!-- Editor for RestTime property -->
-                    <Label Grid.Row="4" Text="Rusttijd:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="4" Style="{StaticResource EditRecipePropertyFrame}">
-                        <TimePicker Format="HH:mm" Time="{Binding Recipe.RestTime}"/>
-                    </Frame>
+                        <!-- Editor for CookingTime property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}">
+                            <TimePicker Format="HH:mm" Time="{Binding Recipe.CookingTime}"/>
+                        </Frame>
 
-                    <!-- Editor for Method property -->
-                    <Label Grid.Row="5" Text="Methode:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="5" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Methode" Text="{Binding Recipe.Method}"/>
-                    </Frame>
+                        <!-- Editor for RestTime property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='RestTime'}">
+                            <TimePicker Format="HH:mm" Time="{Binding Recipe.RestTime}"/>
+                        </Frame>
 
-                    <!-- Editor for NumPortions property -->
-                    <Label Grid.Row="6" Text="Porties:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="6" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Porties" Text="{Binding Recipe.NumPortions, Converter={StaticResource DefaultValueConverter}}" Keyboard="Numeric"/>
-                    </Frame>
+                        <!-- Editor for Method property -->
+                        <Frame  Style="{StaticResource editRecipePropertyFrame}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Method'}">
+                            <Entry Placeholder="Methode" Text="{Binding Recipe.Method}"/>
+                        </Frame>
 
-                    <!-- Editor for OriginalRecipe property -->
-                    <Label Grid.Row="7" Text="Recept:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Grid.Row="7" Style="{StaticResource EditRecipePropertyFrame}">
-                        <Entry Placeholder="Link naar recept" Text="{Binding Recipe.OriginalRecipe}"/>
-                    </Frame>
+                        <!-- Editor for NumPortions property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}"
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='NumPortions'}">
+                            <Entry Placeholder="Porties" Text="{Binding Recipe.NumPortions, Converter={StaticResource DefaultValueConverter}}" Keyboard="Numeric"/>
+                        </Frame>
+
+                        <!-- Editor for OriginalRecipe property -->
+                        <Frame Style="{StaticResource editRecipePropertyFrame}" 
+                               IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='OriginalRecipe'}">
+                            <Entry Placeholder="Link naar recept" Text="{Binding Recipe.OriginalRecipe}"/>
+                        </Frame>
+                    </StackLayout>
                 </Grid>
 
-                <StackLayout>
+                <!-- Divider with a button to add new properties -->
+                <Grid ColumnSpacing="10" ColumnDefinitions="{StaticResource dividerColumns}">
+                    <BoxView Grid.Column="0"/>
+                    <ImageButton Command="{Binding OnAddPropertyCommand}" Grid.Column="1"/>
+                    <BoxView Grid.Column="2"/>
+                </Grid>
+
+                <StackLayout Spacing="0">
                     <!-- Editor for Description property -->
-                    <Label Text="Beschrijving:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Text="Beschrijving:" Style="{StaticResource removableProperty}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Description'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="Description"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Frame Style="{StaticResource editRecipePropertyFrame}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Description'}">
                         <local:MultiLineEditor Placeholder="Beschrijving" Text="{Binding Recipe.Description}" MaxHeight="256"/>
                     </Frame>
                     
                     <!-- Editor for Ingredients property -->
-                    <Label Text="Ingrediënten:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Text="Ingrediënten:" Style="{StaticResource recipeProperty}"/>
+                    <Frame Style="{StaticResource editRecipePropertyFrame}">
                         <local:MultiLineEditor Placeholder="Ingrediënten" Text="{Binding Recipe.Ingredients}" MaxHeight="256"/>
                     </Frame>
 
                     <!-- Editor for Requirements property -->
-                    <Label Text="Benodigdheden:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Text="Benodigdheden:" Style="{StaticResource removableProperty}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Requirements'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="Requirements"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Frame Style="{StaticResource editRecipePropertyFrame}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='Requirements'}">
                         <local:MultiLineEditor Placeholder="Benodigdheden" Text="{Binding Recipe.Requirements}" MaxHeight="235"/>
                     </Frame>
 
                     <!-- Editor for Steps property -->
-                    <Label Text="Bereiding:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Text="Bereiding:" Style="{StaticResource recipeProperty}"/>
+                    <Frame Style="{StaticResource editRecipePropertyFrame}">
                         <local:MultiLineEditor Placeholder="Bereiding" Text="{Binding Recipe.Steps}" MaxHeight="445"/>
                     </Frame>
 
                     <!-- Editor for ServeTips property -->
-                    <Label Text="Serveertips:" Style="{StaticResource RecipeProperty}"/>
-                    <Frame Style="{StaticResource EditRecipePropertyFrame}">
+                    <Label Text="Serveertips:" Style="{StaticResource removableProperty}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='ServeTips'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OnRemovePropertyCommand}" CommandParameter="ServeTips"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Frame Style="{StaticResource editRecipePropertyFrame}"
+                           IsVisible="{Binding ShowProperties, Converter={StaticResource ShowPropertyConverter}, ConverterParameter='ServeTips'}">
                         <local:MultiLineEditor Placeholder="Serveertips" Text="{Binding Recipe.ServeTips}" MaxHeight="235"/>
                     </Frame>
                 </StackLayout>
+
+                <!-- Divider with a button to add new properties -->
+                <Grid ColumnSpacing="10" ColumnDefinitions="{StaticResource dividerColumns}">
+                    <BoxView Grid.Column="0"/>
+                    <ImageButton Grid.Column="1"/>
+                    <BoxView Grid.Column="2"/>
+                </Grid>
             </StackLayout>
         </ScrollView>
 
+        <!-- Cancel And save buttons -->
         <StackLayout Margin="0,10,0,10" Orientation="Horizontal" HorizontalOptions="Center">
             <Button Text="Cancel" BackgroundColor="Red" Command="{Binding OnCancelCommand}"/>
             <Button Text="Save" BackgroundColor="#228B22" Command="{Binding OnSubmitCommand}"/>

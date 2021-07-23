@@ -48,7 +48,7 @@ namespace ReceptTracker.Controllers
         {
             try
             {
-                await recipeDatabase.ExecuteAsync("DELETE FROM sqlite_sequence where name = 'Recipe'");
+                await recipeDatabase.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name = 'Recipe'");
             }
             catch (SQLiteException e)
             {

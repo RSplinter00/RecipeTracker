@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using SQLite;
+using System.Collections.Generic;
 
 namespace ReceptTracker.Models
 {
@@ -33,5 +34,17 @@ namespace ReceptTracker.Models
         public Recipe()
         {
         }
+
+        public static readonly Dictionary<string, string> EnToDutchTranslation = new Dictionary<string, string>()
+        {
+            { "PrepTime", "Voorbereidingstijd" },
+            { "RestTime", "Rusttijd" },
+            { "Method", "Methode" },
+            { "NumPortions", "Aantal Porties" },
+            { "OriginalRecipe", "Recept" },
+            { "Description", "Beschrijving" },
+            { "Requirements", "Benodigdheden" },
+            { "ServeTips", "Serveertips" }
+        };
     }
 }

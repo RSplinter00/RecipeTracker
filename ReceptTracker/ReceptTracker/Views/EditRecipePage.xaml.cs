@@ -21,6 +21,7 @@ namespace ReceptTracker.Views
 
         protected override bool OnBackButtonPressed()
         {
+            var height = frame.Height;
             ClosePage();
             return true;
         }

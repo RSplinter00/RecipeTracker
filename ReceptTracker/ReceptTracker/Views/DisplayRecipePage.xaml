@@ -8,7 +8,7 @@
              Title="Recept overzicht">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="Label" x:Key="Header" BasedOn="{StaticResource BaseLabel}">
+            <Style TargetType="Label" x:Key="header" BasedOn="{StaticResource BaseLabel}">
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
@@ -36,10 +36,10 @@
             <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
                 <Label Text="{Binding Recipe.PrepTime, StringFormat='Voorbereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.PrepTime, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.RestTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"
-                       IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.CookingTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
+                <Label Text="{Binding Recipe.CookingTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.CookingTime, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.RestTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
+                       IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"
                        IsVisible="{Binding Recipe.TotalDuration, Converter={StaticResource NullToBoolConverter}}"/>
 
@@ -68,7 +68,7 @@
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <Label Text="Beschrijving" Style="{StaticResource Header}"/>
+                        <Label Text="Beschrijving" Style="{StaticResource header}"/>
                     </StackLayout>
                 </xct:Expander.Header>
                 
@@ -93,7 +93,7 @@
                                     </DataTrigger>
                                 </Image.Triggers>
                             </Image>
-                            <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
+                            <Label Text="Ingrediënten" Style="{StaticResource header}"/>
                         </StackLayout>
                     </xct:Expander.Header>
 
@@ -116,7 +116,7 @@
                                     </DataTrigger>
                                 </Image.Triggers>
                             </Image>
-                            <Label Text="Benodigdheden" Style="{StaticResource Header}"/>
+                            <Label Text="Benodigdheden" Style="{StaticResource header}"/>
                         </StackLayout>
                     </xct:Expander.Header>
 
@@ -141,8 +141,8 @@
                         </Image>
                         
                         <StackLayout Orientation="Horizontal" Spacing="0">
-                            <Label Text="Ingrediënten" Style="{StaticResource Header}"/>
-                            <Label Text=" en benodigdheden" Style="{StaticResource Header}"
+                            <Label Text="Ingrediënten" Style="{StaticResource header}"/>
+                            <Label Text=" en benodigdheden" Style="{StaticResource header}"
                                    IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}"/>
                         </StackLayout>
                     </StackLayout>
@@ -155,7 +155,7 @@
                             <Label IsVisible="{Binding Recipe.Ingredients, Converter={StaticResource NullToBoolConverter}}">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="Ingredienten &#10;" Style="{StaticResource Header}" FontSize="16"/>
+                                        <Span Text="Ingredienten &#10;" Style="{StaticResource header}" FontSize="16"/>
                                         <Span Text="{Binding Recipe.Ingredients}"/>
                                     </FormattedString>
                                 </Label.FormattedText>
@@ -165,7 +165,7 @@
                             <Label IsVisible="{Binding Recipe.Requirements, Converter={StaticResource NullToBoolConverter}}">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="Benodigdheden &#10;" Style="{StaticResource Header}" FontSize="16"/>
+                                        <Span Text="Benodigdheden &#10;" Style="{StaticResource header}" FontSize="16"/>
                                         <Span Text="{Binding Recipe.Requirements}"/>
                                     </FormattedString>
                                 </Label.FormattedText>
@@ -187,7 +187,7 @@
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <Label Text="Bereiding" Style="{StaticResource Header}"/>
+                        <Label Text="Bereiding" Style="{StaticResource header}"/>
                     </StackLayout>
                 </xct:Expander.Header>
 
@@ -210,7 +210,7 @@
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <Label Text="Serveertips" Style="{StaticResource Header}"/>
+                        <Label Text="Serveertips" Style="{StaticResource header}"/>
                     </StackLayout>
                 </xct:Expander.Header>
 

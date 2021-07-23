@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <c:NullToBoolConverter x:Key="NullToBoolConverter"/>
             <c:DefaultValueConverter x:Key="DefaultValueConverter"/>
+            <c:ShowPropertyConverter x:Key="ShowPropertyConverter"/>
 
             <Color x:Key="AppBackgroundColor">White</Color>
             

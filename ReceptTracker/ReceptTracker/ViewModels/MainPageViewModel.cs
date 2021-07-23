@@ -54,7 +54,7 @@ namespace ReceptTracker.ViewModels
             NavigateToPageAsync("DisplayRecipePage", parameters);
         }
 
-        public async override void OnNavigatedTo(INavigationParameters parameters)
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             OnRefresh();
         }
