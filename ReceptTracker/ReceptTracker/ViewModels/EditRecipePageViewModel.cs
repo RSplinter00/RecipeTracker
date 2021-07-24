@@ -110,28 +110,28 @@ namespace ReceptTracker.ViewModels
             var cancelButton = "Annuleer";
             var hiddenProperties = HideableProperties.Except(ShowProperties).ToArray();
 
-            for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToDutchTranslation[hiddenProperties[i]];
+            for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToNlTranslation(hiddenProperties[i]);
 
             var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
 
             if (action != cancelButton)
             {
-                action = Recipe.EnToDutchTranslation.FirstOrDefault(x => x.Value == action).Key;
+                action = Recipe.NlToEnTranslation(action);
 
                 ShowProperties.Add(action);
                 OnPropertyChanged("ShowProperties");
             }
         }
 
-        public async void OnRemovedPropertyPressed(string property)
+        public async void OnRemovedPropertyPressed(string propertyName)
         {
-            var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToDutchTranslation[property]} wilt verwijderen?", "Ja", "Nee");
+            var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
 
             if (response)
             {
-                Recipe.GetType().GetProperty(property).SetValue(Recipe, null);
+                Recipe.GetType().GetProperty(propertyName).SetValue(Recipe, null);
 
-                ShowProperties.Remove(property);
+                ShowProperties.Remove(propertyName);
 
                 OnPropertyChanged("Recipe");
                 OnPropertyChanged("ShowProperties");

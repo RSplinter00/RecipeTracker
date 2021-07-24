@@ -2,11 +2,30 @@
 using System;
 using SQLite;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReceptTracker.Models
 {
     public class Recipe : BindableBase
     {
+        private readonly Dictionary<string, string> EnNlTranslations = new Dictionary<string, string>()
+        {
+            { "Name", "Naam" },
+            { "Category", "Categorie" },
+            { "PrepTime", "Voorbereidingstijd" },
+            { "CookingTime", "Bereidingstijd" },
+            { "RestTime", "Rusttijd" },
+            { "TotalDuration", "Totale tijd" },
+            { "Method", "Methode" },
+            { "NumPortions", "Aantal Porties" },
+            { "OriginalRecipe", "Recept" },
+            { "Description", "Beschrijving" },
+            { "Ingredients", "Ingrediënten" },
+            { "Requirements", "Benodigdheden" },
+            { "Steps", "Bereidingswijze" },
+            { "ServeTips", "Serveertips" }
+        };
+        
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
         public string Name { get; set; }
@@ -18,6 +37,7 @@ namespace ReceptTracker.Models
         // Time it takes for the meat to rest
         public TimeSpan RestTime { get; set; }
         // Sum of all timespans
+        [Ignore]
         public TimeSpan TotalDuration
         {
             get => PrepTime + CookingTime + RestTime;
@@ -35,16 +55,28 @@ namespace ReceptTracker.Models
         {
         }
 
-        public static readonly Dictionary<string, string> EnToDutchTranslation = new Dictionary<string, string>()
+        public string EnToNlTranslation(string propertyName)
         {
-            { "PrepTime", "Voorbereidingstijd" },
-            { "RestTime", "Rusttijd" },
-            { "Method", "Methode" },
-            { "NumPortions", "Aantal Porties" },
-            { "OriginalRecipe", "Recept" },
-            { "Description", "Beschrijving" },
-            { "Requirements", "Benodigdheden" },
-            { "ServeTips", "Serveertips" }
-        };
+            try
+            {
+                return EnNlTranslations[propertyName];
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public string NlToEnTranslation(string propertyName)
+        {
+            try
+            {
+                return EnNlTranslations.FirstOrDefault(x => x.Value == propertyName).Key;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
     }
 }

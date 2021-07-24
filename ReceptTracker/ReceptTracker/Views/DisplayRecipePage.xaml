@@ -40,8 +40,7 @@
                        IsVisible="{Binding Recipe.CookingTime, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.RestTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"
-                       IsVisible="{Binding Recipe.TotalDuration, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"/>
 
                 <Label Text="{Binding Recipe.Method, StringFormat='Methode: {0}'}"
                         IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
