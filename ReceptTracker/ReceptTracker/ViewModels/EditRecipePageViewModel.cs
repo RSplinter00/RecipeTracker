@@ -112,7 +112,7 @@ namespace ReceptTracker.ViewModels
 
             for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToDutchTranslation[hiddenProperties[i]];
 
-            string action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
+            var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
 
             if (action != cancelButton)
             {
@@ -129,7 +129,11 @@ namespace ReceptTracker.ViewModels
 
             if (response)
             {
+                Recipe.GetType().GetProperty(property).SetValue(Recipe, null);
+
                 ShowProperties.Remove(property);
+
+                OnPropertyChanged("Recipe");
                 OnPropertyChanged("ShowProperties");
             }
         }
