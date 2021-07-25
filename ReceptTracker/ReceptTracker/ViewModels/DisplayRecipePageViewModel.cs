@@ -11,14 +11,12 @@ namespace ReceptTracker.ViewModels
 {
     public class DisplayRecipePageViewModel : ViewModelBase
     {
-#nullable enable
-        public ICommand? ForceDescriptionUpdateSizeCommand { get; set; }
-        public ICommand? ForceIngredientsUpdateSizeCommand { get; set; }
-        public ICommand? ForceRequirementsUpdateSizeCommand { get; set; }
-        public ICommand? ForceStepsUpdateSizeCommand { get; set; }
-        public ICommand? ForceServetipsUpdateSizeCommand { get; set; }
-        public ICommand? ForceLandscapeUpdateSizeCommand { get; set; }
-#nullable disable
+        public ICommand ForceDescriptionUpdateSizeCommand { get; set; }
+        public ICommand ForceIngredientsUpdateSizeCommand { get; set; }
+        public ICommand ForceRequirementsUpdateSizeCommand { get; set; }
+        public ICommand ForceStepsUpdateSizeCommand { get; set; }
+        public ICommand ForceServetipsUpdateSizeCommand { get; set; }
+        public ICommand ForceLandscapeUpdateSizeCommand { get; set; }
         public DelegateCommand DeleteRecipeCommand { get; }
         public DelegateCommand EditRecipeCommand { get; }
         public DelegateCommand<string> NavigateToWebsiteCommand { get; }

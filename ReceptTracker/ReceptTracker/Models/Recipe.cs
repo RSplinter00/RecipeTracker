@@ -1,12 +1,11 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using SQLite;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ReceptTracker.Models
 {
-    public class Recipe : BindableBase
+    public class Recipe
     {
         private readonly Dictionary<string, string> EnNlTranslations = new Dictionary<string, string>()
         {
@@ -71,7 +70,10 @@ namespace ReceptTracker.Models
         {
             try
             {
-                return EnNlTranslations.FirstOrDefault(x => x.Value == propertyName).Key;
+                var translation = EnNlTranslations.FirstOrDefault(x => x.Value == propertyName).Key;
+
+                if (translation == null) return "";
+                else return translation;
             }
             catch (Exception)
             {
