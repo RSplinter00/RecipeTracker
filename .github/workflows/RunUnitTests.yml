@@ -25,12 +25,12 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: dotnet restore ReceptTracker.Unit.csproj
+        run: dotnet restore ../../ReceptTracker/ReceptTracker.Unit/ReceptTracker.Unit.csproj
         
       # Build
       - name: Build
-        run: dotnet build ReceptTracker.Unit.csproj
+        run: dotnet build ../../ReceptTracker/ReceptTracker.Unit/ReceptTracker.Unit.csproj
         
       # Run unit tests
       - name: Run unit tests
-        run: dotnet test ReceptTracker.Unit.csproj
+        run: dotnet test ../../ReceptTracker/ReceptTracker.Unit/ReceptTracker.Unit.csproj
