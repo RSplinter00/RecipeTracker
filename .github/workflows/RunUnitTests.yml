@@ -21,6 +21,8 @@ jobs:
           nuget-version: latest
       - name: Restore dependencies
         run: dotnet restore ReceptTracker/ReceptTracker.Unit
+      - name: Restore NuGet packages
+        run: nuget restore ReceptTracker/ReceptTracker.Unit/ReceptTracker.Unit.csproj
       - name: Build
         run: dotnet build ReceptTracker/ReceptTracker.Unit --no-restore
       - name: Test
