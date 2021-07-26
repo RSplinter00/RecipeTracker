@@ -45,12 +45,6 @@ namespace ReceptTracker.Unit.Models
         };
 
         [TestMethod]
-        public void FailTest()
-        {
-            Assert.AreEqual(0, 1, "This should prevent the commit from being pushed.");
-        }
-
-        [TestMethod]
         public void TotalDuration_CalculatesSumOfTimeValues()
         {
             // Arrange
