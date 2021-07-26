@@ -16,13 +16,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
-      # Change directory to unit test directory
-      - name: Change directory
-        run: cd ReceptTracker/ReceptTracker.Unit
-        
-      - name: Print current path
-        run: echo %CD%
 
       # Setup dotnet
       - name: Setup dotnet
@@ -32,12 +25,12 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore ReceptTracker.Unit.csproj
         
       # Build
       - name: Build
-        run: dotnet build
+        run: dotnet build ReceptTracker.Unit.csproj
         
       # Run unit tests
       - name: Run unit tests
-        run: dotnet test
+        run: dotnet test ReceptTracker.Unit.csproj
