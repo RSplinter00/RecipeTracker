@@ -22,7 +22,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ReceptTracker/ReceptTracker.Unit
       - name: Restore NuGet packages
-        run: nuget restore ReceptTracker/ReceptTracker.Unit/packages.config
+        run: nuget restore ReceptTracker
       - name: Build
         run: dotnet build ReceptTracker/ReceptTracker.Unit --no-restore
       - name: Test
