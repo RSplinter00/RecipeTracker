@@ -1,0 +1,36 @@
+name: RunUnitTests
+# Triggers the workflow on push or pull request events
+on: [ push, pull_request ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  test:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet: [ '2.0', '4.7.2' ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Setup dotnet
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      # Installs dependencies
+      - name: Install dependencies
+        run: dotnet restore
+        
+      # Build
+      - name: Build
+        run: dotnet build
+        
+      # Run unit tests
+      - name: Run unit tests
+        run: dotnet test ReceptTracker/ReceptTracker.unit
