@@ -15,6 +15,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-version: latest
       - name: Restore dependencies
         run: dotnet restore ReceptTracker/ReceptTracker.Unit
       - name: Build
