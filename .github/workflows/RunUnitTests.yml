@@ -20,6 +20,9 @@ jobs:
       # Change directory to unit test directory
       - name: Change directory
         run: cd ReceptTracker/ReceptTracker.Unit
+        
+      - name: Print current path
+        run: echo %CD%
 
       # Setup dotnet
       - name: Setup dotnet
