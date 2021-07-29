@@ -15,6 +15,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
         protected Mock<INavigationService> NavigationServiceMock { get; }
         protected Mock<IPageDialogService> PageDialogServiceMock { get; }
         protected Mock<IRecipeController> RecipeControllerMock { get; }
+        protected Mock<IAuthenticationService> AuthServiceMock { get; }
 
         public ViewModelBaseTest()
         {
@@ -24,6 +25,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             NavigationServiceMock = MockRepository.Create<INavigationService>();
             PageDialogServiceMock = MockRepository.Create<IPageDialogService>();
             RecipeControllerMock = MockRepository.Create<IRecipeController>();
+            AuthServiceMock = MockRepository.Create<IAuthenticationService>();
         }
     }
 }
