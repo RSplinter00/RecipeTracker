@@ -12,14 +12,16 @@ namespace ReceptTracker.ViewModels
         protected INavigationService NavigationService { get; private set; }
         protected IPageDialogService DialogService { get; private set; }
         protected IRecipeController RecipeController { get; private set; }
+        protected IAuthenticationService AuthService { get; private set; }
 
         public DelegateCommand<string> NavigateCommand { get; }
 
-        public ViewModelBase(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController)
+        public ViewModelBase(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService)
         {
             NavigationService = navigationService;
             DialogService = pageDialogService;
             RecipeController = recipeController;
+            AuthService = authService;
 
             NavigateCommand = new DelegateCommand<string>(NavigateToPageAsync);
         }

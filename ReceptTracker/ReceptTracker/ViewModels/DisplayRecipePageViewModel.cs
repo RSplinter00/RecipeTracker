@@ -39,7 +39,7 @@ namespace ReceptTracker.ViewModels
             }
         }
 
-        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController) : base(navigationService, pageDialogService, recipeController)
+        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
         {
             DeleteRecipeCommand = new DelegateCommand(DeleteRecipe);
             EditRecipeCommand = new DelegateCommand(EditRecipe);

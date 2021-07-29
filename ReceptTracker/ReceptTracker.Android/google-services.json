@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "847002013531",
+    "project_id": "recipe-tracker-a3891",
+    "storage_bucket": "recipe-tracker-a3891.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847002013531:android:7cfdf8b81539c33e38547e",
+        "android_client_info": {
+          "package_name": "nl.splinter.recipetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847002013531-jenvacq68jqgdpt66a2p13ggg419b7j4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.splinter.recipetracker",
+            "certificate_hash": "9d47f7f0e5017b1f50947cd82abbec790dfb184f"
+          }
+        },
+        {
+          "client_id": "847002013531-rkh0g7mg7po0udvpbpfj1l59bfucohpe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrWHF8K-WtyZkHGo_OaleoS4NEe7nv_cM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847002013531-rkh0g7mg7po0udvpbpfj1l59bfucohpe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

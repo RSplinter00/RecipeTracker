@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReceptTracker.Views.MainPage"
+             NavigationPage.HasBackButton="False"
              Title="Recepten">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -12,6 +13,7 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Uitloggen" Order="Secondary" Command="{Binding OnLogoutCommand}"/>
         <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 

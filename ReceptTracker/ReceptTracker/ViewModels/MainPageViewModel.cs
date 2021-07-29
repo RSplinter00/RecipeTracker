@@ -1,15 +1,18 @@
-﻿using Prism.Commands;
+﻿using Plugin.GoogleClient;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using ReceptTracker.Controllers;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ReceptTracker.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        public DelegateCommand OnLogoutCommand { get; }
         public DelegateCommand OnRefreshCommand { get; }
         public DelegateCommand AddRecipeCommand { get; }
         public DelegateCommand<Recipe> RecipeSelectedCommand { get; }
@@ -28,11 +31,22 @@ namespace ReceptTracker.ViewModels
             private set => SetProperty(ref recipes, value);
         }
 
-        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController) : base(navigationService, pageDialogService, recipeController)
+        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
         {
+            OnLogoutCommand = new DelegateCommand(OnLogout);
             OnRefreshCommand = new DelegateCommand(OnRefresh);
             AddRecipeCommand = new DelegateCommand(() => NavigateToPageAsync("EditRecipePage"));
             RecipeSelectedCommand = new DelegateCommand<Recipe>(RecipeSelected);
+        }
+
+        public async void OnLogout()
+        {
+            var result = AuthService.Logout();
+
+            if (result) await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
+            else await DialogService.DisplayAlertAsync("Error", "Niet mogelijk om uit te loggen", "Ok");
+
+            OnNavigatedTo(null);
         }
 
         public async void OnRefresh()
@@ -54,8 +68,11 @@ namespace ReceptTracker.ViewModels
             NavigateToPageAsync("DisplayRecipePage", parameters);
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public async override void OnNavigatedTo(INavigationParameters parameters)
         {
+            var response = await AuthService.LoginAsync();
+            if (response != GoogleActionStatus.Completed) Debugger.Break();
+
             OnRefresh();
         }
     }

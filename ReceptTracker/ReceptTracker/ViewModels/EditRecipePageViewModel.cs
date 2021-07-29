@@ -47,7 +47,7 @@ namespace ReceptTracker.ViewModels
 
         public new event PropertyChangedEventHandler PropertyChanged;
 
-        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController) : base(navigationService, pageDialogService, recipeController)
+        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
         {
             OnCancelCommand = new DelegateCommand(OnCancelPressed);
             OnSubmitCommand = new DelegateCommand(OnSubmit);
