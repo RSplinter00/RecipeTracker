@@ -1,13 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
 
-namespace ReceptTracker.Unit.Models
+namespace ReceptTracker.Unit.UnitTests.Models
 {
-    [TestClass]
-    public class RecipeTest
+    [TestFixture]
+    class RecipeTest
     {
+        private TimeSpan PrepTime = new TimeSpan(1, 0, 0);
+        private readonly TimeSpan CookingTime = new TimeSpan(4, 0, 0);
+        private readonly TimeSpan RestTime = new TimeSpan(0, 30, 0);
+
         private readonly List<string> PropertyNamesEn = new List<string>
         {
             "Name",
@@ -44,45 +48,40 @@ namespace ReceptTracker.Unit.Models
             "Serveertips"
         };
 
-        [TestMethod]
-        public void TotalDuration_CalculatesSumOfTimeValues()
+        [TestCase(false, false, false)]
+        [TestCase(true, false, false)]
+        [TestCase(true, true, false)]
+        [TestCase(false, true, true)]
+        [TestCase(true, false, true)]
+        [TestCase(true, true, true)]
+        public void TotalDuration_CalculatesSumOfTimeValues(bool prepTime, bool cookingTime, bool restTime)
         {
             // Arrange
-            int numTestRecipes = 6;
-            TimeSpan prepTime = new TimeSpan(1, 0, 0);
-            TimeSpan cookingTime = new TimeSpan(4, 0, 0);
-            TimeSpan restTime = new TimeSpan(0, 30, 0);
-            
-            List<Recipe> recipes = new List<Recipe>();
-            for (int i = 0; i < numTestRecipes; i++) recipes.Add(new Recipe());
-
-            List<TimeSpan> expectedDurations = new List<TimeSpan>
-            {
-                new TimeSpan(),
-                prepTime,
-                prepTime + cookingTime,
-                cookingTime + restTime,
-                prepTime + restTime,
-                prepTime + cookingTime + restTime,
-            };
+            Recipe recipe = new Recipe();
+            TimeSpan expectedDuration = new TimeSpan();
 
             // Act
-            recipes[1].PrepTime = prepTime;
-            recipes[2].PrepTime = prepTime;
-            recipes[2].CookingTime = cookingTime;
-            recipes[3].CookingTime = cookingTime;
-            recipes[3].RestTime = restTime;
-            recipes[4].PrepTime = prepTime;
-            recipes[4].RestTime = restTime;
-            recipes[5].PrepTime = prepTime;
-            recipes[5].CookingTime = cookingTime;
-            recipes[5].RestTime = restTime;
+            if (prepTime)
+            {
+                recipe.PrepTime = PrepTime;
+                expectedDuration += PrepTime;
+            }
+            if (cookingTime)
+            {
+                recipe.CookingTime = CookingTime;
+                expectedDuration += CookingTime;
+            }
+            if (restTime)
+            {
+                recipe.RestTime = RestTime;
+                expectedDuration += RestTime;
+            }
 
             // Assert
-            for (int i = 0; i < recipes.Count; i++) Assert.AreEqual(recipes[i].TotalDuration, expectedDurations[i], "Total Duration incorrectly calculated.");
+            Assert.AreEqual(recipe.TotalDuration, expectedDuration, "Total Duration incorrectly calculated.");
         }
 
-        [TestMethod]
+        [Test]
         public void EnToNlTranslation_WithCorrectValue_ReturnsNlTranslation()
         {
             // Arrange
@@ -91,37 +90,29 @@ namespace ReceptTracker.Unit.Models
             // Act
             List<string> actualTranslations = new List<string>();
 
-            foreach (string propertyName in PropertyNamesEn)
-            {
-                actualTranslations.Add(recipe.EnToNlTranslation(propertyName));
-            }
+            foreach (string propertyName in PropertyNamesEn) actualTranslations.Add(recipe.EnToNlTranslation(propertyName));
 
             // Assert
-            for (int i = 0; i < actualTranslations.Count; i++)
-            {
-                Assert.AreEqual(PropertyNamesNl[i], actualTranslations[i], "English property incorrectly translated to Dutch.");
-            }
+            for (int i = 0; i < actualTranslations.Count; i++) Assert.AreEqual(PropertyNamesNl[i], actualTranslations[i], "English property incorrectly translated to Dutch.");
         }
 
-        [TestMethod]
-        public void EnToNlTranslation_WithIncorrectValue_ReturnsEmptyString()
+        [TestCase("IncorrectProperty")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void EnToNlTranslation_WithIncorrectValue_ReturnsEmptyString(string input)
         {
             // Arrange
             Recipe recipe = new Recipe();
             string expectedResult = "";
 
             // Act
-            string result_IncorrectValue = recipe.EnToNlTranslation("IncorrectProperty");
-            string result_EmptyString = recipe.EnToNlTranslation("");
-            string result_Null = recipe.EnToNlTranslation(null);
+            string result = recipe.EnToNlTranslation(input);
 
             // Assert
-            Assert.AreEqual(expectedResult, result_IncorrectValue, "Incorrect property name does not return empty string");
-            Assert.AreEqual(expectedResult, result_EmptyString, "Empty string input does not return empty string");
-            Assert.AreEqual(expectedResult, result_Null, "Null does not return empty string");
+            Assert.AreEqual(expectedResult, result, "Incorrect value does not return empty string");
         }
 
-        [TestMethod]
+        [Test]
         public void NlToEnTranslation_WithCorrectValue_ReturnsNlTranslation()
         {
             // Arrange
@@ -130,34 +121,26 @@ namespace ReceptTracker.Unit.Models
             // Act
             List<string> actualTranslations = new List<string>();
 
-            foreach (string propertyName in PropertyNamesNl)
-            {
-                actualTranslations.Add(recipe.NlToEnTranslation(propertyName));
-            }
+            foreach (string propertyName in PropertyNamesNl) actualTranslations.Add(recipe.NlToEnTranslation(propertyName));
 
             // Assert
-            for (int i = 0; i < actualTranslations.Count; i++)
-            {
-                Assert.AreEqual(PropertyNamesEn[i], actualTranslations[i], "Dutch property incorrectly translated to English.");
-            }
+            for (int i = 0; i < actualTranslations.Count; i++) Assert.AreEqual(PropertyNamesEn[i], actualTranslations[i], "Dutch property incorrectly translated to English.");
         }
 
-        [TestMethod]
-        public void NlToEnTranslation_WithIncorrectValue_ReturnsEmptyString()
+        [TestCase("IncorrectProperty")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void NlToEnTranslation_WithIncorrectValue_ReturnsEmptyString(string input)
         {
             // Arrange
             Recipe recipe = new Recipe();
             string expectedResult = "";
 
             // Act
-            string result_IncorrectValue = recipe.NlToEnTranslation("UnknownProperty");
-            string result_EmptyString = recipe.NlToEnTranslation("");
-            string result_Null = recipe.NlToEnTranslation(null);
+            string result = recipe.NlToEnTranslation(input);
 
             // Assert
-            Assert.AreEqual(expectedResult, result_IncorrectValue, "Incorrect property name does not return empty string");
-            Assert.AreEqual(expectedResult, result_EmptyString, "Empty string input does not return empty string");
-            Assert.AreEqual(expectedResult, result_Null, "Null does not return empty string");
+            Assert.AreEqual(expectedResult, result, "Incorrect value does not return empty string");
         }
     }
 }
