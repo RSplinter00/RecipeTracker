@@ -12,7 +12,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
         [SetUp]
         public void SetUp()
         {
-            MainPageViewModel = new MainPageViewModel(NavigationServiceMock.Object, PageDialogServiceMock.Object, RecipeControllerMock.Object, AuthServiceMock.Object);
+            MainPageViewModel = new MainPageViewModel(NavigationServiceMock.Object, PageDialogServiceMock.Object, AuthServiceMock.Object, FirebaseServiceMock.Object);
         }
     }
 }

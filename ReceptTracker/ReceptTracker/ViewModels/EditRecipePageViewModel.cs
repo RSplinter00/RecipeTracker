@@ -47,12 +47,12 @@ namespace ReceptTracker.ViewModels
 
         public new event PropertyChangedEventHandler PropertyChanged;
 
-        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
+        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
         {
             OnCancelCommand = new DelegateCommand(OnCancelPressed);
             OnSubmitCommand = new DelegateCommand(OnSubmit);
             OnAddPropertyCommand = new DelegateCommand(OnAddPropertyPressed);
-            OnRemovePropertyCommand = new DelegateCommand<string>(OnRemovedPropertyPressed);
+            OnRemovePropertyCommand = new DelegateCommand<string>(OnRemovePropertyPressed);
 
             HideableProperties = new List<string>
             {
@@ -84,11 +84,11 @@ namespace ReceptTracker.ViewModels
         {
             if (CreateMode)
             {
-                await RecipeController.SaveRecipeAsync(Recipe);
+                await FirebaseService.SaveRecipeAsync(Recipe);
 
                 var parameters = new NavigationParameters
                 {
-                    { "SelectedRecipe", Recipe.ID }
+                    { "SelectedRecipe", Recipe.Id }
                 };
 
                 NavigateToPageAsync("../DisplayRecipePage", parameters);
@@ -99,7 +99,7 @@ namespace ReceptTracker.ViewModels
 
                 if (response)
                 {
-                    await RecipeController.SaveRecipeAsync(Recipe);
+                    await FirebaseService.SaveRecipeAsync(Recipe);
                     GoBackAsync();
                 }
             }
@@ -123,7 +123,7 @@ namespace ReceptTracker.ViewModels
             }
         }
 
-        public async void OnRemovedPropertyPressed(string propertyName)
+        public async void OnRemovePropertyPressed(string propertyName)
         {
             var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
 
@@ -163,8 +163,8 @@ namespace ReceptTracker.ViewModels
         {
             if (parameters.ContainsKey("SelectedRecipe"))
             {
-                var recipeID = (int)parameters["SelectedRecipe"];
-                Recipe = await RecipeController.GetRecipeAsync(recipeID);
+                var recipeID = (Guid)parameters["SelectedRecipe"];
+                Recipe = await FirebaseService.GetRecipeAsync(recipeID);
 
                 PopulatePage();
             }

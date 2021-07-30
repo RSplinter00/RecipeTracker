@@ -2,6 +2,7 @@
 using SQLite;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ReceptTracker.Models
 {
@@ -27,6 +28,7 @@ namespace ReceptTracker.Models
         
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         // Time it takes to prepare the recipe
@@ -79,6 +81,11 @@ namespace ReceptTracker.Models
             {
                 return "";
             }
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

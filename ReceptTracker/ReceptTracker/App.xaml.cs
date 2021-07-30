@@ -28,8 +28,9 @@ namespace ReceptTracker
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
-            containerRegistry.Register<IRecipeController, RecipeController>();
+            //containerRegistry.Register<IRecipeController, RecipeController>();
             containerRegistry.Register<IAuthenticationService, GoogleAuthenticationService>();
+            containerRegistry.Register<IFirebaseService, FirebaseService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();

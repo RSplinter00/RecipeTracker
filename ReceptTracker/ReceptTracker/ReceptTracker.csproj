@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FirebaseDatabase.net" Version="4.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Plugin.GoogleClient" Version="2.1.12" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
@@ -38,4 +39,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<ItemGroup>
+		<None Remove="AppSettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="AppSettings.json" />
+	</ItemGroup>
 </Project>

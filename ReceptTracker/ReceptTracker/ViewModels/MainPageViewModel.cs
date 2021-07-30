@@ -31,7 +31,7 @@ namespace ReceptTracker.ViewModels
             private set => SetProperty(ref recipes, value);
         }
 
-        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
+        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
         {
             OnLogoutCommand = new DelegateCommand(OnLogout);
             OnRefreshCommand = new DelegateCommand(OnRefresh);
@@ -53,7 +53,7 @@ namespace ReceptTracker.ViewModels
         {
             IsRefreshing = true;
 
-            Recipes = await RecipeController.GetRecipesAsync();
+            Recipes = await FirebaseService.GetRecipesAsync();
 
             IsRefreshing = false;
         }
@@ -62,7 +62,7 @@ namespace ReceptTracker.ViewModels
         {
             var parameters = new NavigationParameters
             {
-                { "SelectedRecipe", selectedRecipe.ID }
+                { "SelectedRecipe", selectedRecipe.Id }
             };
 
             NavigateToPageAsync("DisplayRecipePage", parameters);

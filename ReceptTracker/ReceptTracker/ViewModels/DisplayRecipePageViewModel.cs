@@ -21,7 +21,7 @@ namespace ReceptTracker.ViewModels
         public DelegateCommand EditRecipeCommand { get; }
         public DelegateCommand<string> NavigateToWebsiteCommand { get; }
 
-        private int recipeID = -1;
+        private Guid recipeId;
 
         private Recipe recipe;
         public Recipe Recipe
@@ -39,7 +39,7 @@ namespace ReceptTracker.ViewModels
             }
         }
 
-        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IRecipeController recipeController, IAuthenticationService authService) : base(navigationService, pageDialogService, recipeController, authService)
+        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
         {
             DeleteRecipeCommand = new DelegateCommand(DeleteRecipe);
             EditRecipeCommand = new DelegateCommand(EditRecipe);
@@ -59,7 +59,7 @@ namespace ReceptTracker.ViewModels
 
             if (response)
             {
-                await RecipeController.DeleteRecipeAsync(Recipe);
+                await FirebaseService.DeleteRecipeAsync(Recipe.Id);
                 GoBackAsync();
             }
         }
@@ -68,7 +68,7 @@ namespace ReceptTracker.ViewModels
         {
             var parameters = new NavigationParameters
             {
-                { "SelectedRecipe", Recipe.ID }
+                { "SelectedRecipe", Recipe.Id }
             };
 
             NavigateToPageAsync("EditRecipePage", parameters);
@@ -76,9 +76,9 @@ namespace ReceptTracker.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("SelectedRecipe")) recipeID = (int)parameters["SelectedRecipe"];
+            if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
 
-            if (recipeID != -1) Recipe = await RecipeController.GetRecipeAsync(recipeID);
+            if (recipeId != null) Recipe = await FirebaseService.GetRecipeAsync(recipeId);
 
             if (Recipe == null)
             {

@@ -36,8 +36,7 @@
             <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
                 <Label Text="{Binding Recipe.PrepTime, StringFormat='Voorbereidingstijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.PrepTime, Converter={StaticResource NullToBoolConverter}}"/>
-                <Label Text="{Binding Recipe.CookingTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"
-                       IsVisible="{Binding Recipe.CookingTime, Converter={StaticResource NullToBoolConverter}}"/>
+                <Label Text="{Binding Recipe.CookingTime, StringFormat='Bereidingstijd: {0:%h} uur {0:%m} min.'}"/>
                 <Label Text="{Binding Recipe.RestTime, StringFormat='Rusttijd: {0:%h} uur {0:%m} min.'}"
                        IsVisible="{Binding Recipe.RestTime, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"/>
