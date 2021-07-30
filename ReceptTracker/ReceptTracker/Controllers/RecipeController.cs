@@ -10,7 +10,7 @@ namespace ReceptTracker.Controllers
     public interface IRecipeController
     {
         Task<List<Recipe>> GetRecipesAsync();
-        Task<Recipe> GetRecipeAsync(int id);
+        Task<Recipe> GetRecipeAsync(Guid id);
         Task<int> SaveRecipeAsync(Recipe recipe);
         Task<int> DeleteRecipeAsync(Recipe Recipe);
     }
@@ -29,12 +29,16 @@ namespace ReceptTracker.Controllers
 
         public Task<List<Recipe>> GetRecipesAsync() => recipeDatabase.Table<Recipe>().ToListAsync();
 
-        public Task<Recipe> GetRecipeAsync(int id) => recipeDatabase.Table<Recipe>().Where(i => i.ID == id).FirstOrDefaultAsync();
+        public Task<Recipe> GetRecipeAsync(Guid id) => recipeDatabase.Table<Recipe>().Where(i => i.Id == id).FirstOrDefaultAsync();
         
         public Task<int> SaveRecipeAsync(Recipe recipe)
         {
-            if (recipe.ID != 0) return recipeDatabase.UpdateAsync(recipe);
-            else return recipeDatabase.InsertAsync(recipe);
+            if (recipe.Id != Guid.Empty) return recipeDatabase.UpdateAsync(recipe);
+            else
+            {
+                recipe.Id = Guid.NewGuid();
+                return recipeDatabase.InsertAsync(recipe);
+            }
         }
 
         public async Task<int> DeleteRecipeAsync(Recipe recipe)

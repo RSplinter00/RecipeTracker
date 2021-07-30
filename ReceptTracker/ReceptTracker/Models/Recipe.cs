@@ -26,8 +26,7 @@ namespace ReceptTracker.Models
             { "ServeTips", "Serveertips" }
         };
         
-        [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
+        [PrimaryKey]
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }

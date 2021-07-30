@@ -24,7 +24,7 @@ namespace ReceptTracker.Controllers
         private GoogleAuthenticationService authService = new GoogleAuthenticationService();
         private string ChildName { get => authService.GetUser().Id; }
 
-        readonly FirebaseClient firebase;
+        private readonly FirebaseClient firebase;
 
         public FirebaseService()
         {
