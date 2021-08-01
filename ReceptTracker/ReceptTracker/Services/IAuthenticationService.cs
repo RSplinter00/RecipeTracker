@@ -2,7 +2,7 @@
 using Plugin.GoogleClient.Shared;
 using System.Threading.Tasks;
 
-namespace ReceptTracker.Controllers
+namespace ReceptTracker.Services
 {
     public interface IAuthenticationService
     {

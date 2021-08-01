@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 using ReceptTracker.Models;
 using SQLite;
 
-namespace ReceptTracker.Controllers
+namespace ReceptTracker.Services
 {
-    class RecipeController : IDatabaseService
+    class CachingService : IDatabaseService
     {
         private readonly string DatabasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db3");
 
-        private readonly SQLiteAsyncConnection RecipeDatabase;
+        private readonly SQLiteAsyncConnection CachingDatabase;
 
-        public RecipeController()
+        public CachingService()
         {
-            RecipeDatabase = new SQLiteAsyncConnection(DatabasePath);
-            RecipeDatabase.CreateTableAsync<Recipe>().Wait();
+            CachingDatabase = new SQLiteAsyncConnection(DatabasePath);
+            CachingDatabase.CreateTableAsync<Recipe>().Wait();
         }
 
         public Task<List<Recipe>> GetRecipesAsync()
         {
             try
             {
-                return RecipeDatabase.Table<Recipe>().ToListAsync();
+                return CachingDatabase.Table<Recipe>().ToListAsync();
             }
             catch (Exception e)
             {
@@ -37,7 +37,7 @@ namespace ReceptTracker.Controllers
         {
             try
             {
-                return RecipeDatabase.Table<Recipe>().Where(i => i.Id == id).FirstOrDefaultAsync();
+                return CachingDatabase.Table<Recipe>().Where(i => i.Id == id).FirstOrDefaultAsync();
             }
             catch (Exception e)
             {
@@ -54,12 +54,12 @@ namespace ReceptTracker.Controllers
             {
                 if (recipe.Id != Guid.Empty)
                 {
-                    response = await RecipeDatabase.UpdateAsync(recipe);
+                    response = await CachingDatabase.UpdateAsync(recipe);
                 }
                 else
                 {
                     recipe.Id = Guid.NewGuid();
-                    response = await RecipeDatabase.InsertAsync(recipe);
+                    response = await CachingDatabase.InsertAsync(recipe);
                 }
             }
             catch (Exception e)
@@ -76,7 +76,7 @@ namespace ReceptTracker.Controllers
 
             try
             {
-                response = await RecipeDatabase.ExecuteAsync($"DELETE FROM Recipe WHERE Id LIKE '{id}'");
+                response = await CachingDatabase.ExecuteAsync($"DELETE FROM Recipe WHERE Id LIKE '{id}'");
             }
             catch (Exception e)
             {

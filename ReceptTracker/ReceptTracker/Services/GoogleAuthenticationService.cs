@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ReceptTracker.Controllers
+namespace ReceptTracker.Services
 {
     public class GoogleAuthenticationService : IAuthenticationService
     {

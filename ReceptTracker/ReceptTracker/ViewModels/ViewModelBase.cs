@@ -2,7 +2,7 @@
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
-using ReceptTracker.Controllers;
+using ReceptTracker.Services;
 using System;
 
 namespace ReceptTracker.ViewModels

@@ -5,7 +5,7 @@ using ReceptTracker.Views;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
-using ReceptTracker.Controllers;
+using ReceptTracker.Services;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ReceptTracker.Unit")]

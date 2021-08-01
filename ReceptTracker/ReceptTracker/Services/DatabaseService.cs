@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ReceptTracker.Controllers
+namespace ReceptTracker.Services
 {
     public interface IDatabaseService
     {
@@ -18,17 +18,17 @@ namespace ReceptTracker.Controllers
 
     public class DatabaseService : IDatabaseService
     {
-        private readonly GoogleAuthenticationService AuthService;
-        private readonly RecipeController RecipeController;
+        private readonly IAuthenticationService AuthService;
+        private readonly CachingService CachingService;
         private readonly FirebaseService FirebaseService;
 
         private bool IsConnected { get => CrossConnectivity.Current.IsConnected; }
         private bool IsLoggedIn { get => AuthService.GetUser() != null; }
 
-        public DatabaseService()
+        public DatabaseService(IAuthenticationService authService)
         {
-            AuthService = new GoogleAuthenticationService();
-            RecipeController = new RecipeController();
+            AuthService = authService;
+            CachingService = new CachingService();
             FirebaseService = new FirebaseService();
         }
 
@@ -37,12 +37,12 @@ namespace ReceptTracker.Controllers
             try
             {
                 if (IsConnected && IsLoggedIn) return FirebaseService.GetRecipesAsync();
-                else return RecipeController.GetRecipesAsync();
+                else return CachingService.GetRecipesAsync();
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return RecipeController.GetRecipesAsync();
+                return CachingService.GetRecipesAsync();
             }
         }
 
@@ -51,12 +51,12 @@ namespace ReceptTracker.Controllers
             try
             {
                 if (IsConnected && IsLoggedIn) return FirebaseService.GetRecipeAsync(id);
-                else return RecipeController.GetRecipeAsync(id);
+                else return CachingService.GetRecipeAsync(id);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return RecipeController.GetRecipeAsync(id);
+                return CachingService.GetRecipeAsync(id);
             }
         }
 
@@ -65,12 +65,12 @@ namespace ReceptTracker.Controllers
             try
             {
                 if (IsConnected && IsLoggedIn) return FirebaseService.SaveRecipeAsync(recipe);
-                else return RecipeController.SaveRecipeAsync(recipe);
+                else return CachingService.SaveRecipeAsync(recipe);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return RecipeController.SaveRecipeAsync(recipe);
+                return CachingService.SaveRecipeAsync(recipe);
             }
         }
 
@@ -79,12 +79,12 @@ namespace ReceptTracker.Controllers
             try
             {
                 if (IsConnected && IsLoggedIn) return FirebaseService.DeleteRecipeAsync(id);
-                else return RecipeController.DeleteRecipeAsync(id);
+                else return CachingService.DeleteRecipeAsync(id);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return RecipeController.DeleteRecipeAsync(id);
+                return CachingService.DeleteRecipeAsync(id);
             }
         }
 
@@ -94,7 +94,7 @@ namespace ReceptTracker.Controllers
             {
                 if (IsConnected && IsLoggedIn)
                 {
-                    var localRecipes = await RecipeController.GetRecipesAsync();
+                    var localRecipes = await CachingService.GetRecipesAsync();
 
                     if (localRecipes.Count > 0)
                     {
@@ -104,7 +104,7 @@ namespace ReceptTracker.Controllers
                             recipe.Id = Guid.Empty;
 
                             var response = await FirebaseService.SaveRecipeAsync(recipe);
-                            if (response) await RecipeController.DeleteRecipeAsync(id);
+                            if (response) await CachingService.DeleteRecipeAsync(id);
                         }
                     }
                 }

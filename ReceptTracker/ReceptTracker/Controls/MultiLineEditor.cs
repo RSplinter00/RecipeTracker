@@ -11,10 +11,9 @@ namespace ReceptTracker.Controls
         protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
         {
             var sizeRequest = base.OnMeasure(widthConstraint, heightConstraint);
-
             var newHeight = sizeRequest.Request.Height;
-            if (newHeight > MaxHeight)
-                newHeight = MaxHeight;
+
+            if (newHeight > MaxHeight) newHeight = MaxHeight;
 
             return new SizeRequest(new Size(sizeRequest.Request.Width, newHeight));
         }
