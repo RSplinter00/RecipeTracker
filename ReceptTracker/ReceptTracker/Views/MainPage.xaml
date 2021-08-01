@@ -13,7 +13,7 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Uitloggen" Order="Secondary" Command="{Binding OnLogoutCommand}"/>
+        <ToolbarItem Text="{Binding LoginToolbarItemText}" Order="Secondary" Command="{Binding OnToggleLoginCommand}"/>
         <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 

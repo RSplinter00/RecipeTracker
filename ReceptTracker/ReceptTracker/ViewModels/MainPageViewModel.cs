@@ -1,4 +1,5 @@
-﻿using Plugin.GoogleClient;
+﻿using Plugin.Connectivity;
+using Plugin.GoogleClient;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
@@ -6,16 +7,27 @@ using ReceptTracker.Controllers;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ReceptTracker.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        public DelegateCommand OnLogoutCommand { get; }
+        private bool hasSynced = false;
+        private bool promptedForLogin = false;
+
+        public DelegateCommand OnToggleLoginCommand { get; }
         public DelegateCommand OnRefreshCommand { get; }
         public DelegateCommand AddRecipeCommand { get; }
         public DelegateCommand<Recipe> RecipeSelectedCommand { get; }
+
+        private readonly string LoginText = "Inloggen";
+        private readonly string LogoutText = "Uitloggen";
+        private string loginToolbarItemText;
+        public string LoginToolbarItemText
+        {
+            get => loginToolbarItemText;
+            private set => SetProperty(ref loginToolbarItemText, value);
+        }
 
         private bool isRefreshing;
         public bool IsRefreshing
@@ -31,29 +43,50 @@ namespace ReceptTracker.ViewModels
             private set => SetProperty(ref recipes, value);
         }
 
-        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
+        public MainPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IDatabaseService databaseService)
+            : base(navigationService, pageDialogService, authService, databaseService)
         {
-            OnLogoutCommand = new DelegateCommand(OnLogout);
+            OnToggleLoginCommand = new DelegateCommand(OnToggleLogin);
             OnRefreshCommand = new DelegateCommand(OnRefresh);
             AddRecipeCommand = new DelegateCommand(() => NavigateToPageAsync("EditRecipePage"));
             RecipeSelectedCommand = new DelegateCommand<Recipe>(RecipeSelected);
         }
 
-        public async void OnLogout()
+        public async void OnToggleLogin()
         {
-            var result = AuthService.Logout();
+            if (CrossConnectivity.Current.IsConnected)
+            {
+                if (AuthService.GetUser() == null)
+                {
+                    await AuthService.LoginAsync();
+                    promptedForLogin = true;
 
-            if (result) await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
-            else await DialogService.DisplayAlertAsync("Error", "Niet mogelijk om uit te loggen", "Ok");
+                    OnRefresh();
+                }
+                else
+                {
+                    if (AuthService.Logout())
+                    {
+                        await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
+                        OnNavigatedTo(null);
+                    }
+                }
 
-            OnNavigatedTo(null);
+                SetLoginToolbarText();
+            }
+        }
+
+        private void SetLoginToolbarText()
+        {
+            if (AuthService.GetUser() == null) LoginToolbarItemText = LoginText;
+            else LoginToolbarItemText = LogoutText;
         }
 
         public async void OnRefresh()
         {
             IsRefreshing = true;
 
-            Recipes = await FirebaseService.GetRecipesAsync();
+            Recipes = await DatabaseService.GetRecipesAsync();
 
             IsRefreshing = false;
         }
@@ -70,8 +103,21 @@ namespace ReceptTracker.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            var response = await AuthService.LoginAsync();
-            if (response != GoogleActionStatus.Completed) Debugger.Break();
+            var response = GoogleActionStatus.Error;
+            
+            if (CrossConnectivity.Current.IsConnected && !promptedForLogin)
+            {
+                response = await AuthService.LoginAsync();
+                promptedForLogin = true;
+            }
+
+            SetLoginToolbarText();
+
+            if (response == GoogleActionStatus.Completed && !hasSynced)
+            {
+                await DatabaseService.SyncRecipes();
+                hasSynced = true;
+            }
 
             OnRefresh();
         }

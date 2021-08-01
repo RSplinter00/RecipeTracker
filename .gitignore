@@ -196,3 +196,6 @@ FakesAssemblies/
 
 # Unittest results
 TestResults/
+
+# AppSettings
+AppSettings.json

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using ReceptTracker.Models;
@@ -7,57 +8,87 @@ using SQLite;
 
 namespace ReceptTracker.Controllers
 {
-    public interface IRecipeController
-    {
-        Task<List<Recipe>> GetRecipesAsync();
-        Task<Recipe> GetRecipeAsync(Guid id);
-        Task<int> SaveRecipeAsync(Recipe recipe);
-        Task<int> DeleteRecipeAsync(Recipe Recipe);
-    }
-
-    public class RecipeController : IRecipeController
+    class RecipeController : IDatabaseService
     {
         private readonly string DatabasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db3");
 
-        private readonly SQLiteAsyncConnection recipeDatabase;
+        private readonly SQLiteAsyncConnection RecipeDatabase;
 
         public RecipeController()
         {
-            recipeDatabase = new SQLiteAsyncConnection(DatabasePath);
-            recipeDatabase.CreateTableAsync<Recipe>().Wait();
+            RecipeDatabase = new SQLiteAsyncConnection(DatabasePath);
+            RecipeDatabase.CreateTableAsync<Recipe>().Wait();
         }
 
-        public Task<List<Recipe>> GetRecipesAsync() => recipeDatabase.Table<Recipe>().ToListAsync();
-
-        public Task<Recipe> GetRecipeAsync(Guid id) => recipeDatabase.Table<Recipe>().Where(i => i.Id == id).FirstOrDefaultAsync();
-        
-        public Task<int> SaveRecipeAsync(Recipe recipe)
-        {
-            if (recipe.Id != Guid.Empty) return recipeDatabase.UpdateAsync(recipe);
-            else
-            {
-                recipe.Id = Guid.NewGuid();
-                return recipeDatabase.InsertAsync(recipe);
-            }
-        }
-
-        public async Task<int> DeleteRecipeAsync(Recipe recipe)
-        {
-            var response = await recipeDatabase.DeleteAsync(recipe);
-            await ResetID();
-            return response;
-        }
-
-        private async Task ResetID()
+        public Task<List<Recipe>> GetRecipesAsync()
         {
             try
             {
-                await recipeDatabase.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name = 'Recipe'");
+                return RecipeDatabase.Table<Recipe>().ToListAsync();
             }
-            catch (SQLiteException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Debug.WriteLine(e.Message);
+                return Task.Run(() => new List<Recipe>());
             }
+        }
+
+        public Task<Recipe> GetRecipeAsync(Guid id)
+        {
+            try
+            {
+                return RecipeDatabase.Table<Recipe>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
+        }
+        
+        public async Task<bool> SaveRecipeAsync(Recipe recipe)
+        {
+            var response = 0;
+
+            try
+            {
+                if (recipe.Id != Guid.Empty)
+                {
+                    response = await RecipeDatabase.UpdateAsync(recipe);
+                }
+                else
+                {
+                    recipe.Id = Guid.NewGuid();
+                    response = await RecipeDatabase.InsertAsync(recipe);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            return response > 0;
+        }
+
+        public async Task<bool> DeleteRecipeAsync(Guid id)
+        {
+            var response = 0;
+
+            try
+            {
+                response = await RecipeDatabase.ExecuteAsync($"DELETE FROM Recipe WHERE Id LIKE '{id}'");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            return response > 0;
+        }
+
+        public Task SyncRecipes()
+        {
+            throw new NotImplementedException();
         }
     }
 }

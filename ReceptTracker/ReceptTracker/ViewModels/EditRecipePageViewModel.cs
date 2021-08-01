@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ReceptTracker.ViewModels
@@ -47,7 +48,8 @@ namespace ReceptTracker.ViewModels
 
         public new event PropertyChangedEventHandler PropertyChanged;
 
-        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
+        public EditRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IDatabaseService databaseService)
+            : base(navigationService, pageDialogService, authService, databaseService)
         {
             OnCancelCommand = new DelegateCommand(OnCancelPressed);
             OnSubmitCommand = new DelegateCommand(OnSubmit);
@@ -76,16 +78,19 @@ namespace ReceptTracker.ViewModels
 
         public async void OnCancelPressed()
         {
-            var response = await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee");
-            if (response) GoBackAsync();
+            if (await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee")) GoBackAsync();
         }
 
         public async void OnSubmit()
         {
+            var response = true;
+
+            if (!CreateMode) response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden.", "Opslaan", "Annuleer");
+
+            if (response) await DatabaseService.SaveRecipeAsync(Recipe);
+
             if (CreateMode)
             {
-                await FirebaseService.SaveRecipeAsync(Recipe);
-
                 var parameters = new NavigationParameters
                 {
                     { "SelectedRecipe", Recipe.Id }
@@ -93,16 +98,7 @@ namespace ReceptTracker.ViewModels
 
                 NavigateToPageAsync("../DisplayRecipePage", parameters);
             }
-            else
-            {
-                var response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden. Weer u het zeker?", "Ja", "Nee");
-
-                if (response)
-                {
-                    await FirebaseService.SaveRecipeAsync(Recipe);
-                    GoBackAsync();
-                }
-            }
+            else GoBackAsync();
         }
 
         public async void OnAddPropertyPressed()
@@ -151,8 +147,9 @@ namespace ReceptTracker.ViewModels
                     else if (value is string) ShowProperties.Add(property);
                     else if (value is int val && val != 0) ShowProperties.Add(property);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Debug.WriteLine(e.Message);
                 }
             }
 
@@ -164,9 +161,8 @@ namespace ReceptTracker.ViewModels
             if (parameters.ContainsKey("SelectedRecipe"))
             {
                 var recipeID = (Guid)parameters["SelectedRecipe"];
-                Recipe = await FirebaseService.GetRecipeAsync(recipeID);
 
-                PopulatePage();
+                Recipe = await DatabaseService.GetRecipeAsync(recipeID);
             }
 
             if (Recipe == null)
@@ -174,7 +170,11 @@ namespace ReceptTracker.ViewModels
                 Recipe = new Recipe();
                 CreateMode = true;
             }
-            else CreateMode = false;
+            else
+            {
+                CreateMode = false;
+                PopulatePage();
+            }
         }
     }
 }

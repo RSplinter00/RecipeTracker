@@ -1,10 +1,13 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Net;
 using Android.OS;
+using Plugin.Connectivity;
 using Plugin.GoogleClient;
 using Prism;
 using Prism.Ioc;
+using System;
 
 namespace ReceptTracker.Droid
 {
@@ -22,6 +25,7 @@ namespace ReceptTracker.Droid
             base.OnCreate(savedInstanceState);
 
             GoogleClientManager.Initialize(this);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new AndroidInitializer()));
         }

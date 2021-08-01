@@ -14,9 +14,8 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
         protected Fixture Fixture { get; }
         protected Mock<INavigationService> NavigationServiceMock { get; }
         protected Mock<IPageDialogService> PageDialogServiceMock { get; }
-        //protected Mock<IRecipeController> RecipeControllerMock { get; }
         protected Mock<IAuthenticationService> AuthServiceMock { get; }
-        protected Mock<IFirebaseService> FirebaseServiceMock { get; }
+        protected Mock<IDatabaseService> DatabaseServiceMock { get; }
 
         public ViewModelBaseTest()
         {
@@ -25,9 +24,8 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             NavigationServiceMock = MockRepository.Create<INavigationService>();
             PageDialogServiceMock = MockRepository.Create<IPageDialogService>();
-            //RecipeControllerMock = MockRepository.Create<IRecipeController>();
             AuthServiceMock = MockRepository.Create<IAuthenticationService>();
-            FirebaseServiceMock = MockRepository.Create<IFirebaseService>();
+            DatabaseServiceMock = MockRepository.Create<IDatabaseService>();
         }
     }
 }

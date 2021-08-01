@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Plugin.Connectivity;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using ReceptTracker.Controllers;
@@ -39,7 +40,8 @@ namespace ReceptTracker.ViewModels
             }
         }
 
-        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IFirebaseService firebaseService) : base(navigationService, pageDialogService, authService, firebaseService)
+        public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IDatabaseService databaseService)
+            : base(navigationService, pageDialogService, authService, databaseService)
         {
             DeleteRecipeCommand = new DelegateCommand(DeleteRecipe);
             EditRecipeCommand = new DelegateCommand(EditRecipe);
@@ -55,11 +57,16 @@ namespace ReceptTracker.ViewModels
 
         public async void DeleteRecipe()
         {
-            var response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt een recept te verwijderen. Dit kan niet terug gedraaid worden. Weet u zeker dat u door wilt gaan?", "Ja", "Nee");
+            bool response;
+
+            if (CrossConnectivity.Current.IsConnected)
+                response = await DialogService.DisplayAlertAsync("Waarschuwing", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden", "Verwijder", "Annuleer");
+            else
+                response = await DialogService.DisplayAlertAsync("Waarschuwing", "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.", "Verwijder", "Annuleer");
 
             if (response)
             {
-                await FirebaseService.DeleteRecipeAsync(Recipe.Id);
+                await DatabaseService.DeleteRecipeAsync(recipe.Id);
                 GoBackAsync();
             }
         }
@@ -78,7 +85,7 @@ namespace ReceptTracker.ViewModels
         {
             if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
 
-            if (recipeId != null) Recipe = await FirebaseService.GetRecipeAsync(recipeId);
+            if (recipeId != null) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
 
             if (Recipe == null)
             {

@@ -1,61 +1,33 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
-using Newtonsoft.Json;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ReceptTracker.Controllers
 {
-    public interface IFirebaseService
+    class FirebaseService : IDatabaseService
     {
-        Task<List<Recipe>> GetRecipesAsync();
-        Task<Recipe> GetRecipeAsync(Guid id);
-        Task<bool> SaveRecipeAsync(Recipe recipe);
-        Task<bool> DeleteRecipeAsync(Guid id);
-    }
+        private readonly GoogleAuthenticationService AuthService = new GoogleAuthenticationService();
+        private string ChildName { get => AuthService.GetUser().Id; }
 
-    public class FirebaseService : IFirebaseService
-    {
-        private GoogleAuthenticationService authService = new GoogleAuthenticationService();
-        private string ChildName { get => authService.GetUser().Id; }
-
-        private readonly FirebaseClient firebase;
+        private readonly FirebaseClient Firebase;
 
         public FirebaseService()
         {
-            firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"]);
+            Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"]);
         }
 
         public async Task<List<Recipe>> GetRecipesAsync()
         {
             try
             {
-                var test = authService.GetUser();
-
-                var result = (await firebase
+                var result = (await Firebase
                     .Child(ChildName)
-                    .OnceAsync<Recipe>()).Select(item => new Recipe
-                    {
-                        Id = item.Object.Id,
-                        Name = item.Object.Name,
-                        Category = item.Object.Category,
-                        PrepTime = item.Object.PrepTime,
-                        CookingTime = item.Object.CookingTime,
-                        RestTime = item.Object.RestTime,
-                        Method = item.Object.Method,
-                        NumPortions = item.Object.NumPortions,
-                        OriginalRecipe = item.Object.OriginalRecipe,
-                        Description = item.Object.Description,
-                        Ingredients = item.Object.Ingredients,
-                        Requirements = item.Object.Requirements,
-                        Steps = item.Object.Steps,
-                        ServeTips = item.Object.ServeTips
-                    }).ToList();
+                    .OnceAsync<Recipe>()).Select(item => FirebaseObjectToRecipe(item)).ToList();
 
                 return result;
             }
@@ -72,7 +44,7 @@ namespace ReceptTracker.Controllers
             {
                 var allPersons = await GetRecipesAsync();
 
-                await firebase
+                await Firebase
                     .Child(ChildName)
                     .OnceAsync<Recipe>();
 
@@ -95,17 +67,17 @@ namespace ReceptTracker.Controllers
                 {
                     recipe.Id = Guid.NewGuid();
 
-                    await firebase
+                    await Firebase
                         .Child(ChildName)
                         .PostAsync(recipe.ToString());
                 }
                 else
                 {
-                    var toUpdateRecipe = (await firebase
+                    var toUpdateRecipe = (await Firebase
                         .Child(ChildName)
                         .OnceAsync<Recipe>()).FirstOrDefault(a => a.Object.Id == recipe.Id);
 
-                    await firebase
+                    await Firebase
                         .Child(ChildName)
                         .Child(toUpdateRecipe.Key)
                         .PutAsync(recipe);
@@ -124,11 +96,11 @@ namespace ReceptTracker.Controllers
         {
             try
             {
-                var toDeleteRecipe = (await firebase
+                var toDeleteRecipe = (await Firebase
                     .Child(ChildName)
                     .OnceAsync<Recipe>()).FirstOrDefault(a => a.Object.Id == id);
 
-                await firebase
+                await Firebase
                     .Child(ChildName)
                     .Child(toDeleteRecipe.Key)
                     .DeleteAsync();
@@ -140,6 +112,40 @@ namespace ReceptTracker.Controllers
                 Debug.WriteLine(e.Message);
                 return false;
             }
+        }
+
+        private Recipe FirebaseObjectToRecipe(FirebaseObject<Recipe> item)
+        {
+            try
+            {
+                return new Recipe
+                {
+                    Id = item.Object.Id,
+                    Name = item.Object.Name,
+                    Category = item.Object.Category,
+                    PrepTime = item.Object.PrepTime,
+                    CookingTime = item.Object.CookingTime,
+                    RestTime = item.Object.RestTime,
+                    Method = item.Object.Method,
+                    NumPortions = item.Object.NumPortions,
+                    OriginalRecipe = item.Object.OriginalRecipe,
+                    Description = item.Object.Description,
+                    Ingredients = item.Object.Ingredients,
+                    Requirements = item.Object.Requirements,
+                    Steps = item.Object.Steps,
+                    ServeTips = item.Object.ServeTips
+                };
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return new Recipe();
+            }
+        }
+
+        public Task SyncRecipes()
+        {
+            throw new NotImplementedException();
         }
     }
 }
