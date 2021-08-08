@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "847002013531",
+    "firebase_url": "https://recipe-tracker-a3891-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "recipe-tracker-a3891",
     "storage_bucket": "recipe-tracker-a3891.appspot.com"
   },
@@ -37,6 +38,13 @@
             {
               "client_id": "847002013531-rkh0g7mg7po0udvpbpfj1l59bfucohpe.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "847002013531-f74g4tr37k0ns36gddd1659k3gt8tr5o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nl.splinter.recipetracker"
+              }
             }
           ]
         }

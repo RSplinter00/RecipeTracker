@@ -65,7 +65,7 @@ namespace ReceptTracker.ViewModels
                 }
                 else
                 {
-                    if (AuthService.Logout())
+                    if (await AuthService.Logout())
                     {
                         await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
                         OnNavigatedTo(null);
@@ -119,7 +119,7 @@ namespace ReceptTracker.ViewModels
                 hasSynced = true;
             }
 
-            OnRefresh();
+            Recipes = await DatabaseService.GetRecipesAsync();
         }
     }
 }

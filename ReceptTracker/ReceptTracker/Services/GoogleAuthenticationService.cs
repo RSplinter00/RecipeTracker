@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Firebase.Auth;
+using Firebase.Database;
+using Newtonsoft.Json;
 using Plugin.GoogleClient;
 using Plugin.GoogleClient.Shared;
 using System;
@@ -9,22 +11,48 @@ namespace ReceptTracker.Services
 {
     public class GoogleAuthenticationService : IAuthenticationService
     {
-        private IGoogleClientManager googleService = CrossGoogleClient.Current;
-        public GoogleUser GetUser() => googleService.CurrentUser;
+        private readonly IGoogleClientManager GoogleService = CrossGoogleClient.Current;
+        public GoogleUser GetUser() => GoogleService.CurrentUser;
+        public static string UserID { get; private set; } = "";
+
+        private static FirebaseClient firebase;
+        public FirebaseClient Firebase
+        {
+            get
+            {
+                if (firebase == null) SetupFirebaseClient().Wait();
+
+                return firebase;
+            }
+            private set => firebase = value;
+        }
+
+        private async Task SetupFirebaseClient()
+        {
+            FirebaseOptions options = null;
+            if (!string.IsNullOrEmpty(GoogleService.AccessToken))
+            {
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(AppSettingsManager.Settings["AndroidAPIKey"]));
+                var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, GoogleService.AccessToken);
+
+                UserID = auth.User.LocalId;
+                options = new FirebaseOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
+                };
+            }
+
+            Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"], options);
+        }
 
         public async Task<GoogleActionStatus> LoginAsync()
         {
             try
             {
-                if (googleService.IsLoggedIn)
-                {
-                    return GoogleActionStatus.Completed;
-                }
-
-                if (!string.IsNullOrEmpty(googleService.AccessToken))
+                if (!string.IsNullOrEmpty(GoogleService.AccessToken))
                 {
                     // Always require user authentication
-                    googleService.Logout();
+                    GoogleService.Logout();
                 }
 
                 GoogleActionStatus status = GoogleActionStatus.Unauthorized;
@@ -37,11 +65,13 @@ namespace ReceptTracker.Services
                     var googleUserString = JsonConvert.SerializeObject(e.Data);
                     Debug.WriteLine($"Google Login attempt by {googleUserString}: {e.Status}");
 #endif
-                    googleService.OnLogin -= userLoginDelegate;
+                    GoogleService.OnLogin -= userLoginDelegate;
                 };
 
-                googleService.OnLogin += userLoginDelegate;
-                await googleService.LoginAsync();
+                GoogleService.OnLogin += userLoginDelegate;
+                await GoogleService.LoginAsync();
+
+                if (status == GoogleActionStatus.Completed) await SetupFirebaseClient();
 
                 return status;
             }
@@ -52,18 +82,19 @@ namespace ReceptTracker.Services
             }
         }
 
-        public bool Logout()
+        public async Task<bool> Logout()
         {
             try
             {
-                googleService.Logout();
+                GoogleService.Logout();
+                await SetupFirebaseClient();
 
             }
             catch (Exception)
             {
             }
 
-            return !googleService.IsLoggedIn;
+            return !GoogleService.IsLoggedIn;
         }
     }
 }

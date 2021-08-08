@@ -11,14 +11,14 @@ namespace ReceptTracker.Services
 {
     class FirebaseService : IDatabaseService
     {
-        private readonly GoogleAuthenticationService AuthService = new GoogleAuthenticationService();
-        private string ChildName { get => AuthService.GetUser().Id; }
+        private string ChildName { get => $"users/{ GoogleAuthenticationService.UserID }"; }
 
-        private readonly FirebaseClient Firebase;
+        private readonly GoogleAuthenticationService AuthService;
+        private FirebaseClient Firebase { get => AuthService.Firebase; }
 
         public FirebaseService()
         {
-            Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"]);
+            AuthService = new GoogleAuthenticationService();
         }
 
         public async Task<List<Recipe>> GetRecipesAsync()
