@@ -34,7 +34,7 @@ namespace ReceptTracker.Services
             {
                 var authProvider = new FirebaseAuthProvider(new FirebaseConfig(AppSettingsManager.Settings["AndroidAPIKey"]));
                 var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, GoogleService.AccessToken);
-
+                
                 UserID = auth.User.LocalId;
                 options = new FirebaseOptions
                 {

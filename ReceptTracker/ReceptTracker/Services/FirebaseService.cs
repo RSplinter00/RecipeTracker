@@ -1,5 +1,6 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+using Newtonsoft.Json;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace ReceptTracker.Services
 
                     await Firebase
                         .Child(ChildName)
-                        .PostAsync(recipe.ToString());
+                        .PostAsync(JsonConvert.SerializeObject(recipe));
                 }
                 else
                 {

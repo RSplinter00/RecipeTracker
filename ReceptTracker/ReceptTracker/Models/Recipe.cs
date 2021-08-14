@@ -81,10 +81,5 @@ namespace ReceptTracker.Models
                 return "";
             }
         }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 }

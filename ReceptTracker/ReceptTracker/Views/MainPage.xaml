@@ -36,7 +36,7 @@
                             </StackLayout>
 
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.RecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
+                                <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
                                                       CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
                         </Frame>

@@ -1,18 +1,20 @@
-﻿using Prism.Commands;
+﻿using Plugin.Connectivity;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using ReceptTracker.Services;
 using System;
+using Xamarin.Essentials;
 
 namespace ReceptTracker.ViewModels
 {
     public class ViewModelBase : BindableBase, IInitialize, INavigationAware
     {
-        protected INavigationService NavigationService { get; private set; }
-        protected IPageDialogService DialogService { get; private set; }
-        protected IAuthenticationService AuthService { get; private set; }
-        protected IDatabaseService DatabaseService { get; private set; }
+        internal INavigationService NavigationService { get; private set; }
+        internal IPageDialogService DialogService { get; private set; }
+        internal IAuthenticationService AuthService { get; private set; }
+        internal IDatabaseService DatabaseService { get; private set; }
 
         public DelegateCommand<string> NavigateCommand { get; }
 
@@ -26,28 +28,35 @@ namespace ReceptTracker.ViewModels
             NavigateCommand = new DelegateCommand<string>(NavigateToPageAsync);
         }
 
-        protected async void NavigateToMainPageAsync()
+        protected bool IsConnected()
+        {
+            if (DeviceInfo.Platform == DevicePlatform.Unknown) return true;
+
+            return CrossConnectivity.Current.IsConnected;
+        }
+
+        internal async void NavigateToMainPageAsync()
         {
             var result = await NavigationService.NavigateAsync("/NavigationPage/MainPage");
 
             if (result != null && !result.Success) Console.WriteLine("Failed to navigate to MainPage");
         }
 
-        public async void NavigateToPageAsync(string path)
+        internal async void NavigateToPageAsync(string path)
         {
             var result = await NavigationService.NavigateAsync(path);
 
             if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
         }
 
-        protected async void NavigateToPageAsync(string path, INavigationParameters navigationParams)
+        internal async void NavigateToPageAsync(string path, INavigationParameters navigationParams)
         {
             var result = await NavigationService.NavigateAsync(path, navigationParams);
 
             if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
         }
 
-        protected async void GoBackAsync()
+        internal async void GoBackAsync()
         {
             var result = await NavigationService.GoBackAsync();
 

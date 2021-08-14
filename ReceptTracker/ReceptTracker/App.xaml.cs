@@ -7,11 +7,12 @@ using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
 using ReceptTracker.Services;
 using System.Runtime.CompilerServices;
+using Prism.DryIoc;
 
 [assembly: InternalsVisibleTo("ReceptTracker.Unit")]
 namespace ReceptTracker
 {
-    public partial class App
+    public partial class App : PrismApplication
     {
         public App(IPlatformInitializer initializer = null) : base(initializer)
         {

@@ -1,5 +1,4 @@
-﻿using Plugin.Connectivity;
-using Plugin.GoogleClient;
+﻿using Plugin.GoogleClient;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
@@ -7,6 +6,7 @@ using ReceptTracker.Services;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ReceptTracker.ViewModels
 {
@@ -18,7 +18,7 @@ namespace ReceptTracker.ViewModels
         public DelegateCommand OnToggleLoginCommand { get; }
         public DelegateCommand OnRefreshCommand { get; }
         public DelegateCommand AddRecipeCommand { get; }
-        public DelegateCommand<Recipe> RecipeSelectedCommand { get; }
+        public DelegateCommand<Recipe> OnRecipeSelectedCommand { get; }
 
         private readonly string LoginText = "Inloggen";
         private readonly string LogoutText = "Uitloggen";
@@ -49,40 +49,51 @@ namespace ReceptTracker.ViewModels
             OnToggleLoginCommand = new DelegateCommand(OnToggleLogin);
             OnRefreshCommand = new DelegateCommand(OnRefresh);
             AddRecipeCommand = new DelegateCommand(() => NavigateToPageAsync("EditRecipePage"));
-            RecipeSelectedCommand = new DelegateCommand<Recipe>(RecipeSelected);
+            OnRecipeSelectedCommand = new DelegateCommand<Recipe>(OnRecipeSelected);
         }
 
-        public async void OnToggleLogin()
+        private async void OnToggleLogin()
         {
-            if (CrossConnectivity.Current.IsConnected)
+            if (IsConnected())
             {
-                if (AuthService.GetUser() == null)
-                {
-                    await AuthService.LoginAsync();
-                    promptedForLogin = true;
-
-                    OnRefresh();
-                }
-                else
-                {
-                    if (await AuthService.Logout())
-                    {
-                        await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
-                        OnNavigatedTo(null);
-                    }
-                }
-
-                SetLoginToolbarText();
+                await ToggleLogin();
             }
         }
 
-        private void SetLoginToolbarText()
+        private async void OnRefresh()
+        {
+            await RefreshRecipes();
+        }
+
+        public async Task ToggleLogin()
+        {
+            if (AuthService.GetUser() == null)
+            {
+                await AuthService.LoginAsync();
+                promptedForLogin = true;
+
+                SetLoginToolbarText();
+                await RefreshRecipes();
+            }
+            else
+            {
+                if (await AuthService.Logout())
+                {
+                    await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
+                    promptedForLogin = true;
+                    OnNavigatedTo(null);
+                }
+            }
+
+        }
+
+        internal void SetLoginToolbarText()
         {
             if (AuthService.GetUser() == null) LoginToolbarItemText = LoginText;
             else LoginToolbarItemText = LogoutText;
         }
 
-        public async void OnRefresh()
+        public async Task RefreshRecipes()
         {
             IsRefreshing = true;
 
@@ -91,21 +102,25 @@ namespace ReceptTracker.ViewModels
             IsRefreshing = false;
         }
 
-        public void RecipeSelected(Recipe selectedRecipe)
+        public async void OnRecipeSelected(Recipe selectedRecipe)
         {
-            var parameters = new NavigationParameters
+            if (selectedRecipe == null) await DialogService.DisplayAlertAsync("Incorrecte recept!", "Dit recept bestaat niet.", "Ok");
+            else
             {
-                { "SelectedRecipe", selectedRecipe.Id }
-            };
+                var parameters = new NavigationParameters
+                {
+                    { "SelectedRecipe", selectedRecipe.Id }
+                };
 
-            NavigateToPageAsync("DisplayRecipePage", parameters);
+                NavigateToPageAsync("DisplayRecipePage", parameters);
+            }
         }
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             var response = GoogleActionStatus.Error;
             
-            if (CrossConnectivity.Current.IsConnected && !promptedForLogin)
+            if (IsConnected() && !promptedForLogin)
             {
                 response = await AuthService.LoginAsync();
                 promptedForLogin = true;

@@ -6,9 +6,10 @@ using System.Collections.Generic;
 namespace ReceptTracker.Unit.UnitTests.Models
 {
     [TestFixture]
-    class RecipeTest
+    public class RecipeTest
     {
-        private TimeSpan PrepTime = new TimeSpan(1, 0, 0);
+        private Recipe recipe;
+        private readonly TimeSpan PrepTime = new TimeSpan(1, 0, 0);
         private readonly TimeSpan CookingTime = new TimeSpan(4, 0, 0);
         private readonly TimeSpan RestTime = new TimeSpan(0, 30, 0);
 
@@ -48,16 +49,21 @@ namespace ReceptTracker.Unit.UnitTests.Models
             "Serveertips"
         };
 
+        [SetUp]
+        public void SetUp()
+        {
+            recipe = new Recipe();
+        }
+
         [TestCase(false, false, false)]
         [TestCase(true, false, false)]
         [TestCase(true, true, false)]
         [TestCase(false, true, true)]
         [TestCase(true, false, true)]
         [TestCase(true, true, true)]
-        public void TotalDuration_CalculatesSumOfTimeValues(bool prepTime, bool cookingTime, bool restTime)
+        public void TotalDuration_ShouldCalculateSumOfTimeValues(bool prepTime, bool cookingTime, bool restTime)
         {
             // Arrange
-            Recipe recipe = new Recipe();
             TimeSpan expectedDuration = new TimeSpan();
 
             // Act
@@ -82,14 +88,12 @@ namespace ReceptTracker.Unit.UnitTests.Models
         }
 
         [Test]
-        public void EnToNlTranslation_WithCorrectValue_ReturnsNlTranslation()
+        public void EnToNlTranslation_WithCorrectValue_ShouldReturnNlTranslation()
         {
             // Arrange
-            Recipe recipe = new Recipe();
-
-            // Act
             List<string> actualTranslations = new List<string>();
 
+            // Act
             foreach (string propertyName in PropertyNamesEn) actualTranslations.Add(recipe.EnToNlTranslation(propertyName));
 
             // Assert
@@ -99,10 +103,9 @@ namespace ReceptTracker.Unit.UnitTests.Models
         [TestCase("IncorrectProperty")]
         [TestCase("")]
         [TestCase(null)]
-        public void EnToNlTranslation_WithIncorrectValue_ReturnsEmptyString(string input)
+        public void EnToNlTranslation_WithIncorrectValue_ShouldReturnEmptyString(string input)
         {
             // Arrange
-            Recipe recipe = new Recipe();
             string expectedResult = "";
 
             // Act
@@ -113,14 +116,12 @@ namespace ReceptTracker.Unit.UnitTests.Models
         }
 
         [Test]
-        public void NlToEnTranslation_WithCorrectValue_ReturnsNlTranslation()
+        public void NlToEnTranslation_WithCorrectValue_ShouldReturnNlTranslation()
         {
             // Arrange
-            Recipe recipe = new Recipe();
-
-            // Act
             List<string> actualTranslations = new List<string>();
 
+            // Act
             foreach (string propertyName in PropertyNamesNl) actualTranslations.Add(recipe.NlToEnTranslation(propertyName));
 
             // Assert
@@ -130,10 +131,9 @@ namespace ReceptTracker.Unit.UnitTests.Models
         [TestCase("IncorrectProperty")]
         [TestCase("")]
         [TestCase(null)]
-        public void NlToEnTranslation_WithIncorrectValue_ReturnsEmptyString(string input)
+        public void NlToEnTranslation_WithIncorrectValue_ShouldReturnEmptyString(string input)
         {
             // Arrange
-            Recipe recipe = new Recipe();
             string expectedResult = "";
 
             // Act
