@@ -20,14 +20,14 @@ namespace ReceptTracker.Services
         {
             get
             {
-                if (firebase == null) SetupFirebaseClient().Wait();
+                if (firebase == null) SetupFirebaseClientAsync().Wait();
 
                 return firebase;
             }
             private set => firebase = value;
         }
 
-        private async Task SetupFirebaseClient()
+        private async Task SetupFirebaseClientAsync()
         {
             FirebaseOptions options = null;
             if (!string.IsNullOrEmpty(GoogleService.AccessToken))
@@ -71,7 +71,7 @@ namespace ReceptTracker.Services
                 GoogleService.OnLogin += userLoginDelegate;
                 await GoogleService.LoginAsync();
 
-                if (status == GoogleActionStatus.Completed) await SetupFirebaseClient();
+                if (status == GoogleActionStatus.Completed) await SetupFirebaseClientAsync();
 
                 return status;
             }
@@ -82,12 +82,12 @@ namespace ReceptTracker.Services
             }
         }
 
-        public async Task<bool> Logout()
+        public async Task<bool> LogoutAsync()
         {
             try
             {
                 GoogleService.Logout();
-                await SetupFirebaseClient();
+                await SetupFirebaseClientAsync();
 
             }
             catch (Exception)

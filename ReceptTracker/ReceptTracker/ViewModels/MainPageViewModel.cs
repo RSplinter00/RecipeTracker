@@ -77,7 +77,7 @@ namespace ReceptTracker.ViewModels
             }
             else
             {
-                if (await AuthService.Logout())
+                if (await AuthService.LogoutAsync())
                 {
                     await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
                     promptedForLogin = true;
@@ -130,7 +130,7 @@ namespace ReceptTracker.ViewModels
 
             if (response == GoogleActionStatus.Completed && !hasSynced)
             {
-                await DatabaseService.SyncRecipes();
+                await DatabaseService.SyncRecipesAsync();
                 hasSynced = true;
             }
 

@@ -21,8 +21,8 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="DeleteRecipeIcon" Text="Verwijder recept" Command="{Binding DeleteRecipeCommand}"/>
-        <ToolbarItem IconImageSource="EditRecipeIcon" Text="Wijzig recept" Command="{Binding EditRecipeCommand}"/>
+        <ToolbarItem IconImageSource="DeleteRecipeIcon" Text="Verwijder recept" Command="{Binding OnDeleteRecipeCommand}"/>
+        <ToolbarItem IconImageSource="EditRecipeIcon" Text="Wijzig recept" Command="{Binding OnEditRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -49,7 +49,7 @@
                         IsVisible="{Binding Recipe.OriginalRecipe, Converter={StaticResource NullToBoolConverter}}">
                     <!-- Open the link in the webbrowser, after clicking it -->
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToWebsiteCommand}" CommandParameter="{Binding Recipe.OriginalRecipe}"/>
+                        <TapGestureRecognizer Command="{Binding OnNavigateToWebsiteCommand}" CommandParameter="{Binding Recipe.OriginalRecipe}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </StackLayout>

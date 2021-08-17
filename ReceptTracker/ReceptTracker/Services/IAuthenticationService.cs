@@ -8,6 +8,6 @@ namespace ReceptTracker.Services
     {
         GoogleUser GetUser();
         Task<GoogleActionStatus> LoginAsync();
-        Task<bool> Logout();
+        Task<bool> LogoutAsync();
     }
 }

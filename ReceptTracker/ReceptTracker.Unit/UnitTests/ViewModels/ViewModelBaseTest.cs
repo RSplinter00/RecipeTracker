@@ -5,6 +5,7 @@ using Prism.Services;
 using ReceptTracker.Services;
 using NUnit.Framework;
 using Plugin.GoogleClient.Shared;
+using System;
 
 namespace ReceptTracker.Unit.UnitTests.ViewModels
 {
@@ -16,7 +17,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
         protected Mock<IPageDialogService> PageDialogServiceMock { get; }
         protected Mock<IAuthenticationService> AuthServiceMock { get; }
         protected Mock<IDatabaseService> DatabaseServiceMock { get; }
-        protected GoogleUser CurrentUser { get; }
+        protected GoogleUser CurrentUser { get; private set; }
 
         public ViewModelBaseTest()
         {
@@ -27,13 +28,13 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             PageDialogServiceMock = MockRepository.Create<IPageDialogService>();
             AuthServiceMock = MockRepository.Create<IAuthenticationService>();
             DatabaseServiceMock = MockRepository.Create<IDatabaseService>();
-
-            CurrentUser = Fixture.Create<GoogleUser>();
         }
 
         [SetUp]
         public void Setup()
         {
+            CurrentUser = Fixture.Create<GoogleUser>();
+
             NavigationServiceMock.Reset();
             PageDialogServiceMock.Reset();
             AuthServiceMock.Reset();

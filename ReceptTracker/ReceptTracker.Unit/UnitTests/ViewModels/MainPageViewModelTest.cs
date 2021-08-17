@@ -52,7 +52,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             AuthServiceMock.SetupSequence(authService => authService.GetUser())
                 .Returns(CurrentUser)
                 .Returns(() => null);
-            AuthServiceMock.Setup(authService => authService.Logout()).Returns(Task.Run(() => true));
+            AuthServiceMock.Setup(authService => authService.LogoutAsync()).Returns(Task.Run(() => true));
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
@@ -60,9 +60,9 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             // Assert
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
-            AuthServiceMock.Verify(authService => authService.Logout(), Times.Once, "Function IAuthenticationService.Logout not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.LogoutAsync(), Times.Once, "Function IAuthenticationService.Logout not called exactly once.");
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Never, "Function IAuthenticationService.LoginAsinc called atleast once.");
-            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipes(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
+            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Once, "Logout alert not displayed exactly once.");
         }
@@ -76,7 +76,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             var alertCancelButton = "Ok";
 
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(CurrentUser);
-            AuthServiceMock.Setup(authService => authService.Logout()).Returns(Task.Run(() => false));
+            AuthServiceMock.Setup(authService => authService.LogoutAsync()).Returns(Task.Run(() => false));
 
             // Act
             await MainPageViewModel.ToggleLogin();
@@ -84,7 +84,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             // Assert
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Never, "Function IAuthenticationService.LoginAsync called atleast once.");
-            AuthServiceMock.Verify(authService => authService.Logout(), Times.Once, "Function IAuthenticationService.Logout not not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.LogoutAsync(), Times.Once, "Function IAuthenticationService.Logout not not called exactly once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Never, "Function IDatabaseService.GetRecipesAsync called atleast once.");
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Never, "Logout alert displayed atleast once.");
         }
@@ -183,7 +183,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(CurrentUser);
-            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipes()).Verifiable();
+            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipesAsync()).Verifiable();
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
@@ -192,7 +192,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
-            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipes(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
+            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
             Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
             Assert.IsNotNull(MainPageViewModel.Recipes, "Variable MainPageViewModel.Recipes is null");
@@ -206,7 +206,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Canceled));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
-            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipes()).Verifiable();
+            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipesAsync()).Verifiable();
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
@@ -215,7 +215,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
-            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipes(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
+            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
             Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
             Assert.IsNotNull(MainPageViewModel.Recipes, "Variable MainPageViewModel.Recipes is null");
@@ -227,7 +227,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             // Arrange
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(CurrentUser);
-            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipes()).Verifiable();
+            DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipesAsync()).Verifiable();
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
@@ -236,7 +236,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
-            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipes(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
+            DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
         }
     }
 }

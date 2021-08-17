@@ -13,7 +13,7 @@ namespace ReceptTracker.Services
         Task<Recipe> GetRecipeAsync(Guid id);
         Task<bool> SaveRecipeAsync(Recipe recipe);
         Task<bool> DeleteRecipeAsync(Guid id);
-        Task SyncRecipes();
+        Task SyncRecipesAsync();
     }
 
     public class DatabaseService : IDatabaseService
@@ -88,7 +88,7 @@ namespace ReceptTracker.Services
             }
         }
 
-        public async Task SyncRecipes()
+        public async Task SyncRecipesAsync()
         {
             try
             {

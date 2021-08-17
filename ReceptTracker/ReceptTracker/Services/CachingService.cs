@@ -86,7 +86,7 @@ namespace ReceptTracker.Services
             return response > 0;
         }
 
-        public Task SyncRecipes()
+        public Task SyncRecipesAsync()
         {
             throw new NotImplementedException();
         }

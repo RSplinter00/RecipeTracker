@@ -144,7 +144,7 @@ namespace ReceptTracker.Services
             }
         }
 
-        public Task SyncRecipes()
+        public Task SyncRecipesAsync()
         {
             throw new NotImplementedException();
         }

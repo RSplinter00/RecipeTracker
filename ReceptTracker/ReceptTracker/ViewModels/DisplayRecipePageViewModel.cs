@@ -18,11 +18,9 @@ namespace ReceptTracker.ViewModels
         public ICommand ForceStepsUpdateSizeCommand { get; set; }
         public ICommand ForceServetipsUpdateSizeCommand { get; set; }
         public ICommand ForceLandscapeUpdateSizeCommand { get; set; }
-        public DelegateCommand DeleteRecipeCommand { get; }
-        public DelegateCommand EditRecipeCommand { get; }
-        public DelegateCommand<string> NavigateToWebsiteCommand { get; }
-
-        private Guid recipeId;
+        public DelegateCommand OnDeleteRecipeCommand { get; }
+        public DelegateCommand OnEditRecipeCommand { get; }
+        public DelegateCommand<string> OnNavigateToWebsiteCommand { get; }
 
         private Recipe recipe;
         public Recipe Recipe
@@ -43,9 +41,9 @@ namespace ReceptTracker.ViewModels
         public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IDatabaseService databaseService)
             : base(navigationService, pageDialogService, authService, databaseService)
         {
-            DeleteRecipeCommand = new DelegateCommand(DeleteRecipe);
-            EditRecipeCommand = new DelegateCommand(EditRecipe);
-            NavigateToWebsiteCommand = new DelegateCommand<string>(ToWebsiteAsync);
+            OnDeleteRecipeCommand = new DelegateCommand(DeleteRecipeAsync);
+            OnEditRecipeCommand = new DelegateCommand(EditRecipeAsync);
+            OnNavigateToWebsiteCommand = new DelegateCommand<string>(ToWebsiteAsync);
         }
 
         public async void ToWebsiteAsync(string website)
@@ -55,24 +53,30 @@ namespace ReceptTracker.ViewModels
             if (Uri.TryCreate(website, UriKind.Absolute, out var uri) && DeviceInfo.Platform != DevicePlatform.Unknown) await Launcher.OpenAsync(uri);
         }
 
-        public async void DeleteRecipe()
+        public async void DeleteRecipeAsync()
         {
             bool response;
 
-            if (CrossConnectivity.Current.IsConnected)
-                response = await DialogService.DisplayAlertAsync("Waarschuwing", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden", "Verwijder", "Annuleer");
+            if (IsConnected())
+                response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.", "Verwijder", "Annuleer");
             else
-                response = await DialogService.DisplayAlertAsync("Waarschuwing", "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.", "Verwijder", "Annuleer");
+                response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.", "Verwijder", "Annuleer");
 
             if (response)
             {
-                await DatabaseService.DeleteRecipeAsync(recipe.Id);
+                await DatabaseService.DeleteRecipeAsync(Recipe.Id);
                 GoBackAsync();
             }
         }
 
-        public void EditRecipe()
+        public async void EditRecipeAsync()
         {
+            if (Recipe == null)
+            {
+                await DialogService.DisplayAlertAsync("Waarschuwing!", "Niet mogelijk om dit recept aan te passen.", "Ok");
+                return;
+            }
+
             var parameters = new NavigationParameters
             {
                 { "SelectedRecipe", Recipe.Id }
@@ -83,15 +87,23 @@ namespace ReceptTracker.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
+            if (Recipe != null) return;
 
-            if (recipeId != null) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
-
-            if (Recipe == null)
+            Guid recipeId;
+            try
             {
-                await DialogService.DisplayAlertAsync("Niet gevonden!", "Het recept kan niet geladen worden.", "OK");
-                GoBackAsync();
+                if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
+
+                if (recipeId != null) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
+
+                if (Recipe != null) return;
             }
+            catch (Exception)
+            {
+            }
+
+            await DialogService.DisplayAlertAsync("Niet gevonden!", "Het recept kan niet geladen worden.", "Ok");
+            GoBackAsync();
         }
     }
 }
