@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using AutoFixture;
+using NUnit.Framework;
 using ReceptTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ReceptTracker.Unit.UnitTests.Models
         private readonly TimeSpan PrepTime = new TimeSpan(1, 0, 0);
         private readonly TimeSpan CookingTime = new TimeSpan(4, 0, 0);
         private readonly TimeSpan RestTime = new TimeSpan(0, 30, 0);
+        private readonly Fixture Fixture = new Fixture();
 
         private readonly List<string> PropertyNamesEn = new List<string>
         {
@@ -53,6 +55,11 @@ namespace ReceptTracker.Unit.UnitTests.Models
         public void SetUp()
         {
             recipe = new Recipe();
+        }
+
+        private Recipe CreateRandomizedRecipe()
+        {
+            return Fixture.Build<Recipe>().Without(i => i.Id).Do(i => i.Id = Fixture.Create<Guid>()).Create();
         }
 
         [TestCase(false, false, false)]
@@ -141,6 +148,102 @@ namespace ReceptTracker.Unit.UnitTests.Models
 
             // Assert
             Assert.AreEqual(expectedResult, result, "Incorrect value does not return empty string");
+        }
+        
+        [Test]
+        public void Equals_WithSameRecipe_ShouldReturnTrue()
+        {
+            // Arrange
+            recipe = CreateRandomizedRecipe();
+
+            // Act
+            var result = recipe.Equals(recipe);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Equals_WithSameIdDifferentProperties_ShouldReturnTrue()
+        {
+            // Arrange
+            var id = Fixture.Create<Guid>();
+            var desc = Fixture.Create<string>();
+            var time = Fixture.Create<TimeSpan>();
+            recipe = new Recipe
+            {
+                Id = id,
+                Description = desc,
+                PrepTime = time,
+                NumPortions = 1
+            };
+            var recipe2 = new Recipe
+            {
+                Id = id,
+                Description = desc,
+                PrepTime = time,
+                NumPortions = 2
+            };
+
+            // Act
+            var result = recipe.Equals(recipe2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Equals_WithDifferentId_ShouldReturnFalse()
+        {
+            // Arrange
+            recipe = CreateRandomizedRecipe();
+            var recipe2 = CreateRandomizedRecipe();
+
+            // Act
+            var result = recipe.Equals(recipe2);
+
+            // Arrange
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Equals_WithDifferentIdSameProperties_ShouldReturnFalse()
+        {
+            // Arrange
+            var desc = Fixture.Create<string>();
+            var time = Fixture.Create<TimeSpan>();
+            recipe = new Recipe
+            {
+                Id = Fixture.Create<Guid>(),
+                Description = desc,
+                PrepTime = time
+            };
+            var recipe2 = new Recipe
+            {
+                Id = Fixture.Create<Guid>(),
+                Description = desc,
+                PrepTime = time
+            };
+
+            // Act
+            var result = recipe.Equals(recipe2);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Equals_WithDifferentObject_ShouldReturnFalse()
+        {
+            // Arrange
+            recipe = CreateRandomizedRecipe();
+            var object2 = Fixture.Create<TimeSpan>();
+
+            // Act
+            var result = recipe.Equals(object2);
+
+            // Assert
+            Assert.IsFalse(result);
         }
     }
 }

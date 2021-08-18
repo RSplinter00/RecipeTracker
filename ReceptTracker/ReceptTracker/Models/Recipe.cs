@@ -81,5 +81,13 @@ namespace ReceptTracker.Models
                 return "";
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Recipe)) return false;
+
+            return this.Id == ((Recipe)obj).Id;
+
+        }
     }
 }

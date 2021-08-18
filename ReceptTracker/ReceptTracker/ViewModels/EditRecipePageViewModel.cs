@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using Xamarin.Essentials;
+using System.Threading.Tasks;
 
 namespace ReceptTracker.ViewModels
 {
@@ -17,10 +19,10 @@ namespace ReceptTracker.ViewModels
         public string PageName => CreateMode ? "Nieuw recept" : "Recept wijzigen";
 
         private bool createMode;
-        protected bool CreateMode
+        public bool CreateMode
         {
             get => createMode;
-            set
+            internal set
             {
                 createMode = value;
                 OnPropertyChanged("PageName");
@@ -73,7 +75,7 @@ namespace ReceptTracker.ViewModels
 
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (DeviceInfo.Platform != DevicePlatform.Unknown) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public async void OnCancelPressed()
@@ -87,21 +89,34 @@ namespace ReceptTracker.ViewModels
 
             if (!CreateMode) response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden.", "Opslaan", "Annuleer");
 
-            if (response) await DatabaseService.SaveRecipeAsync(Recipe);
-
-            if (CreateMode)
+            if (response)
             {
-                var parameters = new NavigationParameters
-                {
-                    { "SelectedRecipe", Recipe.Id }
-                };
+                await DatabaseService.SaveRecipeAsync(Recipe);
 
-                NavigateToPageAsync("../DisplayRecipePage", parameters);
+                if (CreateMode)
+                {
+                    var parameters = new NavigationParameters
+                    {
+                        { "SelectedRecipe", Recipe.Id }
+                    };
+
+                    NavigateToPageAsync("../DisplayRecipePage", parameters);
+                }
+                else GoBackAsync();
             }
-            else GoBackAsync();
         }
 
-        public async void OnAddPropertyPressed()
+        private async void OnAddPropertyPressed()
+        {
+            await AddProperty();
+        }
+
+        private async void OnRemovePropertyPressed(string propertyName)
+        {
+            await RemoveProperty(propertyName);
+        }
+
+        public async Task AddProperty()
         {
             var cancelButton = "Annuleer";
             var hiddenProperties = HideableProperties.Except(ShowProperties).ToArray();
@@ -110,16 +125,19 @@ namespace ReceptTracker.ViewModels
 
             var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
 
-            if (action != cancelButton)
+            if (action != null && action != cancelButton)
             {
                 action = Recipe.NlToEnTranslation(action);
 
-                ShowProperties.Add(action);
-                OnPropertyChanged("ShowProperties");
+                if (!string.IsNullOrEmpty(action))
+                {
+                    ShowProperties.Add(action);
+                    OnPropertyChanged("ShowProperties");
+                }
             }
         }
 
-        public async void OnRemovePropertyPressed(string propertyName)
+        public async Task RemoveProperty(string propertyName)
         {
             var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
 
@@ -134,7 +152,7 @@ namespace ReceptTracker.ViewModels
             }
         }
 
-        private void PopulatePage()
+        internal void PopulatePage()
         {
             foreach (var property in HideableProperties)
             {
@@ -158,11 +176,17 @@ namespace ReceptTracker.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("SelectedRecipe"))
+            try
             {
-                var recipeID = (Guid)parameters["SelectedRecipe"];
+                if (parameters.ContainsKey("SelectedRecipe"))
+                {
+                    var recipeID = (Guid)parameters["SelectedRecipe"];
 
-                Recipe = await DatabaseService.GetRecipeAsync(recipeID);
+                    Recipe = await DatabaseService.GetRecipeAsync(recipeID);
+                }
+            }
+            catch (Exception)
+            {
             }
 
             if (Recipe == null)

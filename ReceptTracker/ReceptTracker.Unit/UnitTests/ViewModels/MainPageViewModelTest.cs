@@ -101,7 +101,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             // Assert
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function IAuthenticationService.GetUser not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
+            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             // Assert
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function IAuthenticationService.GetUser not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
+            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
 
             // Assert
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
-            Assert.IsNotNull(MainPageViewModel.Recipes, "Variable MainPageViewModel.Recipes is null.");
+            Assert.IsNotNull(MainPageViewModel.Recipes, "Attribute MainPageViewModel.Recipes is null.");
         }
 
         [Test]
@@ -194,8 +194,8 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
-            Assert.IsNotNull(MainPageViewModel.Recipes, "Variable MainPageViewModel.Recipes is null");
+            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
+            Assert.IsNotNull(MainPageViewModel.Recipes, "Attribute MainPageViewModel.Recipes is null");
         }
 
         [Test]
@@ -217,8 +217,8 @@ namespace ReceptTracker.Unit.UnitTests.ViewModels
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Variable MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
-            Assert.IsNotNull(MainPageViewModel.Recipes, "Variable MainPageViewModel.Recipes is null");
+            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
+            Assert.IsNotNull(MainPageViewModel.Recipes, "Attribute MainPageViewModel.Recipes is null");
         }
 
         [Test]
