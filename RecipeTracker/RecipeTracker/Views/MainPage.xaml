@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeTracker.Views.MainPage"
+             NavigationPage.HasBackButton="False"
+             Title="Recepten">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Image">
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding LoginToolbarItemText}" Order="Secondary" Command="{Binding OnToggleLoginCommand}"/>
+        <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding OnRefreshCommand}">
+        <ScrollView>
+            <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Frame>
+                            <StackLayout>
+                                <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                    <Label Text="{Binding Category}" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+
+                                    <Image Source="Duration.png" Margin="10,0,0,0"/>
+                                    <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubtitle}"/>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

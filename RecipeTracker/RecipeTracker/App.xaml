@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:prism="http://prismlibrary.com"
+                        xmlns:c="clr-namespace:RecipeTracker.Converters"
+                        mc:Ignorable="d"
+                        x:Class="RecipeTracker.App">
+    <prism:PrismApplication.Resources>
+        <ResourceDictionary>
+            <c:NullToBoolConverter x:Key="NullToBoolConverter"/>
+            <c:DefaultValueConverter x:Key="DefaultValueConverter"/>
+            <c:ShowPropertyConverter x:Key="ShowPropertyConverter"/>
+
+            <Color x:Key="AppBackgroundColor">White</Color>
+            
+            <Color x:Key="DarkTextColor">Black</Color>
+            <Color x:Key="LightTextColor">White</Color>
+
+            <Style TargetType="NavigationPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+            </Style>
+
+            <!--
+            Fontsizes:
+            Small: 13
+            Medium: 16
+            Large: 20
+            Title: 28
+            Subtitle: 22
+            -->
+
+            <Style TargetType="StackLayout">
+                <Setter Property="Spacing" Value="10"/>
+            </Style>
+            
+            <Style TargetType="Label" x:Key="BaseLabel">
+                <Setter Property="TextColor" Value="{StaticResource DarkTextColor}"/>
+                <Setter Property="FontSize" Value ="13"/>
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="VerticalTextAlignment" Value="Start"/>
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}"></Style>
+            <Style TargetType="Label" x:Key="RecipeTitle" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="MaxLines" Value="1"/>
+                <Setter Property="LineBreakMode" Value="HeadTruncation"/>
+            </Style>
+            <Style TargetType="Label" x:Key="RecipeSubtitle" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="MaxLines" Value="1"/>
+                <Setter Property="LineBreakMode" Value="HeadTruncation"/>
+            </Style>
+        </ResourceDictionary>
+    </prism:PrismApplication.Resources>
+</prism:PrismApplication>

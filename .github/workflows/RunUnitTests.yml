@@ -20,10 +20,10 @@ jobs:
         with:
           nuget-version: latest
       - name: Restore dependencies
-        run: dotnet restore ReceptTracker/ReceptTracker.Unit
+        run: dotnet restore RecipeTracker/RecipeTracker.Unit
       - name: Restore NuGet packages
-        run: nuget restore ReceptTracker
+        run: nuget restore RecipeTracker
       - name: Build
-        run: dotnet build ReceptTracker/ReceptTracker.Unit --no-restore
+        run: dotnet build RecipeTracker/RecipeTracker.Unit --no-restore
       - name: Test
-        run: dotnet test ReceptTracker/ReceptTracker.Unit --no-restore
+        run: dotnet test RecipeTracker/RecipeTracker.Unit --no-restore
