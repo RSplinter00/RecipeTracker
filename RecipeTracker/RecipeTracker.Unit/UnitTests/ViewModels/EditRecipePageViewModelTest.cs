@@ -82,17 +82,23 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             var alertMessage = "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?";
             var alertAcceptButton = "Ja";
             var alertCancelButton = "Nee";
+            var expectedParameters = new NavigationParameters()
+            {
+                { "SelectedRecipe", SelectedRecipe.Id }
+            };
 
             PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => confirmAlert));
             NavigationServiceMock.Setup(navigationService => navigationService.GoBackAsync()).Verifiable();
 
             // Act
+            EditRecipePageViewModel.Recipe = SelectedRecipe;
             EditRecipePageViewModel.OnCancelCommand?.Execute();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Confirmation alert for cancelling editting the recipe not called exactly once.");
-            if (confirmAlert) NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Once, "Function INavigationService.GoBackAsync not called exactly once.");
-            else NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
+            NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
+            if (confirmAlert) NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync($"../../{nameof(DisplayRecipePage)}", expectedParameters), Times.Once, "Function to navigate to display recipe page with recipe id not called exactly once.");
+            else NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync($"../../{nameof(DisplayRecipePage)}", expectedParameters), Times.Never, "Function to navigate to display recipe page with recipe id called atleast once.");
         }
 
         [Test]

@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AppSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="AppSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FirebaseAuthentication.net" Version="3.7.2" />
     <PackageReference Include="FirebaseDatabase.net" Version="4.0.6" />
     <PackageReference Include="LiteDB" Version="5.0.11" />
@@ -45,11 +53,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-	<ItemGroup>
-		<None Remove="AppSettings.json" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="AppSettings.json" />
-	</ItemGroup>
 </Project>

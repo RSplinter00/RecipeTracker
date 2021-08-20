@@ -80,7 +80,15 @@ namespace RecipeTracker.ViewModels
 
         public async void OnCancelPressed()
         {
-            if (await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee")) GoBackAsync();
+            if (await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee"))
+            {
+                var paramaters = new NavigationParameters
+                {
+                    { "SelectedRecipe", Recipe.Id }
+                };
+
+                NavigateToPageAsync("../../DisplayRecipePage", paramaters);
+            }
         }
 
         public async void OnSubmit()
