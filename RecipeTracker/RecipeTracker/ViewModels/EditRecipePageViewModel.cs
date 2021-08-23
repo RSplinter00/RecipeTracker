@@ -82,17 +82,27 @@ namespace RecipeTracker.ViewModels
         {
             if (await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee"))
             {
-                var paramaters = new NavigationParameters
+                if (CreateMode) GoBackAsync();
+                else
                 {
-                    { "SelectedRecipe", Recipe.Id }
-                };
+                    var paramaters = new NavigationParameters
+                    {
+                        { "SelectedRecipe", Recipe.Id }
+                    };
 
-                NavigateToPageAsync("../../DisplayRecipePage", paramaters);
+                    NavigateToPageAsync("../../DisplayRecipePage", paramaters);
+                }
             }
         }
 
         public async void OnSubmit()
         {
+            if (!IsValid())
+            {
+                await DialogService.DisplayAlertAsync("Let op!", "Het recept kan niet opgeslagen worden. De naam en/of de bereidingswijze ontbreken.", "Ok");
+                return;
+            }
+
             var response = true;
 
             if (!CreateMode) response = await DialogService.DisplayAlertAsync("Pas op!", "Deze actie kan niet ongedaan worden.", "Opslaan", "Annuleer");
@@ -110,6 +120,11 @@ namespace RecipeTracker.ViewModels
 
                 NavigateToPageAsync(navigationPath, parameters);
             }
+        }
+
+        internal bool IsValid()
+        {
+            return Recipe != null && !string.IsNullOrWhiteSpace(Recipe.Name) && !string.IsNullOrWhiteSpace(Recipe.Steps);
         }
 
         private async void OnAddPropertyPressed()

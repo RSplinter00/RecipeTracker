@@ -192,6 +192,95 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
         }
 
+        [Test]
+        public void OnSubmitCommand_WithInvalidRecipe_ShouldDoNothing()
+        {
+            // Arrange
+            var recipe = new Recipe { Id = Guid.NewGuid() };
+
+            var alertTitle = "Pas op!";
+            var alertMessage = "Deze actie kan niet ongedaan worden.";
+            var alertAcceptButton = "Opslaan";
+            var alertCancelButton = "Annuleer";
+
+            var alertInvalidTitle = "Let op!";
+            var alertInvalidMessage = "Het recept kan niet opgeslagen worden. De naam en/of de bereidingswijze ontbreken.";
+            var alertInvalidCancelButton = "Ok";
+
+            var displayRecipePageName = $"../{nameof(DisplayRecipePage)}";
+            var expectedParameters = new NavigationParameters
+            {
+                { "SelectedRecipe", recipe.Id }
+            };
+
+            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertInvalidTitle, alertInvalidMessage, alertInvalidCancelButton)).Verifiable();
+            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => true));
+            DatabaseServiceMock.Setup(databaseService => databaseService.SaveRecipeAsync(SelectedRecipe)).Returns(Task.Run(() => true));
+            NavigationServiceMock.Setup(navigationService => navigationService.NavigateAsync(displayRecipePageName, expectedParameters)).Verifiable();
+            NavigationServiceMock.Setup(navigationService => navigationService.GoBackAsync()).Verifiable();
+
+            // Act
+            EditRecipePageViewModel.CreateMode = false;
+            EditRecipePageViewModel.Recipe = recipe;
+            EditRecipePageViewModel.OnSubmitCommand?.Execute();
+
+            // Assert
+            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertInvalidTitle, alertInvalidMessage, alertInvalidCancelButton), Times.Once, "Warning alert for invalid recipe recipe not called exactly once.");
+            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Never, "Confirmation alert for editting existing recipe called atleast once.");
+            DatabaseServiceMock.Verify(databaseService => databaseService.SaveRecipeAsync(SelectedRecipe), Times.Never, "Function IDatabaseService.SaveRecipeAsync called atleast once.");
+            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(displayRecipePageName, expectedParameters), Times.Never, "Function to navigate to display recipe page for the created recipe called atleast once.");
+            NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
+        }
+
+        [Test]
+        public void IsValid_WithValidRecipe_ShouldReturnTrue()
+        {
+            // Arrange
+            if (string.IsNullOrWhiteSpace(SelectedRecipe.Name)) SelectedRecipe.Name = Fixture.Create<string>();
+            if (string.IsNullOrWhiteSpace(SelectedRecipe.Steps)) SelectedRecipe.Steps = Fixture.Create<string>();
+
+            // Act
+            EditRecipePageViewModel.Recipe = SelectedRecipe;
+            var response = EditRecipePageViewModel.IsValid();
+
+            // Assert
+            Assert.IsTrue(response);
+        }
+
+        [Test]
+        public void IsValid_WithoutRecipe_ShouldReturnFalse()
+        {
+            // Arrange
+
+            // Act
+            EditRecipePageViewModel.Recipe = null;
+            var response = EditRecipePageViewModel.IsValid();
+
+            // Assert
+            Assert.IsFalse(response);
+        }
+
+        [TestCase(null, null, TestName = "IsValid_WithoutNameAndSteps_ShouldReturnFalse")]
+        [TestCase(null, "Steps", TestName = "IsValid_WithoutName_ShouldReturnFalse")]
+        [TestCase("Name", null, TestName = "IsValid_WithoutSteps_ShouldReturnFalse")]
+        [TestCase("", "", TestName = "IsValid_WithEmptyStrings_ShouldReturnFalse")]
+        public void IsValid_WithInvalidRecipe_ShouldReturnFalse(string name, string steps)
+        {
+            // Arrange
+            SelectedRecipe = new Recipe
+            {
+                Name = name,
+                Steps = steps
+            };
+
+            // Act
+            EditRecipePageViewModel.Recipe = SelectedRecipe;
+            var response = EditRecipePageViewModel.IsValid();
+
+            // Assert
+            Assert.IsFalse(response);
+        }
+
         [TestCase("PrepTime")]
         [TestCase("RestTime")]
         [TestCase("Method")]

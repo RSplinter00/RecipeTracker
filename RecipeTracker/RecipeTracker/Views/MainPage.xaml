@@ -19,29 +19,37 @@
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding OnRefreshCommand}">
         <ScrollView>
-            <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate>
-                        <Frame>
-                            <StackLayout>
-                                <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
+            <StackLayout>
+                <StackLayout HorizontalOptions="Center" Spacing="0" Margin="10"
+                             IsVisible="{Binding Recipes, Converter={StaticResource NullToBoolConverter}, ConverterParameter='invert'}">
+                    <Label Text="Geen Recepten!&#10;Maak hier een nieuw recept:" FontSize="16" HorizontalTextAlignment="Center"/>
+                    <Button Text="Nieuw Recept" Command="{Binding AddRecipeCommand}" Margin="10"/>
+                </StackLayout>
+                
+                <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame>
+                                <StackLayout>
+                                    <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
 
-                                <StackLayout Orientation="Horizontal">
-                                    <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
-                                    <Label Text="{Binding Category}" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                        <Label Text="{Binding Category}" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
 
-                                    <Image Source="Duration.png" Margin="10,0,0,0"/>
-                                    <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubtitle}"/>
+                                        <Image Source="Duration.png" Margin="10,0,0,0"/>
+                                        <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubtitle}"/>
+                                    </StackLayout>
                                 </StackLayout>
-                            </StackLayout>
 
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
-                                                      CommandParameter="{Binding .}"/>
-                            </Frame.GestureRecognizers>
-                        </Frame>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
+                                                            CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </RefreshView>
