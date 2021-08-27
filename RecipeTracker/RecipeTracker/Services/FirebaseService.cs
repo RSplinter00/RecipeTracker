@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace RecipeTracker.Services
 {
-    class FirebaseService : IDatabaseService
+    /// <summary>
+    /// Class <c>FirebaseService</c> handles all operations between the application and Google Firebase.
+    /// </summary>
+    public class FirebaseService : IDatabaseService
     {
         private string ChildName { get => $"users/{ GoogleAuthenticationService.UserID }"; }
 
@@ -22,15 +25,21 @@ namespace RecipeTracker.Services
             AuthService = new GoogleAuthenticationService();
         }
 
+        /// <summary>
+        /// Retrieves all recipes from Firebase.
+        /// 
+        /// <para>
+        ///     For offline operation, see <seealso cref="CachingService.GetRecipesAsync"/>.
+        /// </para>
+        /// </summary>
+        /// <returns>All recipes saved to the cloud.</returns>
         public async Task<List<Recipe>> GetRecipesAsync()
         {
             try
             {
-                var result = (await Firebase
+                return (await Firebase
                     .Child(ChildName)
                     .OnceAsync<Recipe>()).Select(item => FirebaseObjectToRecipe(item)).ToList();
-
-                return result;
             }
             catch (Exception e)
             {
@@ -39,19 +48,23 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Returns a specific recipe from Firebase.
+        /// 
+        /// <para>
+        ///     For offline operation, see <seealso cref="CachingService.GetRecipeAsync(Guid)"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="id">Id of the recipe to be retrieved</param>
+        /// <returns>The recipe with the given id.</returns>
         public async Task<Recipe> GetRecipeAsync(Guid id)
         {
             try
             {
-                var allPersons = await GetRecipesAsync();
+                // Retrieve all recipes and filter out the requested recipe.
+                var recipes = await GetRecipesAsync();
 
-                await Firebase
-                    .Child(ChildName)
-                    .OnceAsync<Recipe>();
-
-                var result = allPersons.FirstOrDefault(a => a.Id == id);
-
-                return result;
+                return recipes.FirstOrDefault(a => a.Id == id);
             }
             catch (Exception e)
             {
@@ -60,12 +73,22 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Saves the given recipe to Firebase.
+        /// 
+        /// <para>
+        ///     For offline operation, see <seealso cref="CachingService.SaveRecipeAsync(Recipe)"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="recipe">Recipe to be saved to Firebase.</param>
+        /// <returns>If the operation was successful.</returns>
         public async Task<bool> SaveRecipeAsync(Recipe recipe)
         {
             try
             {
                 if (recipe.Id == Guid.Empty)
                 {
+                    // If the recipe doesn't have a valid id, it is a new recipe.
                     recipe.Id = Guid.NewGuid();
 
                     await Firebase
@@ -74,6 +97,7 @@ namespace RecipeTracker.Services
                 }
                 else
                 {
+                    // If the recipe does have a vlid id, it is an editted recipe.
                     var toUpdateRecipe = (await Firebase
                         .Child(ChildName)
                         .OnceAsync<Recipe>()).FirstOrDefault(a => a.Object.Id == recipe.Id);
@@ -93,6 +117,15 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Deletes the recipe with the given id from Firebase.
+        /// 
+        /// <para>
+        ///     For offline operation, see <seealso cref="CachingService.DeleteRecipeAsync(Guid)"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="id">Id of the recipe to be deleted.</param>
+        /// <returns>If the operation was successful.</returns>
         public async Task<bool> DeleteRecipeAsync(Guid id)
         {
             try
@@ -115,6 +148,11 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Converts a Firebase object of type Recipe to a recipe Object.
+        /// </summary>
+        /// <param name="item">Firebase object to be converted to a recipe.</param>
+        /// <returns>The Recipe value of hte Firebase object.</returns>
         private Recipe FirebaseObjectToRecipe(FirebaseObject<Recipe> item)
         {
             try
@@ -144,6 +182,17 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Class <c>FirebaseService</c> does not implement method <c>SyncRecipesAsync</c>.
+        /// 
+        /// <para>
+        ///     For the implementation, see <seealso cref="DatabaseService.SyncRecipesAsync"/>.
+        /// </para>
+        /// 
+        /// <para>
+        ///     <exception cref="NotImplementedException"><c>NotImplementedException</c> thrown because this method is not implemented by this class.</exception>
+        /// </para>
+        /// </summary>
         public Task SyncRecipesAsync()
         {
             throw new NotImplementedException();

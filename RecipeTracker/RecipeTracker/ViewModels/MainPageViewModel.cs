@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace RecipeTracker.ViewModels
 {
+    /// <summary>
+    /// Class <c>MainPageViewModel</c> is the viewmodel for the main page.
+    /// This page manages the authentication and tracks the recipes of the user.
+    /// </summary>
     public class MainPageViewModel : ViewModelBase
     {
         private bool hasSynced = false;
@@ -52,23 +56,30 @@ namespace RecipeTracker.ViewModels
             OnRecipeSelectedCommand = new DelegateCommand<Recipe>(OnRecipeSelected);
         }
 
+        /// <summary>
+        ///  If the user has an internet connection, task <see cref="ToggleLogin"/> is executed.
+        /// </summary>
         private async void OnToggleLogin()
         {
-            if (IsConnected())
-            {
-                await ToggleLogin();
-            }
+            if (IsConnected()) await ToggleLogin();
         }
 
+        /// <summary>
+        /// Executes task <see cref="RefreshRecipes"/>.
+        /// </summary>
         private async void OnRefresh()
         {
             await RefreshRecipes();
         }
 
+        /// <summary>
+        /// Logs the user in, if he isn't already. If the user is logged in, he will be logged out.
+        /// </summary>
         public async Task ToggleLogin()
         {
             if (AuthService.GetUser() == null)
             {
+                // If the user is not logged in, authenticate him and setup the page accordingly.
                 await AuthService.LoginAsync();
                 promptedForLogin = true;
 
@@ -78,6 +89,7 @@ namespace RecipeTracker.ViewModels
             }
             else
             {
+                // If the user is logged in, log him out and if successful, reset the current page.
                 if (await AuthService.LogoutAsync())
                 {
                     await DialogService.DisplayAlertAsync("Uitgelogd!", "U bent succesvol uitgelogd.", "Ok");
@@ -88,12 +100,18 @@ namespace RecipeTracker.ViewModels
 
         }
 
+        /// <summary>
+        /// Set the text for the login/logout button based on if the user is logged in.
+        /// </summary>
         internal void SetLoginToolbarText()
         {
             if (AuthService.GetUser() == null) LoginToolbarItemText = LoginText;
             else LoginToolbarItemText = LogoutText;
         }
 
+        /// <summary>
+        /// Refreshes the page and updates the list of recipes.
+        /// </summary>
         public async Task RefreshRecipes()
         {
             IsRefreshing = true;
@@ -103,6 +121,10 @@ namespace RecipeTracker.ViewModels
             IsRefreshing = false;
         }
 
+        /// <summary>
+        /// Navigates to <c>DisplayRecipePage</c> with as parameter the id of the selected recipe.
+        /// </summary>
+        /// <param name="selectedRecipe">The recipe to be displayed.</param>
         public async void OnRecipeSelected(Recipe selectedRecipe)
         {
             if (selectedRecipe == null) await DialogService.DisplayAlertAsync("Incorrecte recept!", "Dit recept bestaat niet.", "Ok");
@@ -123,6 +145,7 @@ namespace RecipeTracker.ViewModels
             
             if (IsConnected() && !promptedForLogin)
             {
+                // If the user has in internet connection and isn't asked to login before, login the user.
                 response = await AuthService.LoginAsync();
                 promptedForLogin = true;
             }
@@ -131,6 +154,7 @@ namespace RecipeTracker.ViewModels
 
             if (response == GoogleActionStatus.Completed && !hasSynced)
             {
+                // If the user is logged in and hasn't synced before, save cached recipes to the cloud.
                 await DatabaseService.SyncRecipesAsync();
                 hasSynced = true;
             }

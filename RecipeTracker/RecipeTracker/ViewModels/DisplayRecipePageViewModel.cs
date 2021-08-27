@@ -9,6 +9,10 @@ using Xamarin.Essentials;
 
 namespace RecipeTracker.ViewModels
 {
+    /// <summary>
+    /// Class <c>DisplayRecipePageViewModel</c> is the viewmodel for the display recipe page.
+    /// This page displays the contents of a selected recipe.
+    /// </summary>
     public class DisplayRecipePageViewModel : ViewModelBase
     {
         public ICommand ForceDescriptionUpdateSizeCommand { get; set; }
@@ -45,21 +49,25 @@ namespace RecipeTracker.ViewModels
             OnNavigateToWebsiteCommand = new DelegateCommand<string>(ToWebsiteAsync);
         }
 
+        /// <summary>
+        /// Opens the user's browser page and navigates to the given recipe.
+        /// </summary>
+        /// <param name="website">Url of the website to navigate to.</param>
         public async void ToWebsiteAsync(string website)
         {
+            // Add 'https://' if the url doesn't begin with it.
             if (!(website.StartsWith("https://") || website.StartsWith("http://"))) website = website.Insert(0, "https://");
 
+            // Open the browser and navigate to the website.
             if (Uri.TryCreate(website, UriKind.Absolute, out var uri) && DeviceInfo.Platform != DevicePlatform.Unknown) await Launcher.OpenAsync(uri);
         }
 
+        /// <summary>
+        /// Deletes the recipe displayed on this page.
+        /// </summary>
         public async void DeleteRecipeAsync()
         {
-            bool response;
-
-            if (IsConnected())
-                response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.", "Verwijder", "Annuleer");
-            else
-                response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.", "Verwijder", "Annuleer");
+            bool response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.", "Verwijder", "Annuleer");
 
             if (response)
             {
@@ -68,10 +76,14 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Navigates to EditRecipePage, for the user to edit the recipe displayed on the page.
+        /// </summary>
         public async void EditRecipeAsync()
         {
             if (Recipe == null)
             {
+                // Cancel the action, if the recipe doesn't exist
                 await DialogService.DisplayAlertAsync("Waarschuwing!", "Niet mogelijk om dit recept aan te passen.", "Ok");
                 return;
             }
@@ -87,8 +99,10 @@ namespace RecipeTracker.ViewModels
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
             Guid recipeId;
+
             try
             {
+                // Retrieve the recipe, if the parameters contain a recipe id.
                 if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
 
                 if (recipeId != null) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
@@ -99,6 +113,7 @@ namespace RecipeTracker.ViewModels
             {
             }
 
+            // If the recipe doesn't exist, return to the previous page.
             await DialogService.DisplayAlertAsync("Niet gevonden!", "Het recept kan niet geladen worden.", "Ok");
             GoBackAsync();
         }

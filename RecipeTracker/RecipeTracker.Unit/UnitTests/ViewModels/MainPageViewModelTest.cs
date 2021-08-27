@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace RecipeTracker.Unit.UnitTests.ViewModels
 {
+    /// <summary>
+    /// Class <c>MainPageViewModeltest</c> contains unit tests for class <seealso cref="RecipeTracker.ViewModels.MainPageViewModel"/>.
+    /// </summary>
     [TestFixture]
     public class MainPageViewModelTest : ViewModelBaseTest
     {

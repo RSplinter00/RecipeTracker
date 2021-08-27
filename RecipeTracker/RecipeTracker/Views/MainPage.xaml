@@ -20,19 +20,23 @@
     <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding OnRefreshCommand}">
         <ScrollView>
             <StackLayout>
+                <!-- Displays a message and button to add new recipes, if the user has no recipes yet -->
                 <StackLayout HorizontalOptions="Center" Spacing="0" Margin="10"
                              IsVisible="{Binding Recipes, Converter={StaticResource NullToBoolConverter}, ConverterParameter='invert'}">
                     <Label Text="Geen Recepten!&#10;Maak hier een nieuw recept:" FontSize="16" HorizontalTextAlignment="Center"/>
                     <Button Text="Nieuw Recept" Command="{Binding AddRecipeCommand}" Margin="10"/>
                 </StackLayout>
                 
+                <!-- Displays an overview of all the users recipes -->
                 <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Frame>
+                                <!-- Displays key information of the recipe -->
                                 <StackLayout>
                                     <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
-
+                                    
+                                    <!-- Displays the category (if exists) and the total duration of the recipe -->
                                     <StackLayout Orientation="Horizontal">
                                         <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
                                         <Label Text="{Binding Category}" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
@@ -42,6 +46,7 @@
                                     </StackLayout>
                                 </StackLayout>
 
+                                <!-- Navigates to 'DisplayRecipePage' on click, to display the selected recipe -->
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
                                                             CommandParameter="{Binding .}"/>

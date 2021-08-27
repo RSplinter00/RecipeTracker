@@ -7,15 +7,10 @@ using System.Threading.Tasks;
 
 namespace RecipeTracker.Services
 {
-    public interface IDatabaseService
-    {
-        Task<List<Recipe>> GetRecipesAsync();
-        Task<Recipe> GetRecipeAsync(Guid id);
-        Task<bool> SaveRecipeAsync(Recipe recipe);
-        Task<bool> DeleteRecipeAsync(Guid id);
-        Task SyncRecipesAsync();
-    }
-
+    /// <summary>
+    /// Class <c>DatabaseService</c> is the main service that handles the communication with the databases.
+    /// If the user is connected and logged in, it will use the cloud for its operations, else it will use the cache.
+    /// </summary>
     public class DatabaseService : IDatabaseService
     {
         private readonly IAuthenticationService AuthService;
@@ -32,6 +27,10 @@ namespace RecipeTracker.Services
             FirebaseService = new FirebaseService();
         }
 
+        /// <summary>
+        /// Retrieves all recipes of the user from the database.
+        /// </summary>
+        /// <returns>All recipes saved by the user.</returns>
         public Task<List<Recipe>> GetRecipesAsync()
         {
             try
@@ -46,6 +45,11 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Retrieves a specific recipe.
+        /// </summary>
+        /// <param name="id">Id of the recipe to be retrieved.</param>
+        /// <returns>The recipe with the given id.</returns>
         public Task<Recipe> GetRecipeAsync(Guid id)
         {
             try
@@ -60,6 +64,11 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Saves the given recipe to the database.
+        /// </summary>
+        /// <param name="recipe">The updated/new recipe that should be saved.</param>
+        /// <returns>If the operation was successful.</returns>
         public Task<bool> SaveRecipeAsync(Recipe recipe)
         {
             try
@@ -74,6 +83,11 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Deletes the recipe with the given id from the database.
+        /// </summary>
+        /// <param name="id">The id of the recipe to be deleted</param>
+        /// <returns>If the operation was successful.</returns>
         public Task<bool> DeleteRecipeAsync(Guid id)
         {
             try
@@ -88,16 +102,21 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Synchronizes locally saved recipes with the cloud.
+        /// </summary>
         public async Task SyncRecipesAsync()
         {
             try
             {
                 if (IsConnected && IsLoggedIn)
                 {
+                    // If the user is connected and logged in, retrieve all cached recipes.
                     var localRecipes = await CachingService.GetRecipesAsync();
 
                     if (localRecipes.Count > 0)
                     {
+                        // If the user has cached any recipes, save them to the cloud and delete them locally.
                         foreach (Recipe recipe in localRecipes)
                         {
                             var id = recipe.Id;

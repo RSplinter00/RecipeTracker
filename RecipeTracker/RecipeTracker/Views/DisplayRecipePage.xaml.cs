@@ -2,6 +2,9 @@
 
 namespace RecipeTracker.Views
 {
+    /// <summary>
+    /// View <c>DisplayRecipePage</c> displays the details of the selected recipe.
+    /// </summary>
     public partial class DisplayRecipePage : ContentPage
     {
         private double width = 0;
@@ -18,6 +21,7 @@ namespace RecipeTracker.Views
 
             if (this.width != width || this.height != height)
             {
+                // Keep track of the page's width and height, if it has been changed.
                 this.width = width;
                 this.height = height;
 

@@ -5,10 +5,12 @@ using Prism.Services;
 using RecipeTracker.Services;
 using NUnit.Framework;
 using Plugin.GoogleClient.Shared;
-using System;
 
 namespace RecipeTracker.Unit.UnitTests.ViewModels
 {
+    /// <summary>
+    /// Class <c>ViewModelBaseTest</c> is the base class used for every viewmodel test classes.
+    /// </summary>
     public class ViewModelBaseTest
     {
         protected MockRepository MockRepository { get; }
@@ -24,6 +26,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             MockRepository = new MockRepository(MockBehavior.Loose);
             Fixture = new Fixture();
 
+            // Create mocks for all services.
             NavigationServiceMock = MockRepository.Create<INavigationService>();
             PageDialogServiceMock = MockRepository.Create<IPageDialogService>();
             AuthServiceMock = MockRepository.Create<IAuthenticationService>();
@@ -35,6 +38,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         {
             CurrentUser = Fixture.Create<GoogleUser>();
 
+            // Reset any calls made to the mocks.
             NavigationServiceMock.Reset();
             PageDialogServiceMock.Reset();
             AuthServiceMock.Reset();

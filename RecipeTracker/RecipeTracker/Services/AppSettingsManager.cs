@@ -6,7 +6,10 @@ using System.Reflection;
 
 namespace RecipeTracker.Services
 {
-    class AppSettingsManager
+    /// <summary>
+    /// Class <c>AppSettingsManager</c> retrieves key value pairs from the App Settings.
+    /// </summary>
+    public class AppSettingsManager
     {
         private static AppSettingsManager Instance;
         public static AppSettingsManager Settings
@@ -28,6 +31,7 @@ namespace RecipeTracker.Services
         {
             try
             {
+                // Setup the stream to read and analyze the json file.
                 var assembly = IntrospectionExtensions.GetTypeInfo(typeof(AppSettingsManager)).Assembly;
                 var stream = assembly.GetManifestResourceStream($"{ Namespace }.{ Filename }");
 
@@ -43,6 +47,11 @@ namespace RecipeTracker.Services
             }
         }
 
+        /// <summary>
+        /// Retrieve a value from the app settings by its key.
+        /// </summary>
+        /// <param name="name">Name of the key, to be retrieved.</param>
+        /// <returns>Value belonging to the given key.</returns>
         public string this[string name]
         {
             get

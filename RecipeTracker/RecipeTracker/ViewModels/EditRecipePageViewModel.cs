@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 
 namespace RecipeTracker.ViewModels
 {
+    /// <summary>
+    /// Class <c>EditRecipePageViewModel</c> is the viewmodel for the edit recipe page.
+    /// This page allows the user to create or edit recipes.
+    /// </summary>
     public class EditRecipePageViewModel : ViewModelBase, INotifyPropertyChanged
     {
         public string PageName => CreateMode ? "Nieuw recept" : "Recept wijzigen";
@@ -73,11 +77,18 @@ namespace RecipeTracker.ViewModels
             ShowProperties = new ObservableCollection<string>();
         }
 
+        /// <summary>
+        /// Executes the property changed events for the given property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property which has been changed.</param>
         private void OnPropertyChanged(string propertyName)
         {
             if (DeviceInfo.Platform != DevicePlatform.Unknown) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Cancels the editting of the recipe and navigates back to the previous page, without saving any changes.
+        /// </summary>
         public async void OnCancelPressed()
         {
             if (await DialogService.DisplayAlertAsync("Pas op!", "Niet opgeslagen gegevens worden verwijderd! Weer u zeker dat u terug wilt gaan?", "Ja", "Nee"))
@@ -95,6 +106,9 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Saves any changes made to the recipe and navigates to the DisplayRecipePage.
+        /// </summary>
         public async void OnSubmit()
         {
             if (!IsValid())
@@ -122,32 +136,49 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Checks if the recipe and its required properties exist.
+        /// </summary>
+        /// <returns>If the recipe is considered valid.</returns>
         internal bool IsValid()
         {
             return Recipe != null && !string.IsNullOrWhiteSpace(Recipe.Name) && !string.IsNullOrWhiteSpace(Recipe.Steps);
         }
 
+        /// <summary>
+        /// Executes task <see cref="AddProperty"/>.
+        /// </summary>
         private async void OnAddPropertyPressed()
         {
             await AddProperty();
         }
 
+        /// <summary>
+        /// Executes task <see cref="RemoveProperty(string)"/>.
+        /// </summary>
+        /// <param name="propertyName"></param>
         private async void OnRemovePropertyPressed(string propertyName)
         {
             await RemoveProperty(propertyName);
         }
 
+        /// <summary>
+        /// Prompts the user to add a new property to the recipe and shows the selected property on the page.
+        /// </summary>
         public async Task AddProperty()
         {
             var cancelButton = "Annuleer";
             var hiddenProperties = HideableProperties.Except(ShowProperties).ToArray();
 
+            // Makes a list of all properties in Dutch
             for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToNlTranslation(hiddenProperties[i]);
 
+            // Prompts the user to choose which property to add to the page.
             var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
 
             if (action != null && action != cancelButton)
             {
+                // If the user has selected a property, show it on the page.
                 action = Recipe.NlToEnTranslation(action);
 
                 if (!string.IsNullOrEmpty(action))
@@ -158,12 +189,17 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Removes the selected property from the recipe, by hiding it on the page and resetting its value.
+        /// </summary>
+        /// <param name="propertyName">Name of the selected property to be deleted.</param>
         public async Task RemoveProperty(string propertyName)
         {
             var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
 
             if (response)
             {
+                // If the user confirms deleting the property, the value will be reset and the property will be hidden on the page.
                 Recipe.GetType().GetProperty(propertyName).SetValue(Recipe, null);
 
                 ShowProperties.Remove(propertyName);
@@ -173,14 +209,19 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Checks which properties should be displayed on the page, based on if their value is not the default value.
+        /// </summary>
         internal void PopulatePage()
         {
             foreach (var property in HideableProperties)
             {
                 try
                 {
+                    // Get the value for each property of the recipe
                     var value = Recipe.GetType().GetProperty(property).GetValue(Recipe);
 
+                    // If the value is not the default value, show it on the page.
                     if (value == null) { }
                     else if (value is TimeSpan time && time != new TimeSpan()) ShowProperties.Add(property);
                     else if (value is string) ShowProperties.Add(property);
@@ -201,6 +242,7 @@ namespace RecipeTracker.ViewModels
             {
                 if (parameters.ContainsKey("SelectedRecipe"))
                 {
+                    // Retrieve and set the selected recipe
                     var recipeID = (Guid)parameters["SelectedRecipe"];
 
                     Recipe = await DatabaseService.GetRecipeAsync(recipeID);
@@ -212,11 +254,13 @@ namespace RecipeTracker.ViewModels
 
             if (Recipe == null)
             {
+                // If Recipe is null, then the user is creating a new recipe.
                 Recipe = new Recipe();
                 CreateMode = true;
             }
             else
             {
+                // If the Recipe is not null, then the user is editting te selected recipe.
                 CreateMode = false;
                 PopulatePage();
             }

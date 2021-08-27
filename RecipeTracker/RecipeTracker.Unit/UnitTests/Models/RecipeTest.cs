@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace RecipeTracker.Unit.UnitTests.Models
 {
+    /// <summary>
+    /// Class <c>RecipeTest</c> contains unit tests for class <seealso cref="Recipe"/>.
+    /// </summary>
     [TestFixture]
     public class RecipeTest
     {
@@ -57,6 +60,10 @@ namespace RecipeTracker.Unit.UnitTests.Models
             recipe = new Recipe();
         }
 
+        /// <summary>
+        /// Creates a new recipe with randomised values.
+        /// </summary>
+        /// <returns>A recipe with randomised values.</returns>
         private Recipe CreateRandomizedRecipe()
         {
             return Fixture.Build<Recipe>().Without(i => i.Id).Do(i => i.Id = Fixture.Create<Guid>()).Create();

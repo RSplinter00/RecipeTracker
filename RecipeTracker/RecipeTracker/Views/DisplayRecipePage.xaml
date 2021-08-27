@@ -77,7 +77,7 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <!-- Layout for the ingredients and requirements, if the device is in portrait -->
+            <!-- Layout for the ingredients and requirements, if the device is in portrait mode -->
             <StackLayout Spacing="0" x:Name="outerPortraitLayout">
                 <!-- Show an expander for the ingredients -->
                 <xct:Expander x:Name="ingredientsExpander" ForceUpdateSizeCommand="{Binding ForceIngredientsUpdateSizeCommand}"

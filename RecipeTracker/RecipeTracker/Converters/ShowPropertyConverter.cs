@@ -5,7 +5,10 @@ using Xamarin.Forms;
 
 namespace RecipeTracker.Converters
 {
-    class ShowPropertyConverter : IValueConverter
+    /// <summary>
+    /// Class <c>ShowPropertyConverter</c> checks if the value contains the given parameter.
+    /// </summary>
+    public class ShowPropertyConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -13,6 +16,7 @@ namespace RecipeTracker.Converters
 
             if (value is ObservableCollection<string> && parameter is string)
             {
+                // If the datatypes are correct, check if value contains the parameter.
                 var val = (ObservableCollection<string>)value;
                 var param = (string)parameter;
 

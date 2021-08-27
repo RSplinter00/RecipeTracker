@@ -12,6 +12,9 @@ using Prism.DryIoc;
 [assembly: InternalsVisibleTo("RecipeTracker.Unit")]
 namespace RecipeTracker
 {
+    /// <summary>
+    /// Class <c>App</c> setsup everything needed to properly run he application.
+    /// </summary>
     public partial class App : PrismApplication
     {
         public App(IPlatformInitializer initializer = null) : base(initializer)
@@ -22,6 +25,7 @@ namespace RecipeTracker
         {
             InitializeComponent();
 
+            // Navigate to the main page.
             await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
@@ -29,10 +33,14 @@ namespace RecipeTracker
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
+            // Register services.
             containerRegistry.Register<IAuthenticationService, GoogleAuthenticationService>();
             containerRegistry.Register<IDatabaseService, DatabaseService>();
 
+            // Register the navigation page.
             containerRegistry.RegisterForNavigation<NavigationPage>();
+            
+            // Register the application pages.
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
             containerRegistry.RegisterForNavigation<EditRecipePage, EditRecipePageViewModel>();

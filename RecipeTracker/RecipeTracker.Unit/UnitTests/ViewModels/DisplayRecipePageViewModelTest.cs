@@ -10,6 +10,9 @@ using Prism.Navigation;
 
 namespace RecipeTracker.Unit.UnitTests.ViewModels
 {
+    /// <summary>
+    /// Class <c>DisplayRecipePageViewModelTest</c> contains unit tests for class <seealso cref="RecipeTracker.ViewModels.DisplayRecipePageViewModel"/>.
+    /// </summary>
     [TestFixture]
     public class DisplayRecipePageViewModelTest : ViewModelBaseTest
     {
@@ -24,17 +27,15 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnDeleteRecipeCommand_WhenConnectedAndAccepted_ShouldDeleteRecipeAndNavigateBack()
+        public void OnDeleteRecipeCommand_WhenAccepted_ShouldDeleteRecipeAndNavigateBack()
         {
             // Arrange
             var alertTitle = "Waarschuwing!";
             var alertMessage = "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.";
-            var alertMessageLocal = "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.";
             var alertAcceptButton = "Verwijder";
             var alertCancelButton = "Annuleer";
             
             PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => true));
-            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessageLocal, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => true));
             DatabaseServiceMock.Setup(databaseService => databaseService.DeleteRecipeAsync(SelectedRecipe.Id)).Returns(Task.Run(() => true));
             NavigationServiceMock.Setup(navigationService => navigationService.GoBackAsync()).Verifiable();
 
@@ -44,23 +45,20 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Alert for deleting a recipe from Firebase not called exactly once.");
-            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessageLocal, alertAcceptButton, alertCancelButton), Times.Never, "Alert for deleting a cached recipe called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.DeleteRecipeAsync(SelectedRecipe.Id), Times.Once, "Function IDatabaseService.DeleteRecipeAsync for the selected recipe not called exactly once.");
             NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Once, "Function INavigationService.GoBackAsync not called exactly once.");
         }
 
         [Test]
-        public void OnDeleteRecipeCommand_WhenConnectedAndCanceled_ShouldNotDeleteRecipe()
+        public void OnDeleteRecipeCommand_WhenCanceled_ShouldNotDeleteRecipe()
         {
             // Arrange
             var alertTitle = "Waarschuwing!";
             var alertMessage = "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.";
-            var alertMessageLocal = "U staat op het punt om dit recept lokaal te verwijderen. Als dit recept niet is opgeslagen in de cloud, kan dit niet worden terug gedraaid.";
             var alertAcceptButton = "Verwijder";
             var alertCancelButton = "Annuleer";
 
             PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => false));
-            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessageLocal, alertAcceptButton, alertCancelButton)).Returns(Task.Run(() => false));
             DatabaseServiceMock.Setup(databaseService => databaseService.DeleteRecipeAsync(SelectedRecipe.Id)).Returns(Task.Run(() => false));
             NavigationServiceMock.Setup(navigationService => navigationService.GoBackAsync()).Verifiable();
 
@@ -70,7 +68,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Alert for deleting a recipe from Firebase not called exactly once.");
-            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessageLocal, alertAcceptButton, alertCancelButton), Times.Never, "Alert for deleting a cached recipe called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.DeleteRecipeAsync(SelectedRecipe.Id), Times.Never, "Function IDatabaseService.DeleteRecipeAsync for the selected recipe called atleast once.");
             NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
         }

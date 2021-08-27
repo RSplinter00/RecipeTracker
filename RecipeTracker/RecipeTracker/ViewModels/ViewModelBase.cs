@@ -9,6 +9,9 @@ using Xamarin.Essentials;
 
 namespace RecipeTracker.ViewModels
 {
+    /// <summary>
+    /// Class <c>ViewModelBase</c> is the base model for all viewmodels
+    /// </summary>
     public class ViewModelBase : BindableBase, IInitialize, INavigationAware
     {
         internal INavigationService NavigationService { get; private set; }
@@ -28,6 +31,11 @@ namespace RecipeTracker.ViewModels
             NavigateCommand = new DelegateCommand<string>(NavigateToPageAsync);
         }
 
+        /// <summary>
+        /// hecks if the user has an internet connection.
+        /// For testing purposes, if the device platform is unknown, it will always return true.
+        /// </summary>
+        /// <returns>Whether the user has an internet connection or not.</returns>
         protected bool IsConnected()
         {
             if (DeviceInfo.Platform == DevicePlatform.Unknown) return true;
@@ -35,6 +43,9 @@ namespace RecipeTracker.ViewModels
             return CrossConnectivity.Current.IsConnected;
         }
 
+        /// <summary>
+        /// navigates the application to the mainpage, resetting the navigation stack.
+        /// </summary>
         internal async void NavigateToMainPageAsync()
         {
             var result = await NavigationService.NavigateAsync("/NavigationPage/MainPage");
@@ -42,6 +53,10 @@ namespace RecipeTracker.ViewModels
             if (result != null && !result.Success) Console.WriteLine("Failed to navigate to MainPage");
         }
 
+        /// <summary>
+        /// nvigates the application to the page with the given path.
+        /// </summary>
+        /// <param name="path">The path of the page to navigate to.</param>
         internal async void NavigateToPageAsync(string path)
         {
             var result = await NavigationService.NavigateAsync(path);
@@ -49,6 +64,11 @@ namespace RecipeTracker.ViewModels
             if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
         }
 
+        /// <summary>
+        /// Navigates the application to the page with the given path and sets the given parameters.
+        /// </summary>
+        /// <param name="path">The path of the page to navigate to.</param>
+        /// <param name="navigationParams">Parameters to pass to the next page.</param>
         internal async void NavigateToPageAsync(string path, INavigationParameters navigationParams)
         {
             var result = await NavigationService.NavigateAsync(path, navigationParams);
@@ -56,6 +76,9 @@ namespace RecipeTracker.ViewModels
             if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
         }
 
+        /// <summary>
+        /// Navigates the application back to the previous page in the navigation stack.
+        /// </summary>
         internal async void GoBackAsync()
         {
             var result = await NavigationService.GoBackAsync();

@@ -442,7 +442,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             Assert.IsEmpty(EditRecipePageViewModel.ShowProperties, "Attribute EditRecipePageViewModel.ShowProperties is not empty.");
         }
 
-        // TODO: OnNavigatedTo(parameters)
         [Test]
         public void OnNavigatedTo_WithCorrectParameters_ShouldSetSelectedRecipe()
         {

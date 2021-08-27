@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace RecipeTracker.Models
 {
+    /// <summary>
+    /// Class <c>Recipe</c> represents the recipe for a dish.
+    /// </summary>
     public class Recipe
     {
         private readonly Dictionary<string, string> EnNlTranslations = new Dictionary<string, string>()
@@ -54,6 +57,15 @@ namespace RecipeTracker.Models
         {
         }
 
+        /// <summary>
+        /// Translates an English property name to Dutch.
+        /// 
+        /// <para>
+        ///     For the Dutch to English translation, see <seealso cref="NlToEnTranslation(string)"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="propertyName">Name of the property, in English, to be translated to Dutch.</param>
+        /// <returns></returns>
         public string EnToNlTranslation(string propertyName)
         {
             try
@@ -66,6 +78,15 @@ namespace RecipeTracker.Models
             }
         }
 
+        /// <summary>
+        /// Translates a Dutch property name to English.
+        /// 
+        /// <para>
+        ///     For the English to Dutch translation, see <seealso cref="EnToNlTranslation(string)"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="propertyName">Name of the property, in Dutch, to be translated to English.</param>
+        /// <returns></returns>
         public string NlToEnTranslation(string propertyName)
         {
             try
@@ -85,6 +106,7 @@ namespace RecipeTracker.Models
         {
             if (!(obj is Recipe)) return false;
 
+            // Define if the recipe is unique by its Id property.
             return this.Id == ((Recipe)obj).Id;
 
         }
