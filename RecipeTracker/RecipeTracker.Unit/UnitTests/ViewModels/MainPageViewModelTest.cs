@@ -167,13 +167,13 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnRefreshCommand_ShouldGetRecipes()
+        public async Task RefreshRecipes_ShouldGetRecipes()
         {
             // Arrange
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
-            MainPageViewModel.OnRefreshCommand?.Execute();
+            await MainPageViewModel.RefreshRecipes();
 
             // Assert
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
@@ -181,7 +181,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnNavigatedTo_WhenLoggingIn_ShouldSetupMainPage()
+        public async Task SetupMainPage_WhenLoggingIn_ShouldSetupMainPage()
         {
             // Arrange
             var expectedToolbarText = "Uitloggen";
@@ -192,7 +192,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
-            MainPageViewModel.OnNavigatedTo(null);
+            await MainPageViewModel.SetupMainPage();
 
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
@@ -204,7 +204,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnNavigatedTo_WithoutLoggingIn_ShouldSetupMainPage()
+        public async Task SetupMainPage_WithoutLoggingIn_ShouldSetupMainPage()
         {
             // Arrange
             var expectedToolbarText = "Inloggen";
@@ -215,7 +215,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
-            MainPageViewModel.OnNavigatedTo(null);
+            await MainPageViewModel.SetupMainPage();
 
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
@@ -227,7 +227,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnNavigatedTo_AfterSecondCall_ShouldNotLoginAndSync()
+        public async Task SetupMainPage_AfterSecondCall_ShouldNotLoginAndSync()
         {
             // Arrange
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
@@ -236,8 +236,8 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             DatabaseServiceMock.Setup(databaseService => databaseService.GetRecipesAsync()).Returns(Task.Run(() => new List<Recipe>()));
 
             // Act
-            MainPageViewModel.OnNavigatedTo(null);
-            MainPageViewModel.OnNavigatedTo(null);
+            await MainPageViewModel.SetupMainPage();
+            await MainPageViewModel.SetupMainPage();
 
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");

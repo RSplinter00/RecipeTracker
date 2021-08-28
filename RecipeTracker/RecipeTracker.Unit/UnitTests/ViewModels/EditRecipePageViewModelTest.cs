@@ -102,7 +102,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnSubmitCommand_InCreateMode_ShouldAddRecipeAndNavigateToItsPage()
+        public async Task SaveRecipe_InCreateMode_ShouldAddRecipeAndNavigateToItsPage()
         {
             // Arrange
             var alertTitle = "Pas op!";
@@ -123,7 +123,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             // Act
             EditRecipePageViewModel.CreateMode = true;
             EditRecipePageViewModel.Recipe = SelectedRecipe;
-            EditRecipePageViewModel.OnSubmitCommand?.Execute();
+            await EditRecipePageViewModel.SaveRecipe();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Never, "Confirmation alert for editting existing recipe called atleast once.");
@@ -133,7 +133,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnSubmitCommand_NotInCreateModeWhenConfirmed_ShouldSaveRecipeAndNavigateToItsPage()
+        public async Task SaveRecipe_NotInCreateModeWhenConfirmed_ShouldSaveRecipeAndNavigateToItsPage()
         {
             // Arrange
             var alertTitle = "Pas op!";
@@ -153,7 +153,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             // Act
             EditRecipePageViewModel.CreateMode = false;
             EditRecipePageViewModel.Recipe = SelectedRecipe;
-            EditRecipePageViewModel.OnSubmitCommand?.Execute();
+            await EditRecipePageViewModel.SaveRecipe();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Confirmation alert for editting existing recipe not called exactly once.");
@@ -162,7 +162,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnSubmitCommand_NotInCreateModeWhenCanceled_ShouldDoNothing()
+        public async Task SaveRecipe_NotInCreateModeWhenCanceled_ShouldDoNothing()
         {
             // Arrange
             var alertTitle = "Pas op!";
@@ -183,7 +183,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             // Act
             EditRecipePageViewModel.CreateMode = false;
             EditRecipePageViewModel.Recipe = SelectedRecipe;
-            EditRecipePageViewModel.OnSubmitCommand?.Execute();
+            await EditRecipePageViewModel.SaveRecipe();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Confirmation alert for editting existing recipe not called exactly once.");
@@ -193,7 +193,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnSubmitCommand_WithInvalidRecipe_ShouldDoNothing()
+        public async Task SaveRecipe_WithInvalidRecipe_ShouldDoNothing()
         {
             // Arrange
             var recipe = new Recipe { Id = Guid.NewGuid() };
@@ -222,7 +222,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             // Act
             EditRecipePageViewModel.CreateMode = false;
             EditRecipePageViewModel.Recipe = recipe;
-            EditRecipePageViewModel.OnSubmitCommand?.Execute();
+            await EditRecipePageViewModel.SaveRecipe();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertInvalidTitle, alertInvalidMessage, alertInvalidCancelButton), Times.Once, "Warning alert for invalid recipe recipe not called exactly once.");

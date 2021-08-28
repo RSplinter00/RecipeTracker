@@ -107,9 +107,17 @@ namespace RecipeTracker.ViewModels
         }
 
         /// <summary>
+        /// Executes Task <seealso cref="SaveRecipe"/>.
+        /// </summary>
+        private async void OnSubmit()
+        {
+            await SaveRecipe();
+        }
+
+        /// <summary>
         /// Saves any changes made to the recipe and navigates to the DisplayRecipePage.
         /// </summary>
-        public async void OnSubmit()
+        public async Task SaveRecipe()
         {
             if (!IsValid())
             {
@@ -243,9 +251,9 @@ namespace RecipeTracker.ViewModels
                 if (parameters.ContainsKey("SelectedRecipe"))
                 {
                     // Retrieve and set the selected recipe
-                    var recipeID = (Guid)parameters["SelectedRecipe"];
+                    var recipeId = (Guid)parameters["SelectedRecipe"];
 
-                    Recipe = await DatabaseService.GetRecipeAsync(recipeID);
+                    Recipe = await DatabaseService.GetRecipeAsync(recipeId);
                 }
             }
             catch (Exception)

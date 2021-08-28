@@ -139,10 +139,10 @@ namespace RecipeTracker.ViewModels
             }
         }
 
-        public async override void OnNavigatedTo(INavigationParameters parameters)
+        internal async Task SetupMainPage()
         {
             var response = GoogleActionStatus.Error;
-            
+
             if (IsConnected() && !promptedForLogin)
             {
                 // If the user has in internet connection and isn't asked to login before, login the user.
@@ -160,6 +160,11 @@ namespace RecipeTracker.ViewModels
             }
 
             Recipes = await DatabaseService.GetRecipesAsync();
+        }
+
+        public async override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            await SetupMainPage();
         }
     }
 }

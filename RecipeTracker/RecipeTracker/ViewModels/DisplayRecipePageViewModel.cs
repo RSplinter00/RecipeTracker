@@ -6,6 +6,8 @@ using RecipeTracker.Models;
 using System;
 using System.Windows.Input;
 using Xamarin.Essentials;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace RecipeTracker.ViewModels
 {
@@ -25,6 +27,7 @@ namespace RecipeTracker.ViewModels
         public DelegateCommand OnEditRecipeCommand { get; }
         public DelegateCommand<string> OnNavigateToWebsiteCommand { get; }
 
+        private Guid recipeId;
         private Recipe recipe;
         public Recipe Recipe
         {
@@ -44,7 +47,7 @@ namespace RecipeTracker.ViewModels
         public DisplayRecipePageViewModel(INavigationService navigationService, IPageDialogService pageDialogService, IAuthenticationService authService, IDatabaseService databaseService)
             : base(navigationService, pageDialogService, authService, databaseService)
         {
-            OnDeleteRecipeCommand = new DelegateCommand(DeleteRecipeAsync);
+            OnDeleteRecipeCommand = new DelegateCommand(OnDeleteRecipe);
             OnEditRecipeCommand = new DelegateCommand(EditRecipeAsync);
             OnNavigateToWebsiteCommand = new DelegateCommand<string>(ToWebsiteAsync);
         }
@@ -62,10 +65,15 @@ namespace RecipeTracker.ViewModels
             if (Uri.TryCreate(website, UriKind.Absolute, out var uri) && DeviceInfo.Platform != DevicePlatform.Unknown) await Launcher.OpenAsync(uri);
         }
 
+        private async void OnDeleteRecipe()
+        {
+            await DeleteRecipeAsync();
+        }
+
         /// <summary>
         /// Deletes the recipe displayed on this page.
         /// </summary>
-        public async void DeleteRecipeAsync()
+        public async Task DeleteRecipeAsync()
         {
             bool response = await DialogService.DisplayAlertAsync("Waarschuwing!", "U staat op het punt dit recept te verwijderen. Dit kan niet terug gedraaid worden.", "Verwijder", "Annuleer");
 
@@ -98,19 +106,18 @@ namespace RecipeTracker.ViewModels
 
         public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            Guid recipeId;
-
             try
             {
-                // Retrieve the recipe, if the parameters contain a recipe id.
+                // Get the recipe id from the parameters and retrieve the selected recipe.
                 if (parameters.ContainsKey("SelectedRecipe")) recipeId = (Guid)parameters["SelectedRecipe"];
 
-                if (recipeId != null) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
+                if (recipeId != Guid.Empty) Recipe = await DatabaseService.GetRecipeAsync(recipeId);
 
                 if (Recipe != null) return;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine(e.Message);
             }
 
             // If the recipe doesn't exist, return to the previous page.

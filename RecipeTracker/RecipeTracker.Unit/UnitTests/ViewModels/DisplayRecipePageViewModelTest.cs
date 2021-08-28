@@ -27,7 +27,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnDeleteRecipeCommand_WhenAccepted_ShouldDeleteRecipeAndNavigateBack()
+        public async Task DeleteRecipeAsync_WhenAccepted_ShouldDeleteRecipeAndNavigateBack()
         {
             // Arrange
             var alertTitle = "Waarschuwing!";
@@ -41,7 +41,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Act
             DisplayRecipePageViewModel.Recipe = SelectedRecipe;
-            DisplayRecipePageViewModel.OnDeleteRecipeCommand?.Execute();
+            await DisplayRecipePageViewModel.DeleteRecipeAsync();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Alert for deleting a recipe from Firebase not called exactly once.");
@@ -50,7 +50,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void OnDeleteRecipeCommand_WhenCanceled_ShouldNotDeleteRecipe()
+        public async Task DeleteRecipeAsync_WhenCanceled_ShouldNotDeleteRecipe()
         {
             // Arrange
             var alertTitle = "Waarschuwing!";
@@ -64,7 +64,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Act
             DisplayRecipePageViewModel.Recipe = SelectedRecipe;
-            DisplayRecipePageViewModel.OnDeleteRecipeCommand?.Execute();
+            await DisplayRecipePageViewModel.DeleteRecipeAsync();
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertAcceptButton, alertCancelButton), Times.Once, "Alert for deleting a recipe from Firebase not called exactly once.");
