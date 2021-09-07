@@ -139,6 +139,9 @@ namespace RecipeTracker.ViewModels
             }
         }
 
+        /// <summary>
+        /// Setups the main page by authentication the user and synchronizing recipes, if needed. And populates the page with recipes.
+        /// </summary>
         internal async Task SetupMainPage()
         {
             var response = GoogleActionStatus.Error;

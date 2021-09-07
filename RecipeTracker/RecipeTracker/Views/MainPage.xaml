@@ -6,6 +6,8 @@
              Title="Recepten">
     <ContentPage.Resources>
         <ResourceDictionary>
+            <Color x:Key="FrameShadowColor">#C2C8CF</Color>
+
             <Style TargetType="Image">
                 <Setter Property="VerticalOptions" Value="Center"/>
             </Style>
@@ -24,32 +26,40 @@
                 <StackLayout HorizontalOptions="Center" Spacing="0" Margin="10"
                              IsVisible="{Binding Recipes, Converter={StaticResource NullToBoolConverter}, ConverterParameter='invert'}">
                     <Label Text="Geen Recepten!&#10;Maak hier een nieuw recept:" FontSize="16" HorizontalTextAlignment="Center"/>
-                    <Button Text="Nieuw Recept" Command="{Binding AddRecipeCommand}" Margin="10"/>
+                    <Button Text="Nieuw Recept" BackgroundColor="{StaticResource AppBackgroundColor}" BorderColor="Black" BorderWidth="2" CornerRadius="10"
+                            FontSize="16" FontAttributes="Bold" TextTransform="None" Command="{Binding AddRecipeCommand}" Margin="10"/>
                 </StackLayout>
                 
                 <!-- Displays an overview of all the users recipes -->
                 <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Frame>
+                            <Frame BorderColor="{StaticResource FrameShadowColor}" CornerRadius="10">
                                 <!-- Displays key information of the recipe -->
                                 <StackLayout>
                                     <Label Text="{Binding Name}" Style="{StaticResource RecipeTitle}"/>
                                     
                                     <!-- Displays the category (if exists) and the total duration of the recipe -->
-                                    <StackLayout Orientation="Horizontal">
-                                        <Image Source="Category.png" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
-                                        <Label Text="{Binding Category}" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                                        <Image Source="Duration.png" Margin="10,0,0,0"/>
-                                        <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Style="{StaticResource RecipeSubtitle}"/>
-                                    </StackLayout>
+                                        <Image Source="Duration.png" Grid.Column="0"/>
+                                        <Label Text="{Binding TotalDuration, StringFormat='{0:hh\\:mm}'}" Grid.Column="1" Style="{StaticResource RecipeSubtitle}"/>
+
+                                        <Image Source="Category.png" Grid.Column="2" Margin="10,0,0,0" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                        <Label Text="{Binding Category}" Grid.Column="3" LineBreakMode="TailTruncation" Style="{StaticResource RecipeSubtitle}" IsVisible="{Binding Category, Converter={StaticResource NullToBoolConverter}}"/>
+                                    </Grid>
                                 </StackLayout>
 
                                 <!-- Navigates to 'DisplayRecipePage' on click, to display the selected recipe -->
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.OnRecipeSelectedCommand, Source={x:Reference RecipeOverview}}"
-                                                            CommandParameter="{Binding .}"/>
+                                                          CommandParameter="{Binding .}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
                         </DataTemplate>
