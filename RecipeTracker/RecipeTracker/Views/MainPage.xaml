@@ -15,7 +15,8 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding LoginToolbarItemText}" Order="Secondary" Command="{Binding OnToggleLoginCommand}"/>
+        <!--<ToolbarItem Text="{Binding LoginToolbarItemText}" Order="Secondary" Command="{Binding OnToggleLoginCommand}"/>-->
+        <ToolbarItem Text="Instellingen" Order="Secondary" Command="{Binding OnSettingsPressedCommand}"/>
         <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
     </ContentPage.ToolbarItems>
 

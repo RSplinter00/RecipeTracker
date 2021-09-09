@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeTracker.Views.Settings.SettingsPage"
+             Title="Instellingen">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Frame" x:Key="SettingsHeaderFrame">
+                <Setter Property="BackgroundColor" Value="#1F2022"/>
+                <Setter Property="CornerRadius" Value="0"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}" x:Key="SettingsHeaderLabel">
+                <Setter Property="TextColor" Value="{StaticResource LightTextColor}"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}" x:Key="SettingsCategoryLabel">
+                <Setter Property="TextColor" Value="{StaticResource DarkTextColor}"/>
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+
+            <Style TargetType="Image" x:Key="NavigationIndicatorImage">
+                <Setter Property="Source" Value="ArrowRight.png"/>
+                <Setter Property="HorizontalOptions" Value="End"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <StackLayout>
+        <!-- Display a list of all settings categories -->
+        <CollectionView ItemsSource="{Binding SettingsProperties}" x:Name="SettingsCollectionView"
+                        SelectionMode="Single" SelectionChangedCommand="{Binding OnSelectionChangedCommand}" SelectedItem="{Binding SelectedItem}">
+            <CollectionView.Header>
+                <Frame Style="{StaticResource SettingsHeaderFrame}">
+                    <Label Text="Algemeen" Style="{StaticResource SettingsHeaderLabel}"/>
+                </Frame>
+            </CollectionView.Header>
+                
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <ContentView>
+                        <!-- Change background color for different states -->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <!-- Default state -->
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="White"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <!-- While focused on a row -->
+                                <VisualState Name="Focused">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="LightGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <!-- After pressing a row -->
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="LightGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                            
+                        <!-- Layout for the settings category -->
+                        <Grid Margin="10,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding .}" Style="{StaticResource SettingsCategoryLabel}" Grid.Column="0"/>
+                            <Image Style="{StaticResource NavigationIndicatorImage}" Grid.Column="1"/>
+                        </Grid>
+                    </ContentView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

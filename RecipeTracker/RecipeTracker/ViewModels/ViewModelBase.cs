@@ -32,18 +32,6 @@ namespace RecipeTracker.ViewModels
         }
 
         /// <summary>
-        /// hecks if the user has an internet connection.
-        /// For testing purposes, if the device platform is unknown, it will always return true.
-        /// </summary>
-        /// <returns>Whether the user has an internet connection or not.</returns>
-        protected bool IsConnected()
-        {
-            if (DeviceInfo.Platform == DevicePlatform.Unknown) return true;
-
-            return CrossConnectivity.Current.IsConnected;
-        }
-
-        /// <summary>
         /// navigates the application to the mainpage, resetting the navigation stack.
         /// </summary>
         internal async void NavigateToMainPageAsync()

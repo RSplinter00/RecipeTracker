@@ -20,18 +20,10 @@ namespace RecipeTracker.ViewModels
         private bool promptedForLogin = false;
 
         public DelegateCommand OnToggleLoginCommand { get; }
+        public DelegateCommand OnSettingsPressedCommand { get; }
         public DelegateCommand OnRefreshCommand { get; }
         public DelegateCommand AddRecipeCommand { get; }
         public DelegateCommand<Recipe> OnRecipeSelectedCommand { get; }
-
-        private readonly string LoginText = "Inloggen";
-        private readonly string LogoutText = "Uitloggen";
-        private string loginToolbarItemText;
-        public string LoginToolbarItemText
-        {
-            get => loginToolbarItemText;
-            private set => SetProperty(ref loginToolbarItemText, value);
-        }
 
         private bool isRefreshing;
         public bool IsRefreshing
@@ -51,6 +43,7 @@ namespace RecipeTracker.ViewModels
             : base(navigationService, pageDialogService, authService, databaseService)
         {
             OnToggleLoginCommand = new DelegateCommand(OnToggleLogin);
+            OnSettingsPressedCommand = new DelegateCommand(() => NavigateToPageAsync("SettingsPage"));
             OnRefreshCommand = new DelegateCommand(OnRefresh);
             AddRecipeCommand = new DelegateCommand(() => NavigateToPageAsync("EditRecipePage"));
             OnRecipeSelectedCommand = new DelegateCommand<Recipe>(OnRecipeSelected);
@@ -61,7 +54,7 @@ namespace RecipeTracker.ViewModels
         /// </summary>
         private async void OnToggleLogin()
         {
-            if (IsConnected()) await ToggleLogin();
+            if (App.IsConnected()) await ToggleLogin();
         }
 
         /// <summary>
@@ -83,7 +76,6 @@ namespace RecipeTracker.ViewModels
                 await AuthService.LoginAsync();
                 promptedForLogin = true;
 
-                SetLoginToolbarText();
                 await DatabaseService.SyncRecipesAsync();
                 await RefreshRecipes();
             }
@@ -98,15 +90,6 @@ namespace RecipeTracker.ViewModels
                 }
             }
 
-        }
-
-        /// <summary>
-        /// Set the text for the login/logout button based on if the user is logged in.
-        /// </summary>
-        internal void SetLoginToolbarText()
-        {
-            if (AuthService.GetUser() == null) LoginToolbarItemText = LoginText;
-            else LoginToolbarItemText = LogoutText;
         }
 
         /// <summary>
@@ -144,18 +127,15 @@ namespace RecipeTracker.ViewModels
         /// </summary>
         internal async Task SetupMainPage()
         {
-            var response = GoogleActionStatus.Error;
 
-            if (IsConnected() && !promptedForLogin)
+            if (App.IsConnected() && !promptedForLogin && AuthService.GetUser() != null)
             {
-                // If the user has in internet connection and isn't asked to login before, login the user.
-                response = await AuthService.LoginAsync();
+                // If the user has an internet connection, is still logged in and hasn't asked to login before, call the login function.
+                await AuthService.LoginAsync();
                 promptedForLogin = true;
             }
 
-            SetLoginToolbarText();
-
-            if (response == GoogleActionStatus.Completed && !hasSynced)
+            if (AuthService.GetUser() != null && !hasSynced)
             {
                 // If the user is logged in and hasn't synced before, save cached recipes to the cloud.
                 await DatabaseService.SyncRecipesAsync();

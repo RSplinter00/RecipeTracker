@@ -1,0 +1,116 @@
+﻿using Moq;
+using NUnit.Framework;
+using Plugin.GoogleClient;
+using RecipeTracker.ViewModels.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
+{
+    [TestFixture]
+    public class AccountSettingsPageViewModelTest : ViewModelBaseTest
+    {
+        private AccountSettingsPageViewModel AccountSettingsPageViewModel { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            AccountSettingsPageViewModel = new AccountSettingsPageViewModel(NavigationServiceMock.Object, PageDialogServiceMock.Object, AuthServiceMock.Object, DatabaseServiceMock.Object);
+        }
+
+        [Test]
+        public async Task LoginUserAsync_WhenLoggingIn_ShouldLoginAndSetUser()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => CurrentUser);
+
+            // Act
+            await AccountSettingsPageViewModel.LoginUserAsync();
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function AuthenticationService.GetUser not called exactly once.");
+            Assert.AreEqual(CurrentUser, AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User does not equal the expected user.");
+        }
+
+        [Test]
+        public async Task LoginUserAsync_WhenRefusingLogin_ShouldDoNothing()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Canceled));
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
+
+            // Act
+            await AccountSettingsPageViewModel.LoginUserAsync();
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Never, "Function AuthenticationService.GetUser called atleast once.");
+            Assert.IsNull(AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User is not null.");
+        }
+
+        [Test]
+        public async Task LogoutUserAsync_WhenLoggingOut_ShouldLogoutAndResetUser()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.LogoutAsync()).Returns(Task.Run(() => true));
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
+
+            // Act
+            await AccountSettingsPageViewModel.LogoutUserAsync();
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.LogoutAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Never, "Function AuthenticationService.GetUser called atleast once.");
+            Assert.IsNull(AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User is not null.");
+        }
+
+        [Test]
+        public async Task LogoutUserAsync_WhenFailingLogout_ShouldDoNothing()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.LogoutAsync()).Returns(Task.Run(() => false));
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
+
+            // Act
+            await AccountSettingsPageViewModel.LogoutUserAsync();
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.LogoutAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Never, "Function AuthenticationService.GetUser called atleast once.");
+            Assert.IsNull(AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User is not null.");
+        }
+
+        [Test]
+        public void OnNavigatedTo_WhenLoggedIn_ShouldSetCurrentUser()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => CurrentUser);
+
+            // Act
+            AccountSettingsPageViewModel.OnNavigatedTo(null);
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function AuthenticationService.GetUser not called exactly once.");
+            Assert.AreEqual(CurrentUser, AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User does not equal the expected user.");
+        }
+
+        [Test]
+        public void OnNavigatedTo_WhenNotLoggedIn_ShouldSetUserNull()
+        {
+            // Arrange
+            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
+
+            // Act
+            AccountSettingsPageViewModel.OnNavigatedTo(null);
+
+            // Assert
+            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function AuthenticationService.GetUser not called exactly once.");
+            Assert.IsNull(AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User is not null.");
+        }
+    }
+}

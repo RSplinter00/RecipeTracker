@@ -95,36 +95,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         }
 
         [Test]
-        public void SetLoginToolbarText_WhenUserNotNull_ShouldSetToolbarTextForLogout()
-        {
-            // Arrange
-            var expectedToolbarText = "Uitloggen";
-            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(CurrentUser);
-
-            // Act
-            MainPageViewModel.SetLoginToolbarText();
-
-            // Assert
-            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function IAuthenticationService.GetUser not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
-        }
-
-        [Test]
-        public void SetLoginToolbarText_WhenUserNull_ShouldSetToolbarTextForLogin()
-        {
-            // Arrange
-            var expectedToolbarText = "Inloggen";
-            AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
-
-            // Act
-            MainPageViewModel.SetLoginToolbarText();
-
-            // Assert
-            AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function IAuthenticationService.GetUser not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
-        }
-
-        [Test]
         public void OnRecipeSelectedCommand_WithValidRecipe_ShouldNavigateToDisplayRecipePage()
         {
             // Arange
@@ -184,8 +154,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         public async Task SetupMainPage_WhenLoggingIn_ShouldSetupMainPage()
         {
             // Arrange
-            var expectedToolbarText = "Uitloggen";
-
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(CurrentUser);
             DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipesAsync()).Verifiable();
@@ -199,7 +167,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Once, "Function IDatabaseService.SyncRecipes not called exactly once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
             Assert.IsNotNull(MainPageViewModel.Recipes, "Attribute MainPageViewModel.Recipes is null");
         }
 
@@ -207,8 +174,6 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
         public async Task SetupMainPage_WithoutLoggingIn_ShouldSetupMainPage()
         {
             // Arrange
-            var expectedToolbarText = "Inloggen";
-
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Canceled));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
             DatabaseServiceMock.Setup(databaseService => databaseService.SyncRecipesAsync()).Verifiable();
@@ -218,11 +183,10 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             await MainPageViewModel.SetupMainPage();
 
             // Assert
-            AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function IAuthenticationService.LoginAsync not called exactly once.");
+            AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Never, "Function IAuthenticationService.LoginAsync called atleast once.");
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.AtLeastOnce, "Function IAuthenticationService.GetUser not called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.SyncRecipesAsync(), Times.Never, "Function IDatabaseService.SyncRecipes called atleast once.");
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipesAsync(), Times.Once, "Function IDatabaseService.GetRecipesAsync not called exactly once.");
-            Assert.AreEqual(expectedToolbarText, MainPageViewModel.LoginToolbarItemText, "Attribute MainPageViewModel.LoginToolbarItemText did not equal expected toolbar text.");
             Assert.IsNotNull(MainPageViewModel.Recipes, "Attribute MainPageViewModel.Recipes is null");
         }
 

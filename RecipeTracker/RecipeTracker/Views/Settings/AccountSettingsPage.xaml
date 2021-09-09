@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeTracker.Views.Settings.AccountSettingsPage"
+             Title="Account">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="TextTransform" Value="None"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
+                <Setter Property="BorderColor" Value="{StaticResource NavigationBarBackgroundColor}"/>
+                <Setter Property="BorderWidth" Value="3"/>
+                <Setter Property="CornerRadius" Value="20"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout>
+        <!-- Displays a login message and button -->
+        <StackLayout IsVisible="{Binding User, Converter={StaticResource NullToBoolConverter}, ConverterParameter='invert'}" Margin="30">
+            <Label Text="Login met Google om uw recepten in de Cloud op te slaan! Zo kunnen uw favoriete recepten nooit verloren gaan." FontSize="16" HorizontalTextAlignment="Center"/>
+            <Button Text="Inloggen" Command="{Binding OnLoginPressedCommand}" Margin="0,10"/>
+        </StackLayout>
+
+        <!-- Displays the user's information -->
+        <StackLayout HorizontalOptions="Center" Margin="30" IsVisible="{Binding User, Converter={StaticResource NullToBoolConverter}}">
+            <!-- Profile Picture -->
+            <Frame CornerRadius="100" HorizontalOptions="Center" Padding="0" IsClippedToBounds="True" HeightRequest="100" WidthRequest="100">
+                <Image Source="{Binding User.Picture}" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="100" WidthRequest="100"/>
+            </Frame>
+
+            <Label Text="{Binding User.Name}" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding User.Email}" FontSize="16" TextColor="Gray" HorizontalTextAlignment="Center"/>
+
+            <!-- Logout button -->
+            <Button Text="Uitloggen" Margin="0,20" Command="{Binding OnLogoutPressedCommand}"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

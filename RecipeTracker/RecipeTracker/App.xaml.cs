@@ -8,6 +8,13 @@ using Xamarin.Forms;
 using RecipeTracker.Services;
 using System.Runtime.CompilerServices;
 using Prism.DryIoc;
+using RecipeTracker.Views.Settings;
+using RecipeTracker.ViewModels.Settings;
+using Xamarin.Essentials;
+using Plugin.Connectivity;
+using Plugin.GoogleClient;
+using System.Threading.Tasks;
+using System;
 
 [assembly: InternalsVisibleTo("RecipeTracker.Unit")]
 namespace RecipeTracker
@@ -19,6 +26,18 @@ namespace RecipeTracker
     {
         public App(IPlatformInitializer initializer = null) : base(initializer)
         {
+        }
+
+        /// <summary>
+        /// hecks if the user has an internet connection.
+        /// For testing purposes, if the device platform is unknown, it will always return true.
+        /// </summary>
+        /// <returns>Whether the user has an internet connection or not.</returns>
+        public static bool IsConnected()
+        {
+            if (DeviceInfo.Platform == DevicePlatform.Unknown) return true;
+
+            return CrossConnectivity.Current.IsConnected;
         }
 
         protected override async void OnInitialized()
@@ -39,11 +58,16 @@ namespace RecipeTracker
 
             // Register the navigation page.
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            
+
+            // Register the settings pages.
+            containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
+            containerRegistry.RegisterForNavigation<AccountSettingsPage, AccountSettingsPageViewModel>();
+
             // Register the application pages.
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
             containerRegistry.RegisterForNavigation<EditRecipePage, EditRecipePageViewModel>();
+
         }
     }
 }
