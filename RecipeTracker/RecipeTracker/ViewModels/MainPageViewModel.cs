@@ -127,7 +127,6 @@ namespace RecipeTracker.ViewModels
         /// </summary>
         internal async Task SetupMainPage()
         {
-
             if (App.IsConnected() && !promptedForLogin && AuthService.GetUser() != null)
             {
                 // If the user has an internet connection, is still logged in and hasn't asked to login before, call the login function.

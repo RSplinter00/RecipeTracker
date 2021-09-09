@@ -1,10 +1,12 @@
 ﻿using Moq;
 using NUnit.Framework;
 using RecipeTracker.ViewModels.Settings;
-using System;
 
 namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
 {
+    /// <summary>
+    /// Class <c>SettingsPageViewModelTest</c> contains unit tests for class <seealso cref="RecipeTracker.ViewModels.Settings.SettingsPageViewModel"/>.
+    /// </summary>
     [TestFixture]
     public class SettingsPageViewModelTest : ViewModelBaseTest
     {

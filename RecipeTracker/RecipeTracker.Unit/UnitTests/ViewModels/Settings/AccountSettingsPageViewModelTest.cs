@@ -2,14 +2,13 @@
 using NUnit.Framework;
 using Plugin.GoogleClient;
 using RecipeTracker.ViewModels.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
 {
+    /// <summary>
+    /// Class <c>AccountSettingsPageViewModelTest</c> contains unit tests for class <seealso cref="RecipeTracker.ViewModels.Settings.AccountSettingsPageViewModelTest"/>.
+    /// </summary>
     [TestFixture]
     public class AccountSettingsPageViewModelTest : ViewModelBaseTest
     {

@@ -5,15 +5,7 @@
              Title="Account">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="Button">
-                <Setter Property="HorizontalOptions" Value="Center"/>
-                <Setter Property="TextTransform" Value="None"/>
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}"/>
-                <Setter Property="BorderColor" Value="{StaticResource NavigationBarBackgroundColor}"/>
-                <Setter Property="BorderWidth" Value="3"/>
-                <Setter Property="CornerRadius" Value="20"/>
-            </Style>
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 

@@ -67,12 +67,6 @@ namespace RecipeTracker.Services
         {
             try
             {
-                if (!string.IsNullOrEmpty(GoogleService.AccessToken))
-                {
-                    // Always require user authentication.
-                    GoogleService.Logout();
-                }
-
                 GoogleActionStatus status = GoogleActionStatus.Unauthorized;
 
                 // Create the function to login the user.

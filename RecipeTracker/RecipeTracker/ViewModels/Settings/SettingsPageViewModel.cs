@@ -36,7 +36,6 @@ namespace RecipeTracker.ViewModels.Settings
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            Console.WriteLine();
         }
     }
 }

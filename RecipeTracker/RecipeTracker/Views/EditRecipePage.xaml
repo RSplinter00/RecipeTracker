@@ -47,9 +47,8 @@
 
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="0"/>
                 <Setter Property="CornerRadius" Value="10"/>
-                <Setter Property="TextTransform" Value="None"/>
-                <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
 
             <Style TargetType="BoxView">

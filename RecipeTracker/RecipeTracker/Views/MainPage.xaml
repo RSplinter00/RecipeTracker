@@ -15,7 +15,6 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <!--<ToolbarItem Text="{Binding LoginToolbarItemText}" Order="Secondary" Command="{Binding OnToggleLoginCommand}"/>-->
         <ToolbarItem Text="Instellingen" Order="Secondary" Command="{Binding OnSettingsPressedCommand}"/>
         <ToolbarItem IconImageSource="AddRecipeIcon" Text="Voeg recept toe" Command="{Binding AddRecipeCommand}"/>
     </ContentPage.ToolbarItems>
@@ -27,8 +26,7 @@
                 <StackLayout HorizontalOptions="Center" Spacing="0" Margin="10"
                              IsVisible="{Binding Recipes, Converter={StaticResource NullToBoolConverter}, ConverterParameter='invert'}">
                     <Label Text="Geen Recepten!&#10;Maak hier een nieuw recept:" FontSize="16" HorizontalTextAlignment="Center"/>
-                    <Button Text="Nieuw Recept" BackgroundColor="{StaticResource AppBackgroundColor}" BorderColor="Black" BorderWidth="2" CornerRadius="10"
-                            FontSize="16" FontAttributes="Bold" TextTransform="None" Command="{Binding AddRecipeCommand}" Margin="10"/>
+                    <Button Text="Nieuw Recept" Command="{Binding AddRecipeCommand}" Margin="10"/>
                 </StackLayout>
                 
                 <!-- Displays an overview of all the users recipes -->

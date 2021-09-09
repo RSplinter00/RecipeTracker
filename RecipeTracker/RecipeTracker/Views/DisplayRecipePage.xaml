@@ -132,7 +132,7 @@
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">
                             <Image.Triggers>
-                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference requirementsExpander}, Path=IsExpanded}" Value="True">
+                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference outerLandscapeLayout}, Path=IsExpanded}" Value="True">
                                     <Setter Property="Source" Value="CollapseIcon.png" />
                                 </DataTrigger>
                             </Image.Triggers>
