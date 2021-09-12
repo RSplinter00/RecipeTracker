@@ -30,7 +30,7 @@
                 </StackLayout>
                 
                 <!-- Displays an overview of all the users recipes -->
-                <StackLayout x:Name="RecipeOverview" Margin="10,10,10,10" BindableLayout.ItemsSource="{Binding Recipes}">
+                <StackLayout x:Name="RecipeOverview" Margin="10" BindableLayout.ItemsSource="{Binding Recipes}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Frame BorderColor="{StaticResource FrameShadowColor}" CornerRadius="10">

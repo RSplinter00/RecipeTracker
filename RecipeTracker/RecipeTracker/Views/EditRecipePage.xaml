@@ -239,14 +239,14 @@
                 <!-- Divider with a button to add new properties -->
                 <Grid ColumnSpacing="10" ColumnDefinitions="{StaticResource dividerColumns}">
                     <BoxView Grid.Column="0"/>
-                    <ImageButton Grid.Column="1"/>
+                    <ImageButton Command="{Binding OnAddPropertyCommand}" Grid.Column="1"/>
                     <BoxView Grid.Column="2"/>
                 </Grid>
             </StackLayout>
         </ScrollView>
 
         <!-- Cancel And save buttons -->
-        <StackLayout Margin="0,10,0,10" Orientation="Horizontal" HorizontalOptions="Center">
+        <StackLayout Margin="0,10" Orientation="Horizontal" HorizontalOptions="Center">
             <Button Text="Cancel" BackgroundColor="Red" Command="{Binding OnCancelCommand}"/>
             <Button Text="Save" BackgroundColor="#228B22" Command="{Binding OnSubmitCommand}"/>
         </StackLayout>

@@ -12,6 +12,9 @@
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
             </Style>
+            <Style TargetType="Label" x:Key="categorySubtitle" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
 
             <Style TargetType="xct:Expander">
                 <Setter Property="Margin" Value="0,10,0,0"/>
@@ -29,8 +32,14 @@
         <StackLayout Margin="10" Spacing="0">
             <!-- Show recipe name and its category -->
             <Label Text="{Binding Recipe.Name}" Style="{StaticResource RecipeTitle}"/>
-            <Label Text="{Binding Recipe.Category, StringFormat='In: {0}'}" Margin="20,0,0,0"
-                   FontAttributes="Italic" Style="{StaticResource RecipeSubtitle}"/>
+            <Label IsVisible="{Binding Recipe.Category, Converter={StaticResource NullToBoolConverter}}" Margin="20,0,0,0" LineBreakMode="TailTruncation">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="In: " Style="{StaticResource categorySubtitle}"/>
+                        <Span Text="{Binding Recipe.Category}" Style="{StaticResource categorySubtitle}" FontAttributes="Italic"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
 
             <!-- Textbox showing important properties of the recipe -->
             <StackLayout BackgroundColor="LightGray" Spacing="0" Margin="0,10,0,0" Padding="20" HorizontalOptions="StartAndExpand">
@@ -42,11 +51,11 @@
                 <Label Text="{Binding Recipe.TotalDuration, StringFormat='Totale tijd: {0:%h} uur {0:%m} min.'}" Margin="0,0,0,10"/>
 
                 <Label Text="{Binding Recipe.Method, StringFormat='Methode: {0}'}"
-                        IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
+                       IsVisible="{Binding Recipe.Method, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="{Binding Recipe.NumPortions, StringFormat='Porties: {0}'}"
-                        IsVisible="{Binding Recipe.NumPortions, Converter={StaticResource NullToBoolConverter}}"/>
+                       IsVisible="{Binding Recipe.NumPortions, Converter={StaticResource NullToBoolConverter}}"/>
                 <Label Text="Bekijk online" TextColor="Blue" TextDecorations="Underline"
-                        IsVisible="{Binding Recipe.OriginalRecipe, Converter={StaticResource NullToBoolConverter}}">
+                       IsVisible="{Binding Recipe.OriginalRecipe, Converter={StaticResource NullToBoolConverter}}">
                     <!-- Open the link in the webbrowser, after clicking it -->
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OnNavigateToWebsiteCommand}" CommandParameter="{Binding Recipe.OriginalRecipe}"/>
