@@ -30,7 +30,7 @@
     
     <StackLayout>
         <!-- Display a list of all settings categories -->
-        <CollectionView ItemsSource="{Binding SettingsProperties}" x:Name="SettingsCollectionView"
+        <CollectionView ItemsSource="{Binding SettingsProperties.Values}" x:Name="SettingsCollectionView"
                         SelectionMode="Single" SelectionChangedCommand="{Binding OnSelectionChangedCommand}" SelectedItem="{Binding SelectedItem}">
             <CollectionView.Header>
                 <Frame Style="{StaticResource SettingsHeaderFrame}">
@@ -65,7 +65,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                             
-                        <!-- Layout for the settings category -->
+                        <!-- Layout for the settings categories -->
                         <Grid Margin="10,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>

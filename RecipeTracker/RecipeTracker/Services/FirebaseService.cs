@@ -15,7 +15,7 @@ namespace RecipeTracker.Services
     /// </summary>
     public class FirebaseService : IDatabaseService
     {
-        private string ChildName { get => $"users/{ GoogleAuthenticationService.UserID }"; }
+        private string ChildName { get => $"recipes/{ GoogleAuthenticationService.UserID }"; }
 
         private readonly GoogleAuthenticationService AuthService;
         private FirebaseClient Firebase { get => AuthService.Firebase; }
@@ -29,7 +29,7 @@ namespace RecipeTracker.Services
         /// Retrieves all recipes from Firebase.
         /// 
         /// <para>
-        ///     For offline operation, see <seealso cref="CachingService.GetRecipesAsync"/>.
+        ///     For the offline operation, see <seealso cref="CachingService.GetRecipesAsync"/>.
         /// </para>
         /// </summary>
         /// <returns>All recipes saved to the cloud.</returns>
@@ -52,7 +52,7 @@ namespace RecipeTracker.Services
         /// Returns a specific recipe from Firebase.
         /// 
         /// <para>
-        ///     For offline operation, see <seealso cref="CachingService.GetRecipeAsync(Guid)"/>.
+        ///     For the offline operation, see <seealso cref="CachingService.GetRecipeAsync(Guid)"/>.
         /// </para>
         /// </summary>
         /// <param name="id">Id of the recipe to be retrieved</param>
@@ -77,7 +77,7 @@ namespace RecipeTracker.Services
         /// Saves the given recipe to Firebase.
         /// 
         /// <para>
-        ///     For offline operation, see <seealso cref="CachingService.SaveRecipeAsync(Recipe)"/>.
+        ///     For the offline operation, see <seealso cref="CachingService.SaveRecipeAsync(Recipe)"/>.
         /// </para>
         /// </summary>
         /// <param name="recipe">Recipe to be saved to Firebase.</param>
@@ -97,7 +97,7 @@ namespace RecipeTracker.Services
                 }
                 else
                 {
-                    // If the recipe does have a vlid id, it is an editted recipe.
+                    // If the recipe does have a valid id, it is an editted recipe.
                     var toUpdateRecipe = (await Firebase
                         .Child(ChildName)
                         .OnceAsync<Recipe>()).FirstOrDefault(a => a.Object.Id == recipe.Id);
@@ -121,7 +121,7 @@ namespace RecipeTracker.Services
         /// Deletes the recipe with the given id from Firebase.
         /// 
         /// <para>
-        ///     For offline operation, see <seealso cref="CachingService.DeleteRecipeAsync(Guid)"/>.
+        ///     For the offline operation, see <seealso cref="CachingService.DeleteRecipeAsync(Guid)"/>.
         /// </para>
         /// </summary>
         /// <param name="id">Id of the recipe to be deleted.</param>

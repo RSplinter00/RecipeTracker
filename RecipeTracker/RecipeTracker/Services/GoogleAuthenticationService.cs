@@ -15,7 +15,7 @@ namespace RecipeTracker.Services
     public class GoogleAuthenticationService : IAuthenticationService
     {
         private readonly IGoogleClientManager GoogleService = CrossGoogleClient.Current;
-        public static string UserID { get; private set; } = "";
+        public static string UserID { get; private set; } = "UnknownUser";
 
         private static FirebaseClient firebase;
         public FirebaseClient Firebase
@@ -41,7 +41,7 @@ namespace RecipeTracker.Services
                 // If the user has received an access token, retrieve the users Firebase token.
                 var authProvider = new FirebaseAuthProvider(new FirebaseConfig(AppSettingsManager.Settings["AndroidAPIKey"]));
                 var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, GoogleService.AccessToken);
-                
+
                 // Creates the firebase options, so the user can be authenticated by Firebase.
                 UserID = auth.User.LocalId;
                 options = new FirebaseOptions
@@ -49,6 +49,7 @@ namespace RecipeTracker.Services
                     AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
                 };
             }
+            else UserID = "UnknownUser";
 
             Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"], options);
         }

@@ -160,6 +160,7 @@
     <Compile Include="UnitTests\ViewModels\EditRecipePageViewModelTest.cs" />
     <Compile Include="UnitTests\ViewModels\MainPageViewModelTest.cs" />
     <Compile Include="UnitTests\ViewModels\Settings\AccountSettingsPageViewModelTest.cs" />
+    <Compile Include="UnitTests\ViewModels\Settings\ReportIssueSettingsPageViewModelTest.cs" />
     <Compile Include="UnitTests\ViewModels\Settings\SettingsPageViewModelTest.cs" />
     <Compile Include="UnitTests\ViewModels\ViewModelBaseTest.cs" />
   </ItemGroup>

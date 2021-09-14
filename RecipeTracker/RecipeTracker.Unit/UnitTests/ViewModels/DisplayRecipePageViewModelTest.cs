@@ -94,7 +94,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Never, "Alert for failed navigation called atleast once.");
-            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(expectedPageName, expectedParameters), Times.Once, $"Function INavationService.NavigateAsync to {expectedPageName} with correct parameters not called exactly once.");
+            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(expectedPageName, expectedParameters), Times.Once, $"Function INavigationService.NavigateAsync to {expectedPageName} with correct parameters not called exactly once.");
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
 
             // Assert
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Once, "Alert for failed navigation not called exactly once.");
-            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(expectedPageName, expectedParameters), Times.Never, $"Function INavationService.NavigateAsync to {expectedPageName} called atleast once.");
+            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(expectedPageName, expectedParameters), Times.Never, $"Function INavigationService.NavigateAsync to {expectedPageName} called atleast once.");
         }
 
         [Test]

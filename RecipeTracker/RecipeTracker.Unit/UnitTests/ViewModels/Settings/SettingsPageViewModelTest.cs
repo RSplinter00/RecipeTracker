@@ -18,20 +18,19 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
             SettingsPageViewModel = new SettingsPageViewModel(NavigationServiceMock.Object, PageDialogServiceMock.Object, AuthServiceMock.Object, DatabaseServiceMock.Object);
         }
 
-        [Test]
-        public void OnSelectionChanged_WithSelectedItem_ShouldNavigateToSelectedPage()
+        [TestCase("Account", "AccountSettingsPage")]
+        [TestCase("Probleem melden", "ReportIssueSettingsPage")]
+        public void OnSelectionChanged_WithSelectedItem_ShouldNavigateToSelectedPage(string selectedItem, string expectedPageName)
         {
             // Arrange
-            var selectedItem = "Account";
-            
-            NavigationServiceMock.Setup(navigationService => navigationService.NavigateAsync($"{selectedItem}SettingsPage")).Verifiable();
+            NavigationServiceMock.Setup(navigationService => navigationService.NavigateAsync(expectedPageName)).Verifiable();
 
             // Act
             SettingsPageViewModel.SelectedItem = selectedItem;
             SettingsPageViewModel.OnSelectionChanged();
 
             // Assert
-            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync($"{selectedItem}SettingsPage"), Times.Once, $"Method OnSelectionChanged did not navigate user to {selectedItem}SettingsPage.");
+            NavigationServiceMock.Verify(navigationService => navigationService.NavigateAsync(expectedPageName), Times.Once, $"Method OnSelectionChanged did not navigate user to {selectedItem}SettingsPage.");
             Assert.IsNull(SettingsPageViewModel.SelectedItem, "Attribute SettingsPageViewModel.SelectedItem was not reset upon navigating.");
         }
 

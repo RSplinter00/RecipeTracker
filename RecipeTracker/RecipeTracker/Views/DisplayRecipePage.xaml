@@ -182,32 +182,13 @@
                 </xct:Expander.ContentTemplate>
             </xct:Expander>
 
-            <!-- Show an expander for the steps -->
-            <xct:Expander x:Name="stepsExpander" ForceUpdateSizeCommand="{Binding ForceStepsUpdateSizeCommand}"
-                        IsVisible="{Binding Recipe.Steps, Converter={StaticResource NullToBoolConverter}}">
-                <xct:Expander.Header>
-                    <StackLayout Orientation="Horizontal">
-                        <Image Source="ExpandIcon.png">
-                            <Image.Triggers>
-                                <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference stepsExpander}, Path=IsExpanded}" Value="True">
-                                    <Setter Property="Source" Value="CollapseIcon.png" />
-                                </DataTrigger>
-                            </Image.Triggers>
-                        </Image>
-                        <Label Text="Bereiding" Style="{StaticResource header}"/>
-                    </StackLayout>
-                </xct:Expander.Header>
-
-                <xct:Expander.ContentTemplate>
-                    <DataTemplate>
-                        <Label Text="{Binding Recipe.Steps}"/>
-                    </DataTemplate>
-                </xct:Expander.ContentTemplate>
-            </xct:Expander>
+            <!-- Show the steps property -->
+            <Label Text="Bereiding" Style="{StaticResource header}" Margin="0,10,0,0"/>
+            <Label Text="{Binding Recipe.Steps}" Margin="0,0,0,10"/>
 
             <!-- Show an expander for the serve tips -->
             <xct:Expander x:Name="servetipsExpander" ForceUpdateSizeCommand="{Binding ForceServetipsUpdateSizeCommand}"
-                          IsVisible="{Binding Recipe.ServeTips, Converter={StaticResource NullToBoolConverter}}">
+                          IsVisible="{Binding Recipe.ServeTips, Converter={StaticResource NullToBoolConverter}}" Margin="0,0,0,10">
                 <xct:Expander.Header>
                     <StackLayout Orientation="Horizontal">
                         <Image Source="ExpandIcon.png">

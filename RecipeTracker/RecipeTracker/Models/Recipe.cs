@@ -2,6 +2,7 @@
 using SQLite;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace RecipeTracker.Models
 {
@@ -10,6 +11,7 @@ namespace RecipeTracker.Models
     /// </summary>
     public class Recipe
     {
+        [JsonIgnore]
         private readonly Dictionary<string, string> EnNlTranslations = new Dictionary<string, string>()
         {
             { "Name", "Naam" },
@@ -39,7 +41,8 @@ namespace RecipeTracker.Models
         // Time it takes for the meat to rest
         public TimeSpan RestTime { get; set; }
         // Sum of all timespans
-        [Ignore]
+        
+        [Ignore, JsonIgnore]
         public TimeSpan TotalDuration
         {
             get => PrepTime + CookingTime + RestTime;

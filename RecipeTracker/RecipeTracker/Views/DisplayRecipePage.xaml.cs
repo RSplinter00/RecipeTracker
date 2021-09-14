@@ -27,15 +27,24 @@ namespace RecipeTracker.Views
 
                 if (width > height)
                 {
-                    // Show the portrait layout and hide the landscape layout
+                    // Hide the portrait layout and show the landscape layout.
                     outerPortraitLayout.IsVisible = false;
                     outerLandscapeLayout.IsVisible = true;
+
+                    // If either the ingredients or requirements is expanded, expand outerLandscapeLayout.
+                    // If both are collapsed, collapse outerLandscapeLayour aswell.
+                    outerLandscapeLayout.IsExpanded = ingredientsExpander.IsExpanded || requirementsExpander.IsExpanded;
                 }
                 else
                 {
-                    // Hide the portrait layout and show the landscape layout
+                    // Show the portrait layout and hide the landscape layout.
                     outerPortraitLayout.IsVisible = true;
                     outerLandscapeLayout.IsVisible = false;
+
+                    // If outerLandscapeLayout is expanded, expand the ingredients and requirements.
+                    // If outerLandscapeLayout is collapsed, collapse the ingredients and requirements.
+                    ingredientsExpander.IsExpanded = outerLandscapeLayout.IsExpanded;
+                    requirementsExpander.IsExpanded = outerLandscapeLayout.IsExpanded;
                 }
             }
         }

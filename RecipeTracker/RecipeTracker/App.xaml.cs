@@ -55,6 +55,7 @@ namespace RecipeTracker
             // Register services.
             containerRegistry.Register<IAuthenticationService, GoogleAuthenticationService>();
             containerRegistry.Register<IDatabaseService, DatabaseService>();
+            containerRegistry.Register<IReportingService, ReportingService>();
 
             // Register the navigation page.
             containerRegistry.RegisterForNavigation<NavigationPage>();
@@ -62,6 +63,7 @@ namespace RecipeTracker
             // Register the settings pages.
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<AccountSettingsPage, AccountSettingsPageViewModel>();
+            containerRegistry.RegisterForNavigation<ReportIssueSettingsPage, ReportIssueSettingsPageViewModel>();
 
             // Register the application pages.
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
