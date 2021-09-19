@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "847002013531-1r8p5hisuvskl9ghh85cqagj5e93kblb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.splinter.recipetracker",
+            "certificate_hash": "d05d83526ff44f9f9a8407ea7d2572e703c93461"
+          }
+        },
+        {
           "client_id": "847002013531-jenvacq68jqgdpt66a2p13ggg419b7j4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

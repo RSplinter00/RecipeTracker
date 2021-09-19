@@ -12,8 +12,6 @@ using RecipeTracker.Views.Settings;
 using RecipeTracker.ViewModels.Settings;
 using Xamarin.Essentials;
 using Plugin.Connectivity;
-using Plugin.GoogleClient;
-using System.Threading.Tasks;
 using System;
 
 [assembly: InternalsVisibleTo("RecipeTracker.Unit")]
@@ -29,7 +27,7 @@ namespace RecipeTracker
         }
 
         /// <summary>
-        /// hecks if the user has an internet connection.
+        /// Checks if the user has an internet connection.
         /// For testing purposes, if the device platform is unknown, it will always return true.
         /// </summary>
         /// <returns>Whether the user has an internet connection or not.</returns>
@@ -50,25 +48,26 @@ namespace RecipeTracker
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
-
-            // Register services.
-            containerRegistry.Register<IAuthenticationService, GoogleAuthenticationService>();
-            containerRegistry.Register<IDatabaseService, DatabaseService>();
-            containerRegistry.Register<IReportingService, ReportingService>();
-
             // Register the navigation page.
             containerRegistry.RegisterForNavigation<NavigationPage>();
+
+            // Register the application pages.
+            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
+            containerRegistry.RegisterForNavigation<EditRecipePage, EditRecipePageViewModel>();
 
             // Register the settings pages.
             containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<AccountSettingsPage, AccountSettingsPageViewModel>();
             containerRegistry.RegisterForNavigation<ReportIssueSettingsPage, ReportIssueSettingsPageViewModel>();
 
-            // Register the application pages.
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
-            containerRegistry.RegisterForNavigation<DisplayRecipePage, DisplayRecipePageViewModel>();
-            containerRegistry.RegisterForNavigation<EditRecipePage, EditRecipePageViewModel>();
+            // Register services.
+            containerRegistry.Register<IAuthenticationService, GoogleAuthenticationService>();
+            containerRegistry.Register<IDatabaseService, DatabaseService>();
+            containerRegistry.Register<IReportingService, ReportingService>();
+
+            // Register singleton for Xamarin Essentials
+            containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
 
         }
     }
