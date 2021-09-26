@@ -21,11 +21,16 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
         }
 
         [Test]
-        public async Task LoginUserAsync_WhenLoggingIn_ShouldLoginAndSetUser()
+        public async Task LoginUserAsync_WhenLoggingInWithInternetConnection_ShouldLoginAndSetUser()
         {
             // Arrange
+            var alertTitle = "Geen internet connectie";
+            var alertMessage = "Het is niet mogelijk om in te loggen. Controleer uw internet connectie en probeer opnieuw.";
+            var alertCancelButton = "Ok";
+
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Completed));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => CurrentUser);
+            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton)).Verifiable();
 
             // Act
             await AccountSettingsPageViewModel.LoginUserAsync();
@@ -33,15 +38,21 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.Once, "Function AuthenticationService.GetUser not called exactly once.");
+            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Never, "Alert for no internet connection called atleast once.");
             Assert.AreEqual(CurrentUser, AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User does not equal the expected user.");
         }
 
         [Test]
-        public async Task LoginUserAsync_WhenRefusingLogin_ShouldDoNothing()
+        public async Task LoginUserAsync_WhenRefusingLoginWithInternetConnection_ShouldDoNothing()
         {
             // Arrange
+            var alertTitle = "Geen internet connectie";
+            var alertMessage = "Het is niet mogelijk om in te loggen. Controleer uw internet connectie en probeer opnieuw.";
+            var alertCancelButton = "Ok";
+
             AuthServiceMock.Setup(authService => authService.LoginAsync()).Returns(Task.Run(() => GoogleActionStatus.Canceled));
             AuthServiceMock.Setup(authService => authService.GetUser()).Returns(() => null);
+            PageDialogServiceMock.Setup(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton)).Verifiable();
 
             // Act
             await AccountSettingsPageViewModel.LoginUserAsync();
@@ -49,6 +60,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels.Settings
             // Assert
             AuthServiceMock.Verify(authService => authService.LoginAsync(), Times.Once, "Function AuthenticationService.LoginAsync not called exactly once.");
             AuthServiceMock.Verify(authService => authService.GetUser(), Times.Never, "Function AuthenticationService.GetUser called atleast once.");
+            PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Never, "Alert for no internet connection called atleast once.");
             Assert.IsNull(AccountSettingsPageViewModel.User, "Attribute AccountSettingsPageViewModel.User is not null.");
         }
 

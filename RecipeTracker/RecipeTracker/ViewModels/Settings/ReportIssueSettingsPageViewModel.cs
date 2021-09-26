@@ -1,10 +1,11 @@
-﻿using Prism.Commands;
+﻿using Microsoft.AppCenter.Analytics;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using RecipeTracker.Models;
 using RecipeTracker.Services;
-using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace RecipeTracker.ViewModels.Settings
 {
@@ -60,6 +61,13 @@ namespace RecipeTracker.ViewModels.Settings
 
                 if (response)
                 {
+                    var properties = new Dictionary<string, string>
+                    {
+                        { "User", Issue.User }
+                    };
+
+                    Analytics.TrackEvent("Issue reported", properties);
+
                     await DialogService.DisplayAlertAsync("Bedankt!", "Bedankt voor het melden van het probleem!", "Geen probleem");
                     GoBackAsync();
                 }

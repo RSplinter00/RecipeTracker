@@ -9,6 +9,7 @@ using Plugin.GoogleClient;
 using Prism;
 using Prism.Ioc;
 using System;
+using Xamarin.Essentials;
 
 namespace RecipeTracker.Droid
 {
@@ -26,7 +27,7 @@ namespace RecipeTracker.Droid
             base.OnCreate(savedInstanceState);
 
             GoogleClientManager.Initialize(this);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             LoadApplication(new App(new AndroidInitializer()));

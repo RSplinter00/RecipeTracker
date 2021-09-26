@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 
 namespace RecipeTracker.ViewModels
 {
@@ -175,25 +175,32 @@ namespace RecipeTracker.ViewModels
         /// </summary>
         public async Task AddProperty()
         {
-            var cancelButton = "Annuleer";
-            var hiddenProperties = HideableProperties.Except(ShowProperties).ToArray();
-
-            // Makes a list of all properties in Dutch
-            for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToNlTranslation(hiddenProperties[i]);
-
-            // Prompts the user to choose which property to add to the page.
-            var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
-
-            if (action != null && action != cancelButton)
+            try
             {
-                // If the user has selected a property, show it on the page.
-                action = Recipe.NlToEnTranslation(action);
+                var cancelButton = "Annuleer";
+                var hiddenProperties = HideableProperties.Except(ShowProperties).ToArray();
 
-                if (!string.IsNullOrEmpty(action))
+                // Makes a list of all properties in Dutch
+                for (int i = 0; i < hiddenProperties.Length; i++) hiddenProperties[i] = Recipe.EnToNlTranslation(hiddenProperties[i]);
+
+                // Prompts the user to choose which property to add to the page.
+                var action = await DialogService.DisplayActionSheetAsync("Voeg nieuw veld toe", cancelButton, null, hiddenProperties);
+
+                if (action != null && action != cancelButton)
                 {
-                    ShowProperties.Add(action);
-                    OnPropertyChanged("ShowProperties");
+                    // If the user has selected a property, show it on the page.
+                    action = Recipe.NlToEnTranslation(action);
+
+                    if (!string.IsNullOrEmpty(action))
+                    {
+                        ShowProperties.Add(action);
+                        OnPropertyChanged("ShowProperties");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
             }
         }
 
@@ -203,17 +210,24 @@ namespace RecipeTracker.ViewModels
         /// <param name="propertyName">Name of the selected property to be deleted.</param>
         public async Task RemoveProperty(string propertyName)
         {
-            var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
-
-            if (response)
+            try
             {
-                // If the user confirms deleting the property, the value will be reset and the property will be hidden on the page.
-                Recipe.GetType().GetProperty(propertyName).SetValue(Recipe, null);
+                var response = await DialogService.DisplayAlertAsync("Pas op!", $"Weet u zeker dat u het veld {Recipe.EnToNlTranslation(propertyName)} wilt verwijderen?", "Ja", "Nee");
 
-                ShowProperties.Remove(propertyName);
+                if (response)
+                {
+                    // If the user confirms deleting the property, the value will be reset and the property will be hidden on the page.
+                    Recipe.GetType().GetProperty(propertyName).SetValue(Recipe, null);
 
-                OnPropertyChanged("Recipe");
-                OnPropertyChanged("ShowProperties");
+                    ShowProperties.Remove(propertyName);
+
+                    OnPropertyChanged("Recipe");
+                    OnPropertyChanged("ShowProperties");
+                }
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
             }
         }
 
@@ -237,7 +251,7 @@ namespace RecipeTracker.ViewModels
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    Crashes.TrackError(e);
                 }
             }
 
@@ -256,8 +270,9 @@ namespace RecipeTracker.ViewModels
                     Recipe = await DatabaseService.GetRecipeAsync(recipeId);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Crashes.TrackError(e);
             }
 
             if (Recipe == null)

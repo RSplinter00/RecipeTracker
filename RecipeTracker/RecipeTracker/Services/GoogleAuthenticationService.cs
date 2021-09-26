@@ -1,5 +1,6 @@
 ﻿using Firebase.Auth;
 using Firebase.Database;
+using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Plugin.GoogleClient;
 using Plugin.GoogleClient.Shared;
@@ -34,24 +35,31 @@ namespace RecipeTracker.Services
         /// </summary>
         private async Task SetupFirebaseClientAsync()
         {
-            FirebaseOptions options = null;
-
-            if (!string.IsNullOrEmpty(GoogleService.AccessToken))
+            try
             {
-                // If the user has received an access token, retrieve the users Firebase token.
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(AppSettingsManager.Settings["AndroidAPIKey"]));
-                var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, GoogleService.AccessToken);
+                FirebaseOptions options = null;
 
-                // Creates the firebase options, so the user can be authenticated by Firebase.
-                UserID = auth.User.LocalId;
-                options = new FirebaseOptions
+                if (!string.IsNullOrEmpty(GoogleService.AccessToken))
                 {
-                    AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
-                };
-            }
-            else UserID = "UnknownUser";
+                    // If the user has received an access token, retrieve the users Firebase token.
+                    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(AppSettingsManager.Settings["AndroidAPIKey"]));
+                    var auth = await authProvider.SignInWithOAuthAsync(FirebaseAuthType.Google, GoogleService.AccessToken);
 
-            Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"], options);
+                    // Creates the firebase options, so the user can be authenticated by Firebase.
+                    UserID = auth.User.LocalId;
+                    options = new FirebaseOptions
+                    {
+                        AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
+                    };
+                }
+                else UserID = "UnknownUser";
+
+                Firebase = new FirebaseClient(AppSettingsManager.Settings["FirebaseDatabasePath"], options);
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+            }
         }
 
         /// <summary>
@@ -75,10 +83,12 @@ namespace RecipeTracker.Services
                 userLoginDelegate = (object sender, GoogleClientResultEventArgs<GoogleUser> e) =>
                 {
                     status = e.Status;
+
 #if DEBUG
                     var googleUserString = JsonConvert.SerializeObject(e.Data);
                     Debug.WriteLine($"Google Login attempt by {googleUserString}: {e.Status}");
 #endif
+
                     GoogleService.OnLogin -= userLoginDelegate;
                 };
 
@@ -92,7 +102,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                Crashes.TrackError(e);
                 return GoogleActionStatus.Error;
             }
         }
@@ -110,8 +120,9 @@ namespace RecipeTracker.Services
                 await SetupFirebaseClientAsync();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Crashes.TrackError(e);
             }
 
             return !GoogleService.IsLoggedIn;

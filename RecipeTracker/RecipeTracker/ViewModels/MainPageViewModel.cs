@@ -1,10 +1,8 @@
-﻿using Plugin.GoogleClient;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using RecipeTracker.Services;
 using RecipeTracker.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

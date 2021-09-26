@@ -6,8 +6,8 @@ using RecipeTracker.Models;
 using System;
 using System.Windows.Input;
 using Xamarin.Essentials;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 
 namespace RecipeTracker.ViewModels
 {
@@ -58,11 +58,18 @@ namespace RecipeTracker.ViewModels
         /// <param name="website">Url of the website to navigate to.</param>
         public async void ToWebsiteAsync(string website)
         {
-            // Add 'https://' if the url doesn't begin with it.
-            if (!(website.StartsWith("https://") || website.StartsWith("http://"))) website = website.Insert(0, "https://");
+            try
+            {
+                // Add 'https://' if the url doesn't begin with it.
+                if (!(website.StartsWith("https://") || website.StartsWith("http://"))) website = website.Insert(0, "https://");
 
-            // Open the browser and navigate to the website.
-            if (Uri.TryCreate(website, UriKind.Absolute, out var uri) && DeviceInfo.Platform != DevicePlatform.Unknown) await Launcher.OpenAsync(uri);
+                // Open the browser and navigate to the website.
+                if (Uri.TryCreate(website, UriKind.Absolute, out var uri) && DeviceInfo.Platform != DevicePlatform.Unknown) await Launcher.OpenAsync(uri);
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+            }
         }
 
         private async void OnDeleteRecipe()
@@ -117,7 +124,7 @@ namespace RecipeTracker.ViewModels
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
             }
 
             // If the recipe doesn't exist, return to the previous page.

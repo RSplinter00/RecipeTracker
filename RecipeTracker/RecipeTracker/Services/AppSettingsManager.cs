@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -25,7 +25,7 @@ namespace RecipeTracker.Services
         private const string Namespace = "RecipeTracker";
         private const string Filename = "AppSettings.json";
 
-        private JObject secrets;
+        private readonly JObject secrets;
 
         private AppSettingsManager()
         {
@@ -43,7 +43,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.Write(e.Message);
+                Crashes.TrackError(e);
             }
         }
 
@@ -67,7 +67,7 @@ namespace RecipeTracker.Services
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Crashes.TrackError(e);
                     return string.Empty;
                 }
             }

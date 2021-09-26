@@ -1,8 +1,8 @@
-﻿using Plugin.Connectivity;
+﻿using Microsoft.AppCenter.Crashes;
+using Plugin.Connectivity;
 using RecipeTracker.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace RecipeTracker.Services
@@ -17,8 +17,8 @@ namespace RecipeTracker.Services
         private readonly CachingService CachingService;
         private readonly FirebaseService FirebaseService;
 
-        private bool IsConnected { get => CrossConnectivity.Current.IsConnected; }
-        private bool IsLoggedIn { get => AuthService.GetUser() != null; }
+        private bool IsConnected => CrossConnectivity.Current.IsConnected;
+        private bool IsLoggedIn => AuthService.GetUser() != null;
 
         public DatabaseService(IAuthenticationService authService)
         {
@@ -40,7 +40,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return CachingService.GetRecipesAsync();
             }
         }
@@ -59,7 +59,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return CachingService.GetRecipeAsync(id);
             }
         }
@@ -78,7 +78,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return CachingService.SaveRecipeAsync(recipe);
             }
         }
@@ -97,7 +97,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return CachingService.DeleteRecipeAsync(id);
             }
         }
@@ -130,7 +130,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
             }
         }
     }

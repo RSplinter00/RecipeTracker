@@ -1,8 +1,8 @@
 ﻿using Firebase.Database;
+using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using RecipeTracker.Models;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace RecipeTracker.Services
@@ -13,10 +13,10 @@ namespace RecipeTracker.Services
     }
     public class ReportingService : IReportingService
     {
-        private string ChildName { get => $"issues/{ GoogleAuthenticationService.UserID }"; }
+        private readonly string ChildName = $"issues/{ GoogleAuthenticationService.UserID }";
 
         private readonly GoogleAuthenticationService AuthService;
-        private FirebaseClient Firebase { get => AuthService.Firebase; }
+        private FirebaseClient Firebase => AuthService.Firebase;
 
         public ReportingService()
         {
@@ -35,7 +35,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return false;
             }
         }

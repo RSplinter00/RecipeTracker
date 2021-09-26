@@ -145,7 +145,7 @@ namespace RecipeTracker.Unit.UnitTests.ViewModels
             DatabaseServiceMock.Verify(databaseService => databaseService.GetRecipeAsync(SelectedRecipe.Id), Times.Once, "Function IDatabaseService.GetRecipeAsync for selected recipe not called exactly once.");
             PageDialogServiceMock.Verify(dialogService => dialogService.DisplayAlertAsync(alertTitle, alertMessage, alertCancelButton), Times.Never, "Alert for failed retrieving of recipe called atleast once.");
             NavigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), Times.Never, "Function INavigationService.GoBackAsync called atleast once.");
-            Assert.AreEqual(SelectedRecipe, DisplayRecipePageViewModel.Recipe);
+            Assert.AreEqual(SelectedRecipe, DisplayRecipePageViewModel.Recipe, "Attribute DisplayRecipePageViewModel.Recipe is not the expected value.");
         }
 
         [Test]

@@ -4,7 +4,6 @@ using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using RecipeTracker.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace RecipeTracker.ViewModels.Settings
@@ -48,16 +47,19 @@ namespace RecipeTracker.ViewModels.Settings
             await LogoutUserAsync();
         }
 
-
         /// <summary>
         /// Logs in the user.
         /// </summary>
         internal async Task LoginUserAsync()
         {
             // Execute login and set the user if completed
-            var response = await AuthService.LoginAsync();
+            if (App.IsConnected())
+            {
+                var response = await AuthService.LoginAsync();
 
-            if (response == GoogleActionStatus.Completed) User = AuthService.GetUser();
+                if (response == GoogleActionStatus.Completed) User = AuthService.GetUser();
+            }
+            else await DialogService.DisplayAlertAsync("Geen internet connectie", "Het is niet mogelijk om in te loggen. Controleer uw internet connectie en probeer opnieuw.", "Ok");
         }
 
         /// <summary>

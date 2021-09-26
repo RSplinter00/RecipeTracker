@@ -8,11 +8,13 @@ using Xamarin.Forms;
 using RecipeTracker.Services;
 using System.Runtime.CompilerServices;
 using Prism.DryIoc;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using RecipeTracker.Views.Settings;
 using RecipeTracker.ViewModels.Settings;
 using Xamarin.Essentials;
 using Plugin.Connectivity;
-using System;
 
 [assembly: InternalsVisibleTo("RecipeTracker.Unit")]
 namespace RecipeTracker
@@ -43,7 +45,8 @@ namespace RecipeTracker
             InitializeComponent();
 
             // Navigate to the main page.
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            var response = await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            if (!response.Success) Crashes.TrackError(response.Exception);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -68,7 +71,12 @@ namespace RecipeTracker
 
             // Register singleton for Xamarin Essentials
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+        }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+            AppCenter.Start($"android={AppSettingsManager.Settings["AndroidAppCenterKey"]}", typeof(Analytics), typeof(Crashes));
         }
     }
 }

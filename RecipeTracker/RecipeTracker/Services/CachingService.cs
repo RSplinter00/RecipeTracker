@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 using RecipeTracker.Models;
 using SQLite;
 
@@ -39,7 +39,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return Task.Run(() => new List<Recipe>());
             }
         }
@@ -61,7 +61,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return null;
             }
         }
@@ -95,7 +95,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
             }
 
             return response > 0;
@@ -120,7 +120,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
             }
 
             return response > 0;

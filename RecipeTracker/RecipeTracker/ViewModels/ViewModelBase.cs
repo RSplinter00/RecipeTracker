@@ -1,11 +1,10 @@
-﻿using Plugin.Connectivity;
+﻿using Microsoft.AppCenter.Crashes;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using RecipeTracker.Services;
-using System;
-using Xamarin.Essentials;
+using System.Collections.Generic;
 
 namespace RecipeTracker.ViewModels
 {
@@ -36,9 +35,17 @@ namespace RecipeTracker.ViewModels
         /// </summary>
         internal async void NavigateToMainPageAsync()
         {
-            var result = await NavigationService.NavigateAsync("/NavigationPage/MainPage");
+            var path = "/NavigationPage/MainPage";
+            var result = await NavigationService.NavigateAsync(path);
+            if (result != null && !result.Success)
+            {
+                var properties = new Dictionary<string, string>
+                {
+                    { "Failed to navigate to page", path }
+                };
 
-            if (result != null && !result.Success) Console.WriteLine("Failed to navigate to MainPage");
+                Crashes.TrackError(result.Exception, properties);
+            }
         }
 
         /// <summary>
@@ -49,7 +56,15 @@ namespace RecipeTracker.ViewModels
         {
             var result = await NavigationService.NavigateAsync(path);
 
-            if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
+            if (result != null && !result.Success)
+            {
+                var properties = new Dictionary<string, string>
+                {
+                    { "Failed to navigate to page", path }
+                };
+
+                Crashes.TrackError(result.Exception, properties);
+            }
         }
 
         /// <summary>
@@ -61,7 +76,15 @@ namespace RecipeTracker.ViewModels
         {
             var result = await NavigationService.NavigateAsync(path, navigationParams);
 
-            if (result != null && !result.Success) Console.WriteLine($"Unable to navigate to page with path: { path }");
+            if (result != null && !result.Success)
+            {
+                var properties = new Dictionary<string, string>
+                {
+                    { "Failed to navigate to page", path }
+                };
+
+                Crashes.TrackError(result.Exception, properties);
+            }
         }
 
         /// <summary>
@@ -71,7 +94,15 @@ namespace RecipeTracker.ViewModels
         {
             var result = await NavigationService.GoBackAsync();
 
-            if (result != null && !result.Success) Console.WriteLine("Failed to navigate to the previous page");
+            if (result != null && !result.Success)
+            {
+                var properties = new Dictionary<string, string>
+                {
+                    { "Failed to navigate to previous page", $"from: {NavigationService.GetNavigationUriPath()}" }
+                };
+
+                Crashes.TrackError(result.Exception, properties);
+            }
         }
 
         public virtual void Initialize(INavigationParameters parameters)

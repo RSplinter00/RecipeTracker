@@ -1,10 +1,10 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using RecipeTracker.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,10 +15,10 @@ namespace RecipeTracker.Services
     /// </summary>
     public class FirebaseService : IDatabaseService
     {
-        private string ChildName { get => $"recipes/{ GoogleAuthenticationService.UserID }"; }
+        private string ChildName => $"recipes/{ GoogleAuthenticationService.UserID }";
 
         private readonly GoogleAuthenticationService AuthService;
-        private FirebaseClient Firebase { get => AuthService.Firebase; }
+        private FirebaseClient Firebase => AuthService.Firebase;
 
         public FirebaseService()
         {
@@ -43,7 +43,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return new List<Recipe>();
             }
         }
@@ -68,7 +68,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return null;
             }
         }
@@ -112,7 +112,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return false;
             }
         }
@@ -143,7 +143,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return false;
             }
         }
@@ -177,7 +177,7 @@ namespace RecipeTracker.Services
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Crashes.TrackError(e);
                 return new Recipe();
             }
         }

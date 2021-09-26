@@ -3,6 +3,7 @@ using SQLite;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Microsoft.AppCenter.Crashes;
 
 namespace RecipeTracker.Models
 {
@@ -75,8 +76,9 @@ namespace RecipeTracker.Models
             {
                 return EnNlTranslations[propertyName];
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Crashes.TrackError(e);
                 return "";
             }
         }
@@ -99,8 +101,9 @@ namespace RecipeTracker.Models
                 if (translation == null) return "";
                 else return translation;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Crashes.TrackError(e);
                 return "";
             }
         }
@@ -111,7 +114,6 @@ namespace RecipeTracker.Models
 
             // Define if the recipe is unique by its Id property.
             return this.Id == ((Recipe)obj).Id;
-
         }
     }
 }
